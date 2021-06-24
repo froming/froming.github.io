@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;froming.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Gemini&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="第一关&lt;1&gt;解法:直接在url栏的name&#x3D;后输入:  &lt;script&gt;alert(‘forming is handsome’)&lt;&#x2F;script&gt;（这是一段js代码）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xss-labs前五关">
+<meta property="og:url" content="https://froming.github.io/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3">
+<meta property="og:site_name" content="A fifth century">
+<meta property="og:description" content="第一关&lt;1&gt;解法:直接在url栏的name&#x3D;后输入:  &lt;script&gt;alert(‘forming is handsome’)&lt;&#x2F;script&gt;（这是一段js代码）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210120202910649.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210120203404108.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210120223235142.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210120225508104.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210120233111544.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2021012023392024.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210121010748109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210121011058549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210121013404863.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210121013814748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210121014338711.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="article:published_time" content="2021-06-23T16:29:41.000Z">
+<meta property="article:modified_time" content="2021-06-24T03:22:00.650Z">
+<meta property="article:author" content="Forming">
+<meta property="article:tag" content="xss">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210120202910649.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
+
+
+<link rel="canonical" href="https://froming.github.io/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;froming.github.io&#x2F;2021&#x2F;06&#x2F;24&#x2F;xss-labs%E5%89%8D%E4%BA%94%E5%85%B3&quot;,&quot;path&quot;:&quot;2021&#x2F;06&#x2F;24&#x2F;xss-labs前五关&quot;,&quot;title&quot;:&quot;xss-labs前五关&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>xss-labs前五关 | A fifth century</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">A fifth century</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">每一个不曾起舞的日子都是对生命的辜负</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%85%B3"><span class="nav-number">1.</span> <span class="nav-text">第一关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-1-gt-%E8%A7%A3%E6%B3%95"><span class="nav-number">1.0.1.</span> <span class="nav-text">&lt;1&gt;解法:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-2-gt-%E8%A7%A3%E6%9E%90%EF%BC%9A"><span class="nav-number">1.0.2.</span> <span class="nav-text">&lt;2&gt;解析：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E5%85%B3"><span class="nav-number">2.</span> <span class="nav-text">第二关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-1-gt-%E8%A7%A3%E6%B3%95-1"><span class="nav-number">2.0.1.</span> <span class="nav-text">&lt;1&gt;解法:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-2-gt-%E8%A7%A3%E6%9E%90"><span class="nav-number">2.0.2.</span> <span class="nav-text">&lt;2&gt;解析:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E5%85%B3"><span class="nav-number">3.</span> <span class="nav-text">第三关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-1-gt-%E8%A7%A3%E6%B3%95-2"><span class="nav-number">3.0.1.</span> <span class="nav-text">&lt;1&gt;解法:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-2-gt-%E8%A7%A3%E6%9E%90-1"><span class="nav-number">3.0.2.</span> <span class="nav-text">&lt;2&gt;解析:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E5%85%B3"><span class="nav-number">4.</span> <span class="nav-text">第四关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-1-gt-%E8%A7%A3%E6%B3%95-3"><span class="nav-number">4.0.1.</span> <span class="nav-text">&lt;1&gt;解法:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-2-gt-%E8%A7%A3%E6%9E%90%EF%BC%9A-1"><span class="nav-number">4.0.2.</span> <span class="nav-text">&lt;2&gt;解析：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E5%85%B3"><span class="nav-number">5.</span> <span class="nav-text">第五关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-1-gt-%E8%A7%A3%E6%B3%95%EF%BC%9A"><span class="nav-number">5.0.1.</span> <span class="nav-text">&lt;1&gt;解法：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-2-gt-%E8%A7%A3%E6%9E%90%EF%BC%9A-2"><span class="nav-number">5.0.2.</span> <span class="nav-text">&lt;2&gt;解析：</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Forming</p>
+  <div class="site-description" itemprop="description">网络安全websecurity</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/forming" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;forming" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:3288038651@qq.com" title="E-Mail → mailto:3288038651@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/%E6%9C%89%E8%84%9A%E6%B2%A1%E8%84%9A%E8%B6%BE" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;有脚没脚趾" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/m0_53061933?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;m0_53061933?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">Author CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Forming">
+      <meta itemprop="description" content="网络安全websecurity">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="A fifth century">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          xss-labs前五关
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-24 00:29:41 / 修改时间：11:22:00" itemprop="dateCreated datePublished" datetime="2021-06-24T00:29:41+08:00">2021-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="第一关"><a href="#第一关" class="headerlink" title="第一关"></a>第一关</h3><h5 id="lt-1-gt-解法"><a href="#lt-1-gt-解法" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><p>直接在url栏的name=后输入:</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;（这是一段js代码）</p>
+</blockquote>
+<span id="more"></span>
+
+<h5 id="lt-2-gt-解析："><a href="#lt-2-gt-解析：" class="headerlink" title="&lt;2&gt;解析："></a>&lt;2&gt;解析：</h5><p><img src="https://img-blog.csdnimg.cn/20210120202910649.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">那么如果我们注入的是一段能在客户端运行的程序的话，就是能达到恶意注入的目的，查看源码，发现没有做任何防御，我们试着注入在h2处注入的脚本。</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/20210120203404108.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="第二关"><a href="#第二关" class="headerlink" title="第二关"></a>第二关</h3><h5 id="lt-1-gt-解法-1"><a href="#lt-1-gt-解法-1" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><p>与第一关不同的是输入的地方不同，如果和第一关在相同位置上注入就会少返回一个“确定”值，所以要在网页中的输入栏输入</p>
+<blockquote>
+<p>forming is handsome” onfocus=javascript:alert(‘xss’)&gt;//</p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>forming is handsome”&gt; &lt;script&gt;alert(‘forming is hand’)&lt;/script&gt;//</p>
+</blockquote>
+<h5 id="lt-2-gt-解析"><a href="#lt-2-gt-解析" class="headerlink" title="&lt;2&gt;解析:"></a>&lt;2&gt;解析:</h5><p>首先注入&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;,然后查看网页源码<br><img src="https://img-blog.csdnimg.cn/20210120223235142.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>可以发现在h2标签处的‘&gt;’和‘&lt;’被替换成了实体字符，用到的是htmlspecialchars()函数(想知道更多请自行搜索)。所以在此处是实现不了脚本注入的，但是看第一个input元素处‘&lt;’和‘&gt;’并没有被替换，所以在这里根据onfocus事件，可以实现脚本注入。输入</p>
+<blockquote>
+<p>forming is handsome” onfocus=javascript:alert(‘xss’)&gt;//</p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>forming is handsome”&gt; &lt;script&gt;alert(‘forming is hand’)&lt;/script&gt;//</p>
+</blockquote>
+<p>当输入前者进去以后点击页面上的确定，待刷新以后点击一下输入框给onfocus事件一个焦点，网站就会自动通向下一关。若是后者则会自动弹出选框。<br>下图是前者的源码图。<br><img src="https://img-blog.csdnimg.cn/20210120225508104.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="前者的源码图"></p>
+<h3 id="第三关"><a href="#第三关" class="headerlink" title="第三关"></a>第三关</h3><h5 id="lt-1-gt-解法-2"><a href="#lt-1-gt-解法-2" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><p>在与第二关相同的位置输入</p>
+<blockquote>
+<p>forming’ onfocus=javascript:alert(‘handsome’) //</p>
+</blockquote>
+<p><strong>这里讲一个我发现的东西</strong>，那就是输入的字符串不能太长，不然无法注入成功。<br><strong>毕竟</strong>我也想在每一个能输入forming is handsome的地方都输入，但是这个地方可能是开辟的空间太小这么长的字符串不能被存储，所以只能这么短。</p>
+<h5 id="lt-2-gt-解析-1"><a href="#lt-2-gt-解析-1" class="headerlink" title="&lt;2&gt;解析:"></a>&lt;2&gt;解析:</h5><p>和之前一样都是进行尝试，输入:</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;</p>
+</blockquote>
+<p>再查看网页源码：<br><img src="https://img-blog.csdnimg.cn/20210120233111544.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>发现和第二关的不同之处在于在input处也转换了”&gt;”,”&lt;”,那么可以换一种onfocus事件的书写格式达到注入的目的，输入：</p>
+<blockquote>
+<p>forming’ onfocus=javascript:alert(‘handsome’) //</p>
+</blockquote>
+<p>最后再与第二关一样触发onfocus事件，就可以过关。<em><strong>但最后有我一个小问题，我自己给了个解释，如果看到这里的各位有’地道的‘‘正确的’理解，欢迎指正。</strong></em><br><img src="https://img-blog.csdnimg.cn/2021012023392024.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">图片中的input元素处的语句并没有闭合为什么不影响脚本注入？我的解释是，因为input标签是一种无内容标签，所以可以不接/，从而告诉浏览器末尾位置，而浏览器可以自动解析但是不影响，应该是应浏览器而变。</p>
+<h3 id="第四关"><a href="#第四关" class="headerlink" title="第四关"></a>第四关</h3><h5 id="lt-1-gt-解法-3"><a href="#lt-1-gt-解法-3" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><blockquote>
+<p>forming” onfocus=javascript:alert(‘handsome’) //</p>
+</blockquote>
+<h5 id="lt-2-gt-解析：-1"><a href="#lt-2-gt-解析：-1" class="headerlink" title="&lt;2&gt;解析："></a>&lt;2&gt;解析：</h5><p>输入：</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;</p>
+</blockquote>
+<p>以此判断一下情况<br><img src="https://img-blog.csdnimg.cn/20210121010748109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>判断出来和第三关情况大致相同，只是在input处从原来由字符变成实体换成删去’&gt;‘和’&lt;’，但是我们输入的字符串中没有’&gt;‘或’&lt;’,所以我们输入和第三关一样的答案尝试，发现还是不可以。我查看网页源码以后发现，是包裹name的值的符号由单引号变成了双引号，所以<strong>理论上</strong>只需要在第三关的基础上把包裹name值得’改为”，但是需要注意的是（在第三关提醒过）可能是网站源文件中给这一空所留的空间太小导致，输入太长，是不能注入成功的。<br><img src="https://img-blog.csdnimg.cn/20210121011058549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="第五关"><a href="#第五关" class="headerlink" title="第五关"></a>第五关</h3><h5 id="lt-1-gt-解法："><a href="#lt-1-gt-解法：" class="headerlink" title="&lt;1&gt;解法："></a>&lt;1&gt;解法：</h5><p>输入：</p>
+<blockquote>
+<p>forming” &gt;&lt;a href=javascript:alert(‘’is)&gt;handsome&lt;/a&gt;</p>
+</blockquote>
+<h5 id="lt-2-gt-解析：-2"><a href="#lt-2-gt-解析：-2" class="headerlink" title="&lt;2&gt;解析："></a>&lt;2&gt;解析：</h5><p>首先还是输入：</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;</p>
+</blockquote>
+<p>再查看源码<br><img src="https://img-blog.csdnimg.cn/20210121013404863.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">发现h2处的‘&gt;’和’&lt;’被替换成了实体字符，而input处的‘&lt;’和‘&gt;’则没有被替换，同时‘script’被加上了’_’，证明script已经被屏蔽。与前几种情况都不完全相同，所以再输入：</p>
+<blockquote>
+<p>forming” onfocus=javascript:alert(‘handsome’) //</p>
+</blockquote>
+<p>判断一下<br><img src="https://img-blog.csdnimg.cn/20210121013814748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">和刚刚情况一样，证明‘script’和’onfocus’都被屏蔽了。那么是时候请出另一种注入方式了，输入：</p>
+<blockquote>
+<p>forming” &gt;&lt;a href=javascript:alert(‘is’)&gt;handsome&lt;/a&gt;</p>
+</blockquote>
+<p>查看源码：<br><img src="https://img-blog.csdnimg.cn/20210121014338711.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">发现href没有被屏蔽，所以本质上是把有alert函数的文件以超链接的方式与网页连接，最终通过访问超链接的方式执行js脚本。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/xss/" rel="tag"># xss</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF" rel="prev" title="xss-labs举例xss注入的方式及基本思路">
+                  <i class="fa fa-chevron-left"></i> xss-labs举例xss注入的方式及基本思路
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/06/24/xss%E6%B3%A8%E5%85%A5%E7%82%B9%E5%92%8C%E6%B3%A8%E5%85%A5%E8%AF%AD%E5%8F%A5%E5%8F%8A%E5%8D%B1%E5%AE%B3%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93" rel="next" title="xss注入点和注入语句及危害知识总结">
+                  xss注入点和注入语句及危害知识总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forming</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

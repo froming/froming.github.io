@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;froming.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Gemini&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="&lt;1&gt;php伪协议1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解 ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。 php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php伪协议及其它网络安全相关知识">
+<meta property="og:url" content="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
+<meta property="og:site_name" content="A fifth century">
+<meta property="og:description" content="&lt;1&gt;php伪协议1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解 ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。 php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-23T16:25:24.000Z">
+<meta property="article:modified_time" content="2021-06-24T03:20:52.310Z">
+<meta property="article:author" content="Forming">
+<meta property="article:tag" content="php">
+<meta property="article:tag" content="MD5">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;froming.github.io&#x2F;2021&#x2F;06&#x2F;24&#x2F;php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86&quot;,&quot;path&quot;:&quot;2021&#x2F;06&#x2F;24&#x2F;php伪协议及其它网络安全相关知识&quot;,&quot;title&quot;:&quot;php伪协议及其它网络安全相关知识&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>php伪协议及其它网络安全相关知识 | A fifth century</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">A fifth century</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">每一个不曾起舞的日子都是对生命的辜负</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lt-1-gt-php%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.</span> <span class="nav-text">&lt;1&gt;php伪协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AF%B9%E6%9B%B4%E6%94%B9php-ini%E6%96%87%E4%BB%B6%E4%B8%AD%E2%80%98allow-url-fopen%E2%80%98%E5%92%8C%E2%80%99allow-url-include%E2%80%99%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">1.1.</span> <span class="nav-text">1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1%E5%AF%B9PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%90%8D%E5%AD%97%E7%94%B1%E6%9D%A5%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1对PHP伪协议名字由来的理解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-URL%E7%9A%84%E6%A0%87%E5%87%86%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">2.URL的标准格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AF%B9php-ini%E4%B8%AD%E7%9A%84%E9%83%A8%E5%88%86%E8%AF%AD%E5%8F%A5%E6%94%B9%E5%8F%98%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">1.3.</span> <span class="nav-text">3.对php.ini中的部分语句改变的必要性的理解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AF%B9php-input%E4%B8%BA%E8%BF%99%E7%A7%8D%E8%AF%AD%E6%B3%95%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">1.4.</span> <span class="nav-text">4.对php:&#x2F;&#x2F;input为这种语法的必要性的理解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-php-input"><span class="nav-number">1.5.</span> <span class="nav-text">5.php:&#x2F;&#x2F;input</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-base64"><span class="nav-number">1.6.</span> <span class="nav-text">6.base64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%85%B6%E5%AE%83php%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.7.</span> <span class="nav-text">7.其它php伪协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lt-2-gt-%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-number">2.</span> <span class="nav-text">&lt;2&gt;其它网络安全相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%BC%B1%E6%AF%94%E8%BE%83"><span class="nav-number">2.1.</span> <span class="nav-text">（1）弱比较</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AF%B9%E5%BC%BA%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%BC%B1%E7%B1%BB%E5%9E%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.对强类型与弱类型语言的理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%AF%B9%E2%80%9C%E4%B8%89%E7%AD%89%E5%8F%B7%E2%80%9D%E2%80%9C%E5%8F%8C%E7%AD%89%E5%8F%B7%E2%80%9D%E7%9A%84%E5%8C%BA%E5%88%AB%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.对“三等号”“双等号”的区别的理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%AF%94%E8%BE%83%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.3.</span> <span class="nav-text">3.比较操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%882%EF%BC%89md5"><span class="nav-number">2.2.</span> <span class="nav-text">（2）md5</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-md5%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">1.md5是什么</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E7%AC%BC%E7%BB%9F%EF%BC%89"><span class="nav-number">2.2.0.2.</span> <span class="nav-text">2.实现的方法（笼统）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-0exxx%E6%81%92%E4%B8%BA%E9%9B%B6%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.3.</span> <span class="nav-text">(3)0exxx恒为零的原因</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Forming</p>
+  <div class="site-description" itemprop="description">网络安全websecurity</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/forming" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;forming" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:3288038651@qq.com" title="E-Mail → mailto:3288038651@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/%E6%9C%89%E8%84%9A%E6%B2%A1%E8%84%9A%E8%B6%BE" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;有脚没脚趾" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/m0_53061933?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;m0_53061933?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">Author CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Forming">
+      <meta itemprop="description" content="网络安全websecurity">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="A fifth century">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          php伪协议及其它网络安全相关知识
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-24 00:25:24 / 修改时间：11:20:52" itemprop="dateCreated datePublished" datetime="2021-06-24T00:25:24+08:00">2021-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E5%8F%8A%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">漏洞原理及基础知识</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="lt-1-gt-php伪协议"><a href="#lt-1-gt-php伪协议" class="headerlink" title="&lt;1&gt;php伪协议"></a>&lt;1&gt;php伪协议</h2><h3 id="1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解"><a href="#1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解" class="headerlink" title="1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解"></a>1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解</h3><ul>
+<li>ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。</li>
+<li>php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是否将URL作为文件处理，后者的意思是是否允许include/require打开URL作为文件处理。</li>
+</ul>
+<span id="more"></span>
+
+<h4 id="1-1对PHP伪协议名字由来的理解"><a href="#1-1对PHP伪协议名字由来的理解" class="headerlink" title="1.1对PHP伪协议名字由来的理解"></a>1.1对PHP伪协议名字由来的理解</h4><p>php上的协议是一种自定协议不具有广泛性所以叫伪协议</p>
+<h3 id="2-URL的标准格式"><a href="#2-URL的标准格式" class="headerlink" title="2.URL的标准格式"></a>2.URL的标准格式</h3><ul>
+<li><p>URL的标准格式为protocol://hostname[:port]/path[?query#fragment]</p>
+<p>举例：”<a target="_blank" rel="noopener" href="http://www.baidu.com/movie/movieshow?id=234&amp;number=1314#name%E2%80%9C">http://www.baidu.com/movie/movieshow?id=234&amp;number=1314#name“</a></p>
+<ul>
+<li>protocol是指网络传输协议(如：http、https、file等)。</li>
+<li>hostname是指存放资源的与域名、主机名或IP地址。</li>
+<li>port是指端口,有时用默认端口所以不显示。</li>
+<li>path是指一个主机上的一个目录或者文件地址，它决定了服务器如何处理这个请求。</li>
+<li>query从?到#之间是参数(也叫搜索部分)，参数之间用&amp;来间隔。</li>
+<li>fragment用于指定网络资源中的片段，搜索部分搜索出的信息多种多样，通过fragment可以明确指出哪些信息是我们需要 </li>
+</ul>
+<h3 id="3-对php-ini中的部分语句改变的必要性的理解"><a href="#3-对php-ini中的部分语句改变的必要性的理解" class="headerlink" title="3.对php.ini中的部分语句改变的必要性的理解"></a>3.对php.ini中的部分语句改变的必要性的理解</h3></li>
+<li><p>php.ini的作用是是指导php解析器对php语句的处理方式</p>
+</li>
+<li><p>将’allow_url_fopen‘改为’allow_url_fopen=on‘;’allow_url_include’改为’allow_url-include=on‘让计算机可以将URL处理                     。</p>
+<h3 id="4-对php-input为这种语法的必要性的理解"><a href="#4-对php-input为这种语法的必要性的理解" class="headerlink" title="4.对php://input为这种语法的必要性的理解"></a>4.对php://input为这种语法的必要性的理解</h3><p>​               <em><strong>php内置遵循URL的风格的封装协议，只有这种格式计算机才能听懂，并执行命令</strong></em></p>
+<h3 id="5-php-input"><a href="#5-php-input" class="headerlink" title="5.php://input"></a>5.php://input</h3><p><em><strong>用于查看源码，同时是要查看未压缩文件的只读流（只读流是说只能进行读操作的数据）</strong></em></p>
+<p>条件：<em><strong>allow_url_fopen=off/on</strong></em> ;<em><strong>allow_url_include=on</strong></em></p>
+<p>1.可用于给某些变量赋值使用</p>
+<p>2.总的来说用于执行php代码</p>
+<p>3.在POST访问中访问POST的DATA 部分</p>
+<p>4.也可用于一句话木马的注入</p>
+<h3 id="6-base64"><a href="#6-base64" class="headerlink" title="6.base64"></a><em><strong>6.base64</strong></em></h3><p><em><strong>对base64与ASCII码转换的理解。</strong></em></p>
+<ul>
+<li>base64是用64个打印字符表示二进制数据。</li>
+<li>64个打印字符对应64个数字，所以只需6个bit就能表示任意一个打印字符，而一个byte的8个bit有两个就要一直表示0。</li>
+<li>三个传统字节可以用四个base64字符来表示。</li>
+<li>当只有一个传统字节时，用两个base64字符表示多余的bit用0来填补，同理三个也是一样的情况。</li>
+<li><em><strong><a href='http://blog.csdn.net/qq_37391017/article/details/84201021' target='_blank'>详细讲解</a></strong></em></li>
+</ul>
+<h3 id="7-其它php伪协议"><a href="#7-其它php伪协议" class="headerlink" title="7.其它php伪协议"></a>7.其它php伪协议</h3><p>1.php://filter</p>
+<ul>
+<li><p>条件：<em><strong>allow_url_fopen=off/on</strong></em>;<em><strong>allow_url_include=off/on</strong></em></p>
+</li>
+<li><p><em><strong>常用于读取php的源码</strong></em></p>
+</li>
+<li><p><em><strong>进行base64编码输出，不然会当作php代码执行</strong></em></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://127.0.0.1/">http://127.0.0.1/</a>&lt;文件路径&gt;?file=php://filter/read=&lt;读链的过滤器&gt;.base63-encode/resource=&lt;要过滤的数据流&gt;</p>
+</li>
+</ul>
+<p>2.另一些php://协议</p>
+<p>php://stdin、php://memory、php://temp等</p>
+<hr>
+<h2 id="lt-2-gt-其它网络安全相关知识"><a href="#lt-2-gt-其它网络安全相关知识" class="headerlink" title="&lt;2&gt;其它网络安全相关知识"></a>&lt;2&gt;其它网络安全相关知识</h2></li>
+</ul>
+<h3 id="（1）弱比较"><a href="#（1）弱比较" class="headerlink" title="（1）弱比较"></a>（1）弱比较</h3><h4 id="1-对强类型与弱类型语言的理解"><a href="#1-对强类型与弱类型语言的理解" class="headerlink" title="1.对强类型与弱类型语言的理解"></a>1.对强类型与弱类型语言的理解</h4><p>​    1.强类型语言是一种强制类型定义的语言，一旦某一个变量被定义类型，如果不经过强制转换，则它永远就是该数据类型了，强类型语言包括Java、.net 、Python、C++等语言。</p>
+<p>​    2.弱类型语言是一种弱类型定义的语言，某一个变量被定义类型，该变量可以根据环境变化自动进行转换，不需要经过显性强制转换。弱类型语言包括vb 、PHP、javascript等语言</p>
+<h4 id="2-对“三等号”“双等号”的区别的理解"><a href="#2-对“三等号”“双等号”的区别的理解" class="headerlink" title="2.对“三等号”“双等号”的区别的理解"></a>2.对“三等号”“双等号”的区别的理解</h4><p>1.===是恒等，两个数要类型相同且数值相同</p>
+<p>2.==是比较运算，不会检查两个数的类型</p>
+<h4 id="3-比较操作"><a href="#3-比较操作" class="headerlink" title="3.比较操作"></a>3.比较操作</h4><p><em><strong>数字和字符串比较，php会把字符串转换成数字再比较。php转换原则是：若字符串以数字开头，则取开头数字作为转换结果，若无则输出0</strong></em></p>
+<h3 id="（2）md5"><a href="#（2）md5" class="headerlink" title="（2）md5"></a>（2）md5</h3><h5 id="1-md5是什么"><a href="#1-md5是什么" class="headerlink" title="1.md5是什么"></a>1.md5是什么</h5><p>有人认为是一种加密的方式，因为md5将原文件改变。但是也有人不认为，因为md5加密出的文件无法复原。</p>
+<h5 id="2-实现的方法（笼统）"><a href="#2-实现的方法（笼统）" class="headerlink" title="2.实现的方法（笼统）"></a>2.实现的方法（笼统）</h5><p>一串数据占用的位数与512bit取余，如果余数不是448，则要补位（部位的方式为一位是1剩下的全补成零）。之后再将没有补位前的数据长度用64位表示。装入<em><strong>标准幻数</strong></em>。此时数据长度为（n+1）<em>512，之后将每一个512分为16个32子分位，进行</em><strong>四轮运算</strong>，最后得出一个128位的散列值。</p>
+<h3 id="3-0exxx恒为零的原因"><a href="#3-0exxx恒为零的原因" class="headerlink" title="(3)0exxx恒为零的原因"></a>(3)0exxx恒为零的原因</h3><p><em><strong>0exxx是指数表达形式，其中e前面是指数的实数位，而e后面是指数表达式的指数位，进行科学计数法转换以后，0无论乘多少次方都为零，所以0exxx的结果是0</strong></em></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/php/" rel="tag"># php</a>
+              <a href="/tags/MD5/" rel="tag"># MD5</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0" rel="prev" title="harrynull.tech_cipher游记">
+                  <i class="fa fa-chevron-left"></i> harrynull.tech_cipher游记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" rel="next" title="superforming的sql-labs大通关之第1部分解析及注入方法">
+                  superforming的sql-labs大通关之第1部分解析及注入方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forming</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

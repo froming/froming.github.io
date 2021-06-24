@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;froming.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Gemini&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="&lt;1&gt;什么是xssxss的英文名字是cross-site-script。俗称跨站脚本，是一种注入攻击，指攻击者在被攻击的网页上利用编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xss-labs举例xss注入的方式及基本思路">
+<meta property="og:url" content="https://froming.github.io/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF">
+<meta property="og:site_name" content="A fifth century">
+<meta property="og:description" content="&lt;1&gt;什么是xssxss的英文名字是cross-site-script。俗称跨站脚本，是一种注入攻击，指攻击者在被攻击的网页上利用编">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210316191726821.png">
+<meta property="article:published_time" content="2021-06-23T16:28:47.000Z">
+<meta property="article:modified_time" content="2021-06-24T03:21:41.505Z">
+<meta property="article:author" content="Forming">
+<meta property="article:tag" content="xss">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210316191726821.png">
+
+
+<link rel="canonical" href="https://froming.github.io/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;froming.github.io&#x2F;2021&#x2F;06&#x2F;24&#x2F;xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF&quot;,&quot;path&quot;:&quot;2021&#x2F;06&#x2F;24&#x2F;xss-labs举例xss注入的方式及基本思路&quot;,&quot;title&quot;:&quot;xss-labs举例xss注入的方式及基本思路&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>xss-labs举例xss注入的方式及基本思路 | A fifth century</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">A fifth century</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">每一个不曾起舞的日子都是对生命的辜负</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-1-gt-%E4%BB%80%E4%B9%88%E6%98%AFxss"><span class="nav-number">1.</span> <span class="nav-text">&lt;1&gt;什么是xss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-2-gt-XSS%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">&lt;2&gt;XSS的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-3-gt-XSS%E7%9A%84%E5%8D%B1%E5%AE%B3"><span class="nav-number">3.</span> <span class="nav-text">&lt;3&gt;XSS的危害</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-4-gt-%E5%9F%BA%E6%9C%AC%E8%BF%87%E5%85%B3%E5%8E%9F%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">&lt;4&gt;基本过关原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-5-gt-%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">&lt;5&gt;传递参数方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-6-gt-%E5%B8%B8%E8%A7%81%E5%AD%98%E5%9C%A8%E6%B3%A8%E5%85%A5%E7%9A%84%E8%AF%AD%E5%8F%A5"><span class="nav-number">6.</span> <span class="nav-text">&lt;6&gt;常见存在注入的语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-7-gt-%E7%BB%95%E8%BF%87%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">7.</span> <span class="nav-text">&lt;7&gt;绕过的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-8-gt-xss%E6%B3%A8%E5%85%A5%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="nav-number">8.</span> <span class="nav-text">&lt;8&gt;xss注入的基本思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5-%E5%88%9D%E6%AD%A5%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">8.1.</span> <span class="nav-text">第一步:初步信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%94%B6%E9%9B%86%E4%BF%A1%E6%81%AF%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">8.1.1.</span> <span class="nav-text">收集信息的方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5-%E5%B0%9D%E8%AF%95%E6%B3%A8%E5%85%A5%E5%B9%B6%E8%AE%B0%E5%BD%95%E7%BB%93%E6%9E%9C"><span class="nav-number">8.2.</span> <span class="nav-text">第二步:尝试注入并记录结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5-%E5%88%86%E6%9E%90%E4%B8%8D%E6%88%90%E5%8A%9F%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="nav-number">8.3.</span> <span class="nav-text">第三步:分析不成功的结果</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-9-gt-%E6%80%BB%E7%BB%93%E5%8F%91%E7%8E%B0"><span class="nav-number">9.</span> <span class="nav-text">&lt;9&gt;总结发现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%85%B3%E4%BA%8E%E5%8F%8C%E5%86%99%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8F%91%E7%8E%B0"><span class="nav-number">9.1.</span> <span class="nav-text">1.关于双写注入的发现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%85%B3%E4%BA%8E%E4%B8%BA%E4%BB%80%E4%B9%88input%E6%A0%87%E7%AD%BE%E4%B8%8D%E9%97%AD%E5%90%88%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%9A%84%E8%A7%A3%E9%87%8A"><span class="nav-number">9.2.</span> <span class="nav-text">2.关于为什么input标签不闭合也可以的解释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-unicode%E7%BC%96%E7%A0%81%E5%90%8E%E6%88%90%E5%8A%9F%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">9.3.</span> <span class="nav-text">3.unicode编码后成功注入的原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%85%B3%E5%81%9A%E4%B8%8D%E4%BA%86%E7%9A%84%E5%8E%9F%E5%9B%A0%EF%BC%9A"><span class="nav-number">9.4.</span> <span class="nav-text">4.第十四关做不了的原因：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E7%AC%AC%E5%8D%81%E4%B8%83%E3%80%81%E5%8D%81%E5%85%AB%E3%80%81%E5%8D%81%E4%B9%9D%E3%80%81%E4%BA%8C%E5%8D%81%E5%85%B3%EF%BC%9A"><span class="nav-number">9.5.</span> <span class="nav-text">5.第十七、十八、十九、二十关：</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Forming</p>
+  <div class="site-description" itemprop="description">网络安全websecurity</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/forming" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;forming" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:3288038651@qq.com" title="E-Mail → mailto:3288038651@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/%E6%9C%89%E8%84%9A%E6%B2%A1%E8%84%9A%E8%B6%BE" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;有脚没脚趾" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/m0_53061933?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;m0_53061933?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">Author CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Forming">
+      <meta itemprop="description" content="网络安全websecurity">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="A fifth century">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          xss-labs举例xss注入的方式及基本思路
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-24 00:28:47 / 修改时间：11:21:41" itemprop="dateCreated datePublished" datetime="2021-06-24T00:28:47+08:00">2021-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="lt-1-gt-什么是xss"><a href="#lt-1-gt-什么是xss" class="headerlink" title="&lt;1&gt;什么是xss"></a>&lt;1&gt;什么是xss</h3><p>xss的英文名字是cross-site-script。俗称跨站脚本，是一种注入攻击，指攻击者在被攻击的网页上利用编</p>
+<span id="more"></span>
+
+<p>写时的漏洞注入恶意脚本代码，受害者访问该页面时，恶意代码会在用户的浏览器上执行。</p>
+<h3 id="lt-2-gt-XSS的分类"><a href="#lt-2-gt-XSS的分类" class="headerlink" title="&lt;2&gt;XSS的分类"></a>&lt;2&gt;XSS的分类</h3><ul>
+<li><p>1.反射型</p>
+</li>
+<li><p>2.dom型</p>
+</li>
+<li><p>3.存储型</p>
+</li>
+<li><p>&lt;1&gt;<strong>反射型解析</strong>：反射型的数据走向是 <strong>客户端-&gt;服务器-&gt;客户端</strong>，XSS-LABS中全是这种类型的，或者也可以说是dom型的，客户端根据html网页源码，判断注入漏洞，不调用html中的js代码是反射型，而dom型则是直接调用网页源码中的js代码。</p>
+</li>
+<li><p>&lt;2&gt;<strong>dom型解析</strong>：dom型的数据走向是 <strong>URL-&gt;浏览器</strong>。</p>
+</li>
+<li><p>&lt;3&gt;<strong>存储型解析</strong>：存储型的数据走向是 <strong>客户端-&gt;服务器-&gt;数据库-&gt;服务器-&gt;客户端</strong>，比如有些网站有评论功能，当你评论时，服务器会把你的评论保存再数据库中，如果这时候注入恶意的js代码，那么只要一有人请求这个网页，那么就会请求到有恶意代码的网页。</p>
+</li>
+</ul>
+<h3 id="lt-3-gt-XSS的危害"><a href="#lt-3-gt-XSS的危害" class="headerlink" title="&lt;3&gt;XSS的危害"></a>&lt;3&gt;XSS的危害</h3><p>XSS-LABS中的漏洞没办法让人直观的感受到XSS的危害，所以我在这里举个例子让大家感受一下，如果一个人发现了一个网站过滤不严的地方，然后用a标签写了一个连接，中间加入了js代码，骗你进这个网址点一点就能免费领电饭煲，当你点进去以后发现其实指向了自己经常登录的一个网站，后来也不在意以为是恶作剧，可能这时候你已经被拿走了你在这个网站的cookie，那么注入者拿着你的cookie登录网站，用你的大会员看视频，损害你的利益。</p>
+<h3 id="lt-4-gt-基本过关原理"><a href="#lt-4-gt-基本过关原理" class="headerlink" title="&lt;4&gt;基本过关原理"></a>&lt;4&gt;基本过关原理</h3><p>通过探索发现漏洞，并根据漏洞注入js代码，成功调取head标签中内嵌的js函数——alert，进入下一关。</p>
+<h3 id="lt-5-gt-传递参数方式"><a href="#lt-5-gt-传递参数方式" class="headerlink" title="&lt;5&gt;传递参数方式"></a>&lt;5&gt;传递参数方式</h3><p>像SQL-LABS一样，XSS靶场也包括有不同的传递注入语句的方式，不过和SQL-LABS不同的是，XSS-LABS没有SQL-LABS那么多的传递方式，它有以下两种：</p>
+<ul>
+<li>1.get传参</li>
+<li>2.HTTP消息头传参<br>在哪注入归根结底就是看网站源码调取哪里的参数，调取的参数加了怎样的过滤。</li>
+</ul>
+<h3 id="lt-6-gt-常见存在注入的语句"><a href="#lt-6-gt-常见存在注入的语句" class="headerlink" title="&lt;6&gt;常见存在注入的语句"></a>&lt;6&gt;常见存在注入的语句</h3><ul>
+<li>1.a标签中的href</li>
+<li>2.embed标签传参处</li>
+<li>3.input标签</li>
+<li>4.embed也可以作为其它标签的参数,比如span</li>
+</ul>
+<h3 id="lt-7-gt-绕过的方法"><a href="#lt-7-gt-绕过的方法" class="headerlink" title="&lt;7&gt;绕过的方法"></a>&lt;7&gt;绕过的方法</h3><ul>
+<li>1.img标签src出错时用onerror注入</li>
+<li>2.将a标签闭合,用script标签进行注入</li>
+<li>3.根据href属性的值可以是一个js代码</li>
+<li>4.如果是input标签,可以将value属性闭合之后用onmoseover等触发事件</li>
+<li>5.可以尝试将代码进行unicode编码等浏览器可以解析的编码方式进行注入</li>
+<li>6.多个参数之间可能组合,对于这种情况要具体分析</li>
+</ul>
+<p>总之就是一句话<strong>只要你套路够骚,就没有绕不过去的waf</strong></p>
+<h3 id="lt-8-gt-xss注入的基本思路"><a href="#lt-8-gt-xss注入的基本思路" class="headerlink" title="&lt;8&gt;xss注入的基本思路"></a>&lt;8&gt;xss注入的基本思路</h3><h4 id="第一步-初步信息收集"><a href="#第一步-初步信息收集" class="headerlink" title="第一步:初步信息收集"></a>第一步:初步信息收集</h4><p>判断一个网站是否存在xss注入,首先要有信息去分析,所以第一步进行信息收集</p>
+<h5 id="收集信息的方法"><a href="#收集信息的方法" class="headerlink" title="收集信息的方法"></a>收集信息的方法</h5><ul>
+<li>&lt;1&gt;查看网页源码,留意源码中<strong>常见存在注入的语句</strong>,并留意可以向服务器传递的<strong>参数</strong></li>
+<li>&lt;2&gt;向服务器传递参数,并判断,哪些参数被用到了网页上,并且初步记录</li>
+<li>&lt;3&gt;将用了传递参数的语句总结出来之后,将<strong>常见存在注入的语句</strong>挑出,并且对它们的闭合方式进行记录</li>
+<li>&lt;4&gt;对初步记录进行分析,并总结结论,结论的标准是</li>
+<li><strong>我要在哪些语句上用哪些xss绕过方法进行注入</strong></li>
+</ul>
+<h4 id="第二步-尝试注入并记录结果"><a href="#第二步-尝试注入并记录结果" class="headerlink" title="第二步:尝试注入并记录结果"></a>第二步:尝试注入并记录结果</h4><p>根据第一步的初步信息记录结果,进行注入,但是一般网站都会进行waf防护,所以注入不成功很正常,所以要记录不成功的案例分析</p>
+<h4 id="第三步-分析不成功的结果"><a href="#第三步-分析不成功的结果" class="headerlink" title="第三步:分析不成功的结果"></a>第三步:分析不成功的结果</h4><p>根据绕过方法,将第二步的信息分析,发现可能的方法,进行尝试,之后一直第二步第三步进行循环直到成功</p>
+<h3 id="lt-9-gt-总结发现"><a href="#lt-9-gt-总结发现" class="headerlink" title="&lt;9&gt;总结发现"></a>&lt;9&gt;总结发现</h3><h4 id="1-关于双写注入的发现"><a href="#1-关于双写注入的发现" class="headerlink" title="1.关于双写注入的发现"></a>1.关于双写注入的发现</h4><p>双写注入一般出现在删除字符的情况下,调用<strong>str_replace函数</strong>,将传递过来中的参数中的指定字符串被替换成””,如下图:</p>
+<p><img src="https://img-blog.csdnimg.cn/20210316191726821.png" alt="在这里插入图片描述"><br>根据原理，这一关有多种双写方式，比如在语句中用javassccript和javascrscriptipt的效果一样，原理是把中间的script删除之后，两边的字符又组成了新的’<strong>script</strong>‘,但是计算机不会再检查一遍字符串,从而实现注入。</p>
+<h4 id="2-关于为什么input标签不闭合也可以的解释"><a href="#2-关于为什么input标签不闭合也可以的解释" class="headerlink" title="2.关于为什么input标签不闭合也可以的解释"></a>2.关于为什么input标签不闭合也可以的解释</h4><p>我做题得时候一直苦恼一件事就是为什么input没有闭合也能被正确解析，原因在于在html中input是可以不闭合的，但是在xhtml中必须闭合</p>
+<h4 id="3-unicode编码后成功注入的原理"><a href="#3-unicode编码后成功注入的原理" class="headerlink" title="3.unicode编码后成功注入的原理"></a>3.unicode编码后成功注入的原理</h4><p>这一关要用到unicode编码编码字符串，这样在服务端可以解析代码，但是在服务器端并没有检测出来拦截的字符串，使注入可以成功。过程如下：<br><strong>输入URL–&gt;unicode编码–&gt;服务端–&gt;没有解析unicode–&gt;服务端没有过滤成功–&gt;客户端–&gt;unicode解码</strong>。</p>
+<h4 id="4-第十四关做不了的原因："><a href="#4-第十四关做不了的原因：" class="headerlink" title="4.第十四关做不了的原因："></a>4.第十四关做不了的原因：</h4><p>这一关如果不想看的话直接跳过就好，可能使网站用不了了,使这一关不能做，但是这里我讲一下exif，exif(exchangeable image file format)可交换文件格式，是一种用来记录数码照片属性，数据的文件格式，在php中有一个函数叫exif_read_data用来读取这种格式的文件，我们就可以将js代码编辑到这种格式的文件中以此实现注入。</p>
+<h4 id="5-第十七、十八、十九、二十关："><a href="#5-第十七、十八、十九、二十关：" class="headerlink" title="5.第十七、十八、十九、二十关："></a>5.第十七、十八、十九、二十关：</h4><p>这四关要调用swf格式的文件，flash可以解析的文件格式就是swf文件格式，由此可以看出xss-labd是多老了，编写者一定想不到2021年flash已经在除IE之外的浏览器上除名了。这四关都要用到embed，这个的作用是嵌入一个swf文件格式的文件，同时还有可以向文件中传递参数。</p>
+<ul>
+<li>1.第十七、十八关:<br>这两关只是图片不一样其它完全相同，所以可以用相同的方法注入js脚本，查看服务器上的源码可以发现，arg01和arg02共同为swf文件传递参数，所以我们要根据这一特性和span标签中可以插入焦事件的特性嵌入js代码，所以我们可以在arg01出输入%0a这是一个十六进制编码，意思是换行，这么做就使我们可以顺利的调取alert函数，那么arg02就可以输入onmouseover=javascript:alert(form)此时就实现了调取alert()函数。其实还有很多方法，比如先是在arg01处输入a再在srg02处输入b onmouseover=javascript:alert(form)。但是其实都是万变不离其宗的东西。</li>
+<li>2.第十九、二十关:<br>最后两关观察服务器网页源码源码，发现在src参数处做了引号的包裹，同时用来htmlspecialchar函数将单引号、双引号、大于号、小于号、和号进行了实体字符的转换，理论上来讲已经可以说是毫无破绽了，因为没有闭合的办法。但其实是有的，这里就要引入一个序列化的概念，数据在网络上以<strong>流</strong>（有顺序，有头有尾，在两台主机间传递的数据叫做流）的形式传递，那么一个程序要是想要在其它的主机上也能运行，就需要将自身的属性进行记录，比如版本什么的，这就叫序列化。那么我们可以用反序列化的软件，将一个软件进行反序列化，就可以知道它缺少了什么，又根据swf的特性（可以传递参数的特性） 加入其中缺少的参数，但是将js脚本注入到就要传进去的地方，比如在第十九关的arg01处输入序列化是缺少的version参数，但是arg02参数处输入js脚本比如输入&lt;a href=”javascript:alet(1)”&gt;forming_is _handsome&lt;/a&gt;</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/xss/" rel="tag"># xss</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" rel="prev" title="superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法">
+                  <i class="fa fa-chevron-left"></i> superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3" rel="next" title="xss-labs前五关">
+                  xss-labs前五关 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forming</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

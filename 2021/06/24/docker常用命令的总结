@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;froming.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Gemini&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;}}</script><script src="/js/config.js"></script>
+<meta name="description" content="！！提醒！！&lt;1&gt;docker用的是unix socket而不是TCP,这会导致当前用户权限不够所以直接输入命令，会回显下面一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker常用命令的总结">
+<meta property="og:url" content="https://froming.github.io/2021/06/24/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%9A%84%E6%80%BB%E7%BB%93">
+<meta property="og:site_name" content="A fifth century">
+<meta property="og:description" content="！！提醒！！&lt;1&gt;docker用的是unix socket而不是TCP,这会导致当前用户权限不够所以直接输入命令，会回显下面一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210131151132530.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210131151350407.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210131040427176.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210131123259219.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210131123304204.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210131154000990.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210131125531962.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210131162655275.png">
+<meta property="article:published_time" content="2021-06-23T16:21:14.000Z">
+<meta property="article:modified_time" content="2021-06-24T03:19:24.740Z">
+<meta property="article:author" content="Forming">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210131151132530.png">
+
+
+<link rel="canonical" href="https://froming.github.io/2021/06/24/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%9A%84%E6%80%BB%E7%BB%93">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;froming.github.io&#x2F;2021&#x2F;06&#x2F;24&#x2F;docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%9A%84%E6%80%BB%E7%BB%93&quot;,&quot;path&quot;:&quot;2021&#x2F;06&#x2F;24&#x2F;docker常用命令的总结&quot;,&quot;title&quot;:&quot;docker常用命令的总结&quot;}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
+<title>docker常用命令的总结 | A fifth century</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">A fifth century</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">每一个不曾起舞的日子都是对生命的辜负</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%81%EF%BC%81%E6%8F%90%E9%86%92%EF%BC%81%EF%BC%81"><span class="nav-number">1.</span> <span class="nav-text">！！提醒！！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-1-gt-docker%E4%B8%AD%E7%9A%84management-command%E5%92%8Ccommand"><span class="nav-number">2.</span> <span class="nav-text">&lt;1&gt;docker中的management command和command</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-2-gt-%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">&lt;2&gt;拉取镜像的操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-3-gt-%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF%E7%9A%84%E8%AF%AD%E5%8F%A5%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">&lt;3&gt;查看系统相关信息的语句：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-4-gt-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="nav-number">5.</span> <span class="nav-text">&lt;4&gt;创建一个新的容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-5-gt-%E6%A0%B9%E6%8D%AE%E4%B8%80%E4%B8%AA%E9%95%9C%E5%83%8F%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E5%AE%B9%E5%99%A8%E5%B9%B6%E8%BF%90%E8%A1%8C"><span class="nav-number">6.</span> <span class="nav-text">&lt;5&gt;根据一个镜像创建新的容器并运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-6-gt-%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E5%88%97%E8%A1%A8"><span class="nav-number">7.</span> <span class="nav-text">&lt;6&gt;查看容器列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-7-gt-%E5%AE%B9%E5%99%A8%E7%9A%84%E5%90%AF%E5%8A%A8"><span class="nav-number">8.</span> <span class="nav-text">&lt;7&gt;容器的启动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%BE%97%E4%B8%8D%E6%8F%90%E7%9A%84%E7%BB%84%E5%90%88%E6%8A%80%EF%BC%88%E5%88%9B%E5%BB%BA-%E5%90%AF%E5%8A%A8%EF%BC%89"><span class="nav-number">8.1.</span> <span class="nav-text">不得不提的组合技（创建+启动）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-8-gt-%E5%AE%B9%E5%99%A8%E4%B8%AD%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%81%9C%E6%AD%A2"><span class="nav-number">9.</span> <span class="nav-text">&lt;8&gt;容器中进程的停止</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-9-gt-%E9%87%8D%E5%90%AF%E5%AE%B9%E5%99%A8"><span class="nav-number">10.</span> <span class="nav-text">&lt;9&gt;重启容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-10-gt-%E5%AE%B9%E5%99%A8%E4%B8%AD%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%9A%82%E5%81%9C"><span class="nav-number">11.</span> <span class="nav-text">&lt;10&gt;容器中进程的暂停</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-11-gt-%E5%AE%B9%E5%99%A8%E4%B8%AD%E8%BF%9B%E7%A8%8B%E6%8E%A5%E8%A7%A6%E6%9A%82%E5%81%9C"><span class="nav-number">12.</span> <span class="nav-text">&lt;11&gt;容器中进程接触暂停</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-12-gt-%E8%BF%9E%E6%8E%A5%E5%AE%B9%E5%99%A8"><span class="nav-number">13.</span> <span class="nav-text">&lt;12&gt;连接容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-13-gt-%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF"><span class="nav-number">14.</span> <span class="nav-text">&lt;13&gt;查看容器详细信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-14-gt-%E7%9C%9F%E2%80%94%E2%80%94%E9%87%8D%E5%90%AF%E5%AE%B9%E5%99%A8"><span class="nav-number">15.</span> <span class="nav-text">&lt;14&gt;真——重启容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-15-gt-%E5%9C%A8%E5%AE%B9%E5%99%A8%E4%B8%AD%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">16.</span> <span class="nav-text">&lt;15&gt;在容器中执行命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-16-gt-%E5%88%A0%E9%99%A4%E5%AE%B9%E5%99%A8"><span class="nav-number">17.</span> <span class="nav-text">&lt;16&gt;删除容器</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Forming</p>
+  <div class="site-description" itemprop="description">网络安全websecurity</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/forming" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;forming" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:3288038651@qq.com" title="E-Mail → mailto:3288038651@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/%E6%9C%89%E8%84%9A%E6%B2%A1%E8%84%9A%E8%B6%BE" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;有脚没脚趾" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/m0_53061933?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;m0_53061933?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">Author CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%9A%84%E6%80%BB%E7%BB%93">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Forming">
+      <meta itemprop="description" content="网络安全websecurity">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="A fifth century">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          docker常用命令的总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-24 00:21:14 / 修改时间：11:19:24" itemprop="dateCreated datePublished" datetime="2021-06-24T00:21:14+08:00">2021-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="！！提醒！！"><a href="#！！提醒！！" class="headerlink" title="！！提醒！！"></a>！！提醒！！</h3><p>&lt;1&gt;docker用的是unix socket而不是TCP,这会导致当前用户权限不够所以直接输入命令，会回显下面一</p>
+<span id="more"></span>
+
+<p>段话“Got permission denied while…”,解决这一问题可以在命令前加入sudo。<br>&lt;2&gt;有时会有不能成功拉取的镜像的情况这可能是因为没有镜像加速器的原因导致的。解决这一问题可以通过以下几步<br>1.在阿里云上注册一个账号<br>2.点开右上角的“控制台”<br>3.点击“弹性计算”中的”容器镜像服务“<br>4.点击之后在左边可以找到“镜像中心”其中就有“镜像加速器”<br>5.在其中可以发现属于自己的”加速器地址“<br>6.在kali Linux中输入</p>
+<blockquote>
+<p>cd /etc/docker</p>
+</blockquote>
+<p>7.切换到对应目录下之后输入</p>
+<blockquote>
+<p>sudo vim ./deamon.json</p>
+</blockquote>
+<p>8.进入vim模式之后就可以编辑其中内容，要把刚刚的加速器地址以这种形式输入进去<br>{“registry-mirrors”:[“加速器地址”]}</p>
+<p>9.最后可以按照程序员管理拉取一个hello world镜像尝试一下</p>
+<blockquote>
+<p>sudo docker pull hello-world</p>
+</blockquote>
+<p>成功以后是这样子<br><img src="https://img-blog.csdnimg.cn/20210131151132530.png" alt="在这里插入图片描述"></p>
+<h3 id="lt-1-gt-docker中的management-command和command"><a href="#lt-1-gt-docker中的management-command和command" class="headerlink" title="&lt;1&gt;docker中的management command和command"></a>&lt;1&gt;docker中的management command和command</h3><p>Managementcommand和Command在 1.13 版本之前，docker 并没有 Mangement command。在 Docker 1.12 CLI 中大约有很多顶级命令，这些命令没有经过任何组织，十分混乱，对于新手来说，学习它们并不容易。比如对于容器的创建，在以前没有management command时，语句是“docker create”，而有了management command时语句就变为了“docker container create”。</p>
+<h3 id="lt-2-gt-拉取镜像的操作"><a href="#lt-2-gt-拉取镜像的操作" class="headerlink" title="&lt;2&gt;拉取镜像的操作"></a>&lt;2&gt;拉取镜像的操作</h3><blockquote>
+<p>sudo docker pull 【image】</p>
+</blockquote>
+<p>根据程序员传统以拉取hello-world为例，其结果如下，若结果不是如此，请看上文提醒的第二部分<br><img src="https://img-blog.csdnimg.cn/20210131151350407.png" alt="在这里插入图片描述"></p>
+<h3 id="lt-3-gt-查看系统相关信息的语句："><a href="#lt-3-gt-查看系统相关信息的语句：" class="headerlink" title="&lt;3&gt;查看系统相关信息的语句："></a>&lt;3&gt;查看系统相关信息的语句：</h3><blockquote>
+<p>docker version</p>
+</blockquote>
+<p>运行如下<br><img src="https://img-blog.csdnimg.cn/20210131040427176.png" alt="在这里插入图片描述">还可以输入</p>
+<blockquote>
+<p>sudo docker info<br><img src="https://img-blog.csdnimg.cn/20210131123259219.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+</blockquote>
+<p>又或是</p>
+<blockquote>
+<p>sudo docker system info<br><img src="https://img-blog.csdnimg.cn/20210131123304204.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+</blockquote>
+<h3 id="lt-4-gt-创建一个新的容器"><a href="#lt-4-gt-创建一个新的容器" class="headerlink" title="&lt;4&gt;创建一个新的容器"></a>&lt;4&gt;创建一个新的容器</h3><p> (1)使用 Commands</p>
+<blockquote>
+<p>sudo docker create 【option】【image】</p>
+</blockquote>
+<p>(2)使用 Management Commands</p>
+<blockquote>
+<p>sudo docker container create 【option】【image】</p>
+</blockquote>
+<p>它们作用相同，和之后要学的run类似，都是根据镜像创建一个容器、，但是create的特点是创建但是不运行，而run则会运行。<br>其中option是参数的意思，参数有：</p>
+<ul>
+<li>–name 指定一个容器名称，未指定时，会随机产生一个名字     </li>
+<li>–hostname 设置容器的主机名</li>
+<li>–mac-address 设置 MAC 地址</li>
+<li>–ulimit 设置 Ulimit 选项<br><strong>说明</strong>：ulimit 是一种 Linux 系统的内建功能，一些简单的描述，可以参考 通过 ulimit 改善系统性能 </li>
+</ul>
+<h3 id="lt-5-gt-根据一个镜像创建新的容器并运行"><a href="#lt-5-gt-根据一个镜像创建新的容器并运行" class="headerlink" title="&lt;5&gt;根据一个镜像创建新的容器并运行"></a>&lt;5&gt;根据一个镜像创建新的容器并运行</h3><p>(1)command命令</p>
+<blockquote>
+<p>sudo docker run 【option】【image】</p>
+</blockquote>
+<p>(2)management command命令</p>
+<blockquote>
+<p>sudo docker container run 【option】【image】</p>
+</blockquote>
+<p>其中option就是run的参数，如下</p>
+<ul>
+<li>-i 或 –interactive， 交互模式。</li>
+<li>-t 或 –tty， 分配一个 pseudo-TTY，即伪终端。</li>
+<li>–rm 在容器退出后自动移除。</li>
+<li>-p 将容器的端口映射到主机。</li>
+<li>-v 或 –volume， 指定数据卷。</li>
+</ul>
+<p>这里就以打开刚刚拉取的hello-world演示一下用法<br>在kali linux命令行中输入</p>
+<blockquote>
+<p>sudon docker run  hello-world</p>
+</blockquote>
+<p>最后如下图<br><img src="https://img-blog.csdnimg.cn/20210131154000990.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>以后台模式创建并运行一个容器</p>
+<blockquote>
+<p>docker container run \ -i -t -d \  ubuntu /bin/bash</p>
+</blockquote>
+<p>使用 docker container ls -a 命令查看容器的状态，可以看到这个容器已经在后台运行。参数-i-t的作用是创建一个伪终端，同时在run语句中【image】后面是可以跟语句的，如上面这一段话的意思就是说基于ubuntu创建一个容器，并在容器中打开bash。<br>打开之后我们从这一模式出去有两种办法分别是<br>1.在命令行输入exit<br>2.先按ctrl+p再按ctrl+q<br>这两种方式都会让程序进入后台运行。</p>
+<h3 id="lt-6-gt-查看容器列表"><a href="#lt-6-gt-查看容器列表" class="headerlink" title="&lt;6&gt;查看容器列表"></a>&lt;6&gt;查看容器列表</h3><p>(1)command命令</p>
+<blockquote>
+<p>sudo docker ps</p>
+</blockquote>
+<p>(2)manage command命令</p>
+<blockquote>
+<p>sudo docker container ls</p>
+</blockquote>
+<p>这个命令也是有参数的</p>
+<ul>
+<li>-a 显示所有的容器。</li>
+<li>-q 仅显示 ID。</li>
+<li>-s 显示总的文件大小。</li>
+<li>–all显示所有容器<br>-a和–all作用是差不多的<br>没有参数的运行结果如下：<br><img src="https://img-blog.csdnimg.cn/20210131125531962.png" alt="在这里插入图片描述">有参数（-a和–all）结果如下<br><img src="https://img-blog.csdnimg.cn/20210131162655275.png" alt="在这里插入图片描述"></li>
+</ul>
+<h3 id="lt-7-gt-容器的启动"><a href="#lt-7-gt-容器的启动" class="headerlink" title="&lt;7&gt;容器的启动"></a>&lt;7&gt;容器的启动</h3><p>（1）Management Command</p>
+<blockquote>
+<p>sudo docker container start 【option】 containername</p>
+</blockquote>
+<p>（2）旧的命令格式如下：</p>
+<blockquote>
+<p>docker start 【option】 containername</p>
+</blockquote>
+<h4 id="不得不提的组合技（创建-启动）"><a href="#不得不提的组合技（创建-启动）" class="headerlink" title="不得不提的组合技（创建+启动）"></a>不得不提的组合技（创建+启动）</h4><p>(1)创建</p>
+<blockquote>
+<p>sudo docker container create -it 【containername】 【command】</p>
+</blockquote>
+<p>(2)启动</p>
+<blockquote>
+<p>sudo docker container start 【containername】</p>
+</blockquote>
+<h3 id="lt-8-gt-容器中进程的停止"><a href="#lt-8-gt-容器中进程的停止" class="headerlink" title="&lt;8&gt;容器中进程的停止"></a>&lt;8&gt;容器中进程的停止</h3><p>(1)Management Command</p>
+<blockquote>
+<p>sudo docker container stop  【containername】</p>
+</blockquote>
+<p>(2)command</p>
+<blockquote>
+<p>sudo docker stop 【containername】</p>
+</blockquote>
+<h3 id="lt-9-gt-重启容器"><a href="#lt-9-gt-重启容器" class="headerlink" title="&lt;9&gt;重启容器"></a>&lt;9&gt;重启容器</h3><p>（1）Management Command</p>
+<blockquote>
+<p>sudo docker container restart 【containername】</p>
+</blockquote>
+<p>（2）command</p>
+<blockquote>
+<p>sudo docker restart 【containername】</p>
+</blockquote>
+<h3 id="lt-10-gt-容器中进程的暂停"><a href="#lt-10-gt-容器中进程的暂停" class="headerlink" title="&lt;10&gt;容器中进程的暂停"></a>&lt;10&gt;容器中进程的暂停</h3><p>(1)Management Command</p>
+<blockquote>
+<p>sudo docker container pause 【containername】<br>(2)command<br>sudo docker pause 【containername】</p>
+</blockquote>
+<h3 id="lt-11-gt-容器中进程接触暂停"><a href="#lt-11-gt-容器中进程接触暂停" class="headerlink" title="&lt;11&gt;容器中进程接触暂停"></a>&lt;11&gt;容器中进程接触暂停</h3><p>(1)Management Commands</p>
+<blockquote>
+<p>sudo docker container unpause 【containername】</p>
+</blockquote>
+<p>(2)command</p>
+<blockquote>
+<p>sudo docker unpause 【containername】</p>
+</blockquote>
+<h3 id="lt-12-gt-连接容器"><a href="#lt-12-gt-连接容器" class="headerlink" title="&lt;12&gt;连接容器"></a>&lt;12&gt;连接容器</h3><p>使用 attach 操作将本地标准输入输出流连接到一个运行中的容器，命令格式为：<br>(1)Management Commands</p>
+<blockquote>
+<p>sudo docker container attach 【containername】</p>
+</blockquote>
+<p>(2)command</p>
+<blockquote>
+<p>sudo docker attach 【containername】</p>
+</blockquote>
+<p>可以通过查看相应的主机名和 Mac 地址以判断我们是否连接到了容器。</p>
+<h3 id="lt-13-gt-查看容器详细信息"><a href="#lt-13-gt-查看容器详细信息" class="headerlink" title="&lt;13&gt;查看容器详细信息"></a>&lt;13&gt;查看容器详细信息</h3><p>（1）Management Commands</p>
+<blockquote>
+<p>sudo docker container inspect 【containername】</p>
+</blockquote>
+<p>（2）command</p>
+<blockquote>
+<p>sudo docker inspect 【containername】</p>
+</blockquote>
+<h3 id="lt-14-gt-真——重启容器"><a href="#lt-14-gt-真——重启容器" class="headerlink" title="&lt;14&gt;真——重启容器"></a>&lt;14&gt;真——重启容器</h3><p>docker container restart 【containername】</p>
+<h3 id="lt-15-gt-在容器中执行命令"><a href="#lt-15-gt-在容器中执行命令" class="headerlink" title="&lt;15&gt;在容器中执行命令"></a>&lt;15&gt;在容器中执行命令</h3><p>我们还可以在一个运行中的容器中执行命令</p>
+<blockquote>
+<p>sudo docker container exec  【containername】【command】</p>
+</blockquote>
+<h3 id="lt-16-gt-删除容器"><a href="#lt-16-gt-删除容器" class="headerlink" title="&lt;16&gt;删除容器"></a>&lt;16&gt;删除容器</h3><p>(1)Management Commands</p>
+<blockquote>
+<p>sudo docker container rm 【containername】</p>
+</blockquote>
+<p>(2)command</p>
+<blockquote>
+<p>sudo docker rm 【containername】</p>
+</blockquote>
+<p>或者输入</p>
+<blockquote>
+<p>sudo docker container rm -f $(docker container ls -aq)</p>
+</blockquote>
+<p>根据前面的学习可以发现这句话的意思是先执行括号中的语句，括号中的语句的意思是列出全部的容器，其中的参数的意思是【-a是显示全部容器】【-q是只显示名字】。最终这句话的结果放到了整句话中执行，【-f的作用是强制删除】</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"># docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/24/csrf%E4%BB%8E%E5%B0%8F%E7%99%BD%E5%88%B0%E5%85%A5%E9%97%A8" rel="prev" title="csrf从小白到入门">
+                  <i class="fa fa-chevron-left"></i> csrf从小白到入门
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/06/24/docker%E6%84%8F%E4%B9%89%E4%B8%8E%E7%BB%84%E6%88%90%E5%8F%8A%E5%8E%9F%E7%90%86%E8%BF%98%E6%9C%89%E5%92%8C%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF%E7%9A%84%E5%AF%B9%E6%AF%94" rel="next" title="docker意义与组成及原理还有和虚拟化技术的对比">
+                  docker意义与组成及原理还有和虚拟化技术的对比 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forming</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
