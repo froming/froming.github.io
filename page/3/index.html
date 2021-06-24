@@ -20,41 +20,25 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;froming.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Gemini&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;}}</script><script src="/js/config.js"></script>
-<meta name="description" content="提要本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。 &lt;1&gt;特殊之处（1）与之前关卡相比 1.在前十六关，我只讲了">
-<meta property="og:type" content="article">
-<meta property="og:title" content="superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法">
-<meta property="og:url" content="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
+<meta name="description" content="网络安全websecurity">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A fifth century">
+<meta property="og:url" content="https://froming.github.io/page/3/index.html">
 <meta property="og:site_name" content="A fifth century">
-<meta property="og:description" content="提要本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。 &lt;1&gt;特殊之处（1）与之前关卡相比 1.在前十六关，我只讲了">
+<meta property="og:description" content="网络安全websecurity">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2021020802354748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208023309436.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208024130986.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208031203234.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208033629793.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208033817243.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208034837123.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208035503314.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208040838551.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208041718612.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208043332664.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210208043621896.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70">
-<meta property="article:published_time" content="2021-06-23T16:27:49.000Z">
-<meta property="article:modified_time" content="2021-06-24T04:33:30.603Z">
 <meta property="article:author" content="Forming">
-<meta property="article:tag" content="sql">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2021020802354748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center">
 
 
-<link rel="canonical" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
+<link rel="canonical" href="https://froming.github.io/page/3/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;froming.github.io&#x2F;2021&#x2F;06&#x2F;24&#x2F;superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95&quot;,&quot;path&quot;:&quot;2021&#x2F;06&#x2F;24&#x2F;superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法&quot;,&quot;title&quot;:&quot;superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:true,&quot;isPost&quot;:false,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:&quot;&quot;,&quot;permalink&quot;:&quot;&quot;,&quot;path&quot;:&quot;page&#x2F;3&#x2F;index.html&quot;,&quot;title&quot;:&quot;&quot;}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
-<title>superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法 | A fifth century</title>
+<title>A fifth century</title>
   
 
 
@@ -118,7 +102,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -131,7 +115,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">提要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lt-1-gt-%E7%89%B9%E6%AE%8A%E4%B9%8B%E5%A4%84"><span class="nav-number">2.</span> <span class="nav-text">&lt;1&gt;特殊之处</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E4%B8%8E%E4%B9%8B%E5%89%8D%E5%85%B3%E5%8D%A1%E7%9B%B8%E6%AF%94"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">（1）与之前关卡相比</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E4%B8%8E%E4%B9%8B%E5%90%8E%E5%85%B3%E5%8D%A1%E7%9B%B8%E6%AF%94"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">（2）与之后关卡相比</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lt-2-gt-%E6%8A%A5%E9%94%99%E6%9F%A5%E8%AF%A2%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">&lt;2&gt;报错查询原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%881%EF%BC%89extractvalue%E5%87%BD%E6%95%B0"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">（1）extractvalue函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%EF%BC%882%EF%BC%89updatexml%E5%87%BD%E6%95%B0"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">（2）updatexml函数</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lt-3-gt-%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4"><span class="nav-number">4.</span> <span class="nav-text">&lt;3&gt;具体步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E6%B3%A8%E5%85%A5"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">(1)第一步：判断是否存在注入</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E7%88%86%E5%BA%93%E5%90%8D"><span class="nav-number">4.0.0.2.</span> <span class="nav-text">(2)第二步：爆库名</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E7%88%86%E8%A1%A8%E5%90%8D"><span class="nav-number">4.0.0.3.</span> <span class="nav-text">(3)第三步：爆表名</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E7%88%86%E5%AD%97%E6%AE%B5%E5%90%8D"><span class="nav-number">4.0.0.4.</span> <span class="nav-text">(4)第四步：爆字段名</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-%E7%AC%AC%E4%BA%94%E6%AD%A5%EF%BC%9A%E7%88%86%E5%AD%97%E6%AE%B5"><span class="nav-number">4.0.0.5.</span> <span class="nav-text">(5)第五步：爆字段</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AF%B9%E2%80%9CYou-can%E2%80%99t-specify-target-table-%E2%80%98users%E2%80%99-for-update-in-FROM-clause%E2%80%9D%E5%92%8C%E2%80%9CEvery-derived-table-must-have-its-own-alias%E2%80%9D%E6%8A%A5%E9%94%99%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8F%8A%E5%8E%9F%E7%90%86"><span class="nav-number">4.0.0.5.1.</span> <span class="nav-text">对“You can’t specify target table ‘users’ for update in FROM clause”和“Every derived table must have its own alias”报错的解决及原理</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4"><span class="nav-number">4.0.0.5.2.</span> <span class="nav-text">具体步骤</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E6%AD%A5%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%98%E5%8E%9F"><span class="nav-number">4.0.0.6.</span> <span class="nav-text">第六步：数据库还原</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -206,17 +189,146 @@
 </noscript>
 
 
-    <div class="main-inner post posts-expand">
+    <div class="main-inner index posts-expand">
 
-
-  
+    
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Forming">
+      <meta itemprop="description" content="网络安全websecurity">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="A fifth century">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF" class="post-title-link" itemprop="url">xss-labs举例xss注入的方式及基本思路</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-24 00:28:47 / 修改时间：12:33:45" itemprop="dateCreated datePublished" datetime="2021-06-24T00:28:47+08:00">2021-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="lt-1-gt-什么是xss"><a href="#lt-1-gt-什么是xss" class="headerlink" title="&lt;1&gt;什么是xss"></a>&lt;1&gt;什么是xss</h3><p>xss的英文名字是cross-site-script。俗称跨站脚本，是一种注入攻击，指攻击者在被攻击的网页上利用编写时的漏洞注入恶意脚本代码，受害者访问该页面时，恶意代码会在用户的浏览器上执行。</p>
+<h3 id="lt-2-gt-XSS的分类"><a href="#lt-2-gt-XSS的分类" class="headerlink" title="&lt;2&gt;XSS的分类"></a>&lt;2&gt;XSS的分类</h3><ul>
+<li><p>1.反射型</p>
+</li>
+<li><p>2.dom型</p>
+</li>
+<li><p>3.存储型</p>
+</li>
+<li><p>&lt;1&gt;<strong>反射型解析</strong>：反射型的数据走向是 <strong>客户端-&gt;服务器-&gt;客户端</strong>，XSS-LABS中全是这种类型的，或者也可以说是dom型的，客户端根据html网页源码，判断注入漏洞，不调用html中的js代码是反射型，而dom型则是直接调用网页源码中的js代码。</p>
+</li>
+<li><p>&lt;2&gt;<strong>dom型解析</strong>：dom型的数据走向是 <strong>URL-&gt;浏览器</strong>。</p>
+</li>
+<li><p>&lt;3&gt;<strong>存储型解析</strong>：存储型的数据走向是 <strong>客户端-&gt;服务器-&gt;数据库-&gt;服务器-&gt;客户端</strong>，比如有些网站有评论功能，当你评论时，服务器会把你的评论保存再数据库中，如果这时候注入恶意的js代码，那么只要一有人请求这个网页，那么就会请求到有恶意代码的网页。</p>
+</li>
+</ul>
+<h3 id="lt-3-gt-XSS的危害"><a href="#lt-3-gt-XSS的危害" class="headerlink" title="&lt;3&gt;XSS的危害"></a>&lt;3&gt;XSS的危害</h3><p>XSS-LABS中的漏洞没办法让人直观的感受到XSS的危害，所以我在这里举个例子让大家感受一下，如果一个人发现了一个网站过滤不严的地方，然后用a标签写了一个连接，中间加入了js代码，骗你进这个网址点一点就能免费领电饭煲，当你点进去以后发现其实指向了自己经常登录的一个网站，后来也不在意以为是恶作剧，可能这时候你已经被拿走了你在这个网站的cookie，那么注入者拿着你的cookie登录网站，用你的大会员看视频，损害你的利益。</p>
+<h3 id="lt-4-gt-基本过关原理"><a href="#lt-4-gt-基本过关原理" class="headerlink" title="&lt;4&gt;基本过关原理"></a>&lt;4&gt;基本过关原理</h3><p>通过探索发现漏洞，并根据漏洞注入js代码，成功调取head标签中内嵌的js函数——alert，进入下一关。</p>
+<h3 id="lt-5-gt-传递参数方式"><a href="#lt-5-gt-传递参数方式" class="headerlink" title="&lt;5&gt;传递参数方式"></a>&lt;5&gt;传递参数方式</h3><p>像SQL-LABS一样，XSS靶场也包括有不同的传递注入语句的方式，不过和SQL-LABS不同的是，XSS-LABS没有SQL-LABS那么多的传递方式，它有以下两种：</p>
+<ul>
+<li>1.get传参</li>
+<li>2.HTTP消息头传参<br>在哪注入归根结底就是看网站源码调取哪里的参数，调取的参数加了怎样的过滤。</li>
+</ul>
+<h3 id="lt-6-gt-常见存在注入的语句"><a href="#lt-6-gt-常见存在注入的语句" class="headerlink" title="&lt;6&gt;常见存在注入的语句"></a>&lt;6&gt;常见存在注入的语句</h3><ul>
+<li>1.a标签中的href</li>
+<li>2.embed标签传参处</li>
+<li>3.input标签</li>
+<li>4.embed也可以作为其它标签的参数,比如span</li>
+</ul>
+<h3 id="lt-7-gt-绕过的方法"><a href="#lt-7-gt-绕过的方法" class="headerlink" title="&lt;7&gt;绕过的方法"></a>&lt;7&gt;绕过的方法</h3><ul>
+<li>1.img标签src出错时用onerror注入</li>
+<li>2.将a标签闭合,用script标签进行注入</li>
+<li>3.根据href属性的值可以是一个js代码</li>
+<li>4.如果是input标签,可以将value属性闭合之后用onmoseover等触发事件</li>
+<li>5.可以尝试将代码进行unicode编码等浏览器可以解析的编码方式进行注入</li>
+<li>6.多个参数之间可能组合,对于这种情况要具体分析</li>
+</ul>
+<p>总之就是一句话<strong>只要你套路够骚,就没有绕不过去的waf</strong></p>
+<h3 id="lt-8-gt-xss注入的基本思路"><a href="#lt-8-gt-xss注入的基本思路" class="headerlink" title="&lt;8&gt;xss注入的基本思路"></a>&lt;8&gt;xss注入的基本思路</h3><h4 id="第一步-初步信息收集"><a href="#第一步-初步信息收集" class="headerlink" title="第一步:初步信息收集"></a>第一步:初步信息收集</h4><p>判断一个网站是否存在xss注入,首先要有信息去分析,所以第一步进行信息收集</p>
+<h5 id="收集信息的方法"><a href="#收集信息的方法" class="headerlink" title="收集信息的方法"></a>收集信息的方法</h5><ul>
+<li>&lt;1&gt;查看网页源码,留意源码中<strong>常见存在注入的语句</strong>,并留意可以向服务器传递的<strong>参数</strong></li>
+<li>&lt;2&gt;向服务器传递参数,并判断,哪些参数被用到了网页上,并且初步记录</li>
+<li>&lt;3&gt;将用了传递参数的语句总结出来之后,将<strong>常见存在注入的语句</strong>挑出,并且对它们的闭合方式进行记录</li>
+<li>&lt;4&gt;对初步记录进行分析,并总结结论,结论的标准是</li>
+<li><strong>我要在哪些语句上用哪些xss绕过方法进行注入</strong></li>
+</ul>
+<h4 id="第二步-尝试注入并记录结果"><a href="#第二步-尝试注入并记录结果" class="headerlink" title="第二步:尝试注入并记录结果"></a>第二步:尝试注入并记录结果</h4><p>根据第一步的初步信息记录结果,进行注入,但是一般网站都会进行waf防护,所以注入不成功很正常,所以要记录不成功的案例分析</p>
+<h4 id="第三步-分析不成功的结果"><a href="#第三步-分析不成功的结果" class="headerlink" title="第三步:分析不成功的结果"></a>第三步:分析不成功的结果</h4><p>根据绕过方法,将第二步的信息分析,发现可能的方法,进行尝试,之后一直第二步第三步进行循环直到成功</p>
+<h3 id="lt-9-gt-总结发现"><a href="#lt-9-gt-总结发现" class="headerlink" title="&lt;9&gt;总结发现"></a>&lt;9&gt;总结发现</h3><h4 id="1-关于双写注入的发现"><a href="#1-关于双写注入的发现" class="headerlink" title="1.关于双写注入的发现"></a>1.关于双写注入的发现</h4><p>双写注入一般出现在删除字符的情况下,调用<strong>str_replace函数</strong>,将传递过来中的参数中的指定字符串被替换成””,如下图:</p>
+<p><img src="https://img-blog.csdnimg.cn/20210316191726821.png" alt="在这里插入图片描述"><br>根据原理，这一关有多种双写方式，比如在语句中用javassccript和javascrscriptipt的效果一样，原理是把中间的script删除之后，两边的字符又组成了新的’<strong>script</strong>‘,但是计算机不会再检查一遍字符串,从而实现注入。</p>
+<h4 id="2-关于为什么input标签不闭合也可以的解释"><a href="#2-关于为什么input标签不闭合也可以的解释" class="headerlink" title="2.关于为什么input标签不闭合也可以的解释"></a>2.关于为什么input标签不闭合也可以的解释</h4><p>我做题得时候一直苦恼一件事就是为什么input没有闭合也能被正确解析，原因在于在html中input是可以不闭合的，但是在xhtml中必须闭合</p>
+<h4 id="3-unicode编码后成功注入的原理"><a href="#3-unicode编码后成功注入的原理" class="headerlink" title="3.unicode编码后成功注入的原理"></a>3.unicode编码后成功注入的原理</h4><p>这一关要用到unicode编码编码字符串，这样在服务端可以解析代码，但是在服务器端并没有检测出来拦截的字符串，使注入可以成功。过程如下：<br><strong>输入URL–&gt;unicode编码–&gt;服务端–&gt;没有解析unicode–&gt;服务端没有过滤成功–&gt;客户端–&gt;unicode解码</strong>。</p>
+<h4 id="4-第十四关做不了的原因："><a href="#4-第十四关做不了的原因：" class="headerlink" title="4.第十四关做不了的原因："></a>4.第十四关做不了的原因：</h4><p>这一关如果不想看的话直接跳过就好，可能使网站用不了了,使这一关不能做，但是这里我讲一下exif，exif(exchangeable image file format)可交换文件格式，是一种用来记录数码照片属性，数据的文件格式，在php中有一个函数叫exif_read_data用来读取这种格式的文件，我们就可以将js代码编辑到这种格式的文件中以此实现注入。</p>
+<h4 id="5-第十七、十八、十九、二十关："><a href="#5-第十七、十八、十九、二十关：" class="headerlink" title="5.第十七、十八、十九、二十关："></a>5.第十七、十八、十九、二十关：</h4><p>这四关要调用swf格式的文件，flash可以解析的文件格式就是swf文件格式，由此可以看出xss-labd是多老了，编写者一定想不到2021年flash已经在除IE之外的浏览器上除名了。这四关都要用到embed，这个的作用是嵌入一个swf文件格式的文件，同时还有可以向文件中传递参数。</p>
+<ul>
+<li>1.第十七、十八关:<br>这两关只是图片不一样其它完全相同，所以可以用相同的方法注入js脚本，查看服务器上的源码可以发现，arg01和arg02共同为swf文件传递参数，所以我们要根据这一特性和span标签中可以插入焦事件的特性嵌入js代码，所以我们可以在arg01出输入%0a这是一个十六进制编码，意思是换行，这么做就使我们可以顺利的调取alert函数，那么arg02就可以输入onmouseover=javascript:alert(form)此时就实现了调取alert()函数。其实还有很多方法，比如先是在arg01处输入a再在srg02处输入b onmouseover=javascript:alert(form)。但是其实都是万变不离其宗的东西。</li>
+<li>2.第十九、二十关:<br>最后两关观察服务器网页源码源码，发现在src参数处做了引号的包裹，同时用来htmlspecialchar函数将单引号、双引号、大于号、小于号、和号进行了实体字符的转换，理论上来讲已经可以说是毫无破绽了，因为没有闭合的办法。但其实是有的，这里就要引入一个序列化的概念，数据在网络上以<strong>流</strong>（有顺序，有头有尾，在两台主机间传递的数据叫做流）的形式传递，那么一个程序要是想要在其它的主机上也能运行，就需要将自身的属性进行记录，比如版本什么的，这就叫序列化。那么我们可以用反序列化的软件，将一个软件进行反序列化，就可以知道它缺少了什么，又根据swf的特性（可以传递参数的特性） 加入其中缺少的参数，但是将js脚本注入到就要传进去的地方，比如在第十九关的arg01处输入序列化是缺少的version参数，但是arg02参数处输入js脚本比如输入&lt;a href=”javascript:alet(1)”&gt;forming_is _handsome&lt;/a&gt;</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -229,9 +341,9 @@
       <meta itemprop="name" content="A fifth century">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法
-        </h1>
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法</a>
+        </h2>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -264,7 +376,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="提要"><a href="#提要" class="headerlink" title="提要"></a>提要</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。</p>
+          <h2 id="提要"><a href="#提要" class="headerlink" title="提要"></a>提要</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。</p>
 <h2 id="lt-1-gt-特殊之处"><a href="#lt-1-gt-特殊之处" class="headerlink" title="&lt;1&gt;特殊之处"></a>&lt;1&gt;特殊之处</h2><h5 id="（1）与之前关卡相比"><a href="#（1）与之前关卡相比" class="headerlink" title="（1）与之前关卡相比"></a>（1）与之前关卡相比</h5><ul>
 <li>1.在前十六关，我只讲了sql-labs基于get数据传输方式的“联合查询”、“布尔盲注”、“时间盲注”、和基于post传输数据方式的“联合查询”、“布尔盲注”、“时间盲注”。这是为了，让屏幕前的你学习sql注入有一个循序渐进的过程，这一关将要使用的“报错注入”，前面的关卡也能使用。下面来分析一下为什么能使用“报错注入”，观察源码就会发现调用了“mysql_erroe函数”与“print_r函数”将报错信息输出，所以可以进行”报错注入”，但是不能进行联合查询，因为没有回显。同时因为用了update，所以也不能进行时间盲注。【如下图】</li>
 </ul>
@@ -358,6 +470,7 @@
 <p><strong>特别要注意的是“password”处的“x”是“可变的整数”，意思就是开始数字为0，报完一个数据库的名字之后加一爆下一个的数据库名，这是因为mysql_erroe函数一次的返回只能返回一行数据，不然会报出如下图所示的错误</strong><br>就可以实现注入sql语句查询密码。以<strong>x</strong>为<strong>0</strong>为例若输入正确会得到如下图所示的结果：<br><img src="https://img-blog.csdnimg.cn/20210208043332664.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <h5 id="第六步：数据库还原"><a href="#第六步：数据库还原" class="headerlink" title="第六步：数据库还原"></a>第六步：数据库还原</h5><p>这一关特殊之处在于用“update”对数据库中的数据进行改变，所以我们在做完这一关之后要进行还原，还原的方法就是，回到网站的首页<br><img src="https://img-blog.csdnimg.cn/20210208043621896.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">点击左上角出如上图的“Setup/reset Database for labs”就可以重置数据库</p>
 
+      
     </div>
 
     
@@ -365,24 +478,8 @@
     
 
     <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/sql/" rel="tag"># sql</a>
-          </div>
-
-        
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC2%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" rel="prev" title="superforming的sql-labs大通关之第2部分解析及注入方法">
-                  <i class="fa fa-chevron-left"></i> superforming的sql-labs大通关之第2部分解析及注入方法
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF" rel="next" title="xss-labs举例xss注入的方式及基本思路">
-                  xss-labs举例xss注入的方式及基本思路 <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
+        <div class="post-eof"></div>
+      
     </footer>
   </article>
 </div>
@@ -390,7 +487,9 @@
 
 
 
-
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 </div>
   </main>

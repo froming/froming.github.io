@@ -224,7 +224,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:32:09 / 修改时间：11:22:51" itemprop="dateCreated datePublished" datetime="2021-06-24T00:32:09+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:32:09 / 修改时间：12:34:39" itemprop="dateCreated datePublished" datetime="2021-06-24T00:32:09+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -246,15 +246,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="UTF-8编码的意义及历史背景（异或是unicode标准的意义）"><a href="#UTF-8编码的意义及历史背景（异或是unicode标准的意义）" class="headerlink" title="UTF-8编码的意义及历史背景（异或是unicode标准的意义）"></a>UTF-8编码的意义及历史背景（异或是unicode标准的意义）</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/%E5%88%A9%E7%94%A8UTF-8%E7%90%86%E8%A7%A3unicode%E7%9A%84%E5%86%85%E5%AE%B9%E4%B8%8EUTF-8%E6%84%8F%E4%B9%89#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <h3 id="UTF-8编码的意义及历史背景（异或是unicode标准的意义）"><a href="#UTF-8编码的意义及历史背景（异或是unicode标准的意义）" class="headerlink" title="UTF-8编码的意义及历史背景（异或是unicode标准的意义）"></a>UTF-8编码的意义及历史背景（异或是unicode标准的意义）</h3><ul>
+<li>历史背景<br>世界上第一台通用计算机“ENIAC”于1946年2月14日在美国宾夕法尼亚大学诞生，那时正值世纪第二次大战，美军发明计算机的作用是为了快速处理大量的军事数据。之后到了50年代，计算机进入批处理阶段，此时还没有网络的概念，直到60年代通过时间片转换机制的分时系统的出现，各个主机之间为了更快的传输数据进行了连接，这才有了网络的雏形。那么此时出现一个问题，不同操作系统之间，不同厂商之间设备的互联是有<strong>隔阂</strong>的，为了解决这一问题，也就要有一个固定的格式才能实现不同厂商计算机的互联。这其中有一个统一的编码方式尤为重要，所以UTF-8的意义在于实现不同计算机之间数据传输的正确性。</li>
+<li>意义<br>对计算机有一定了解的一定都知道”ASCII码“，这种编码方式是将一个字符由一个字节来表示，也就是说”ASCII码“最多可以表示256个字符，然而实际的情况是”ASCII码“里面一共编码了127个字符，这对于英语来说是够用的，但是面对<strong>浩如烟海</strong>的人类文明来说，这小小的”ASCII码“明显是不够用的，而且面对计算机全球化的今天，有一个统一的编码方式的要求摆在了明面上。</li>
+</ul>
+<h3 id="利用UTF-8基于unicode来理解unicode"><a href="#利用UTF-8基于unicode来理解unicode" class="headerlink" title="利用UTF-8基于unicode来理解unicode"></a>利用UTF-8基于unicode来理解unicode</h3><p>UTF-8要基于unicode组织推出的<strong>unicode标准</strong>，既然是基于unicode的标准，那么实现的方式自然也就不止UTF-8一种方式，比如    UTF-16、UTF-32等（它们的区别在于UTF-8是将一个字符转换为1到4字节的数据，而UTF-16是将字符转换为2到4字节的数据，UTF-32是将字符转换为4字节的数据），由此可以体会到unicode是一个标准而不是编码方式。</p>
+<h3 id="unicode的内容"><a href="#unicode的内容" class="headerlink" title="unicode的内容"></a>unicode的内容</h3><p>unicode是用四个四字节来表示一个字符，也就是说一共可以表示4294967296个字符，但是就算是将所有语言的字符都编入unicode也不可能有如此多个字符，直到现在也不过编码了238605个字符。其中使用的空间非常少，其中在第二个字节中十进制编码是0、1、2、14、15、16的编码方式被使用，其中15、16的编码方式是个人使用区，用于使用的个人或者公司自己定义字符，而中文的七万多个字符被保存在0、2的编码中。</p>
+<h3 id="unicode和UTF-8转换的方式"><a href="#unicode和UTF-8转换的方式" class="headerlink" title="unicode和UTF-8转换的方式"></a>unicode和UTF-8转换的方式</h3><p>unicode编码进行转换为二进制编码之后，对应UTF-8转换规则之后，将二进制编码带入到转换规则中可替换的部分，就可以得到字符在UTF-8中的对应的编码。</p>
+<h3 id="其它的编码方式"><a href="#其它的编码方式" class="headerlink" title="其它的编码方式"></a>其它的编码方式</h3><p>其它的编码方式有很多，各个国家都有自己的编码方式，比如我国就有GB18030、GBK、GB2312等编码方式，GB18030是GBK的升级版，GBK是GB2312的升级版，如果遇到解析之后是乱码的情况，大概率就是编码不对应。</p>
+
       
     </div>
 
@@ -305,7 +305,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:31:21 / 修改时间：11:22:34" itemprop="dateCreated datePublished" datetime="2021-06-24T00:31:21+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:31:21 / 修改时间：12:34:29" itemprop="dateCreated datePublished" datetime="2021-06-24T00:31:21+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -328,679 +328,59 @@
     
     <div class="post-body" itemprop="articleBody">
           <h2 id="lt-1-gt-从url栏将域名提取出来"><a href="#lt-1-gt-从url栏将域名提取出来" class="headerlink" title="&lt;1&gt;从url栏将域名提取出来"></a>&lt;1&gt;从url栏将域名提取出来</h2><p>在浏览器上的url栏输入url，如果有汉字，这时会将汉字用unicode转换成计算机可以识别的机器语言</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/%E5%9F%BA%E4%BA%8EHTTPS%E5%8D%8F%E8%AE%AE%E8%AF%B7%E6%B1%82%E7%BD%91%E9%A1%B5%E7%9A%84%E8%BF%87%E7%A8%8B#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/xss%E6%B3%A8%E5%85%A5%E7%82%B9%E5%92%8C%E6%B3%A8%E5%85%A5%E8%AF%AD%E5%8F%A5%E5%8F%8A%E5%8D%B1%E5%AE%B3%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/xss%E6%B3%A8%E5%85%A5%E7%82%B9%E5%92%8C%E6%B3%A8%E5%85%A5%E8%AF%AD%E5%8F%A5%E5%8F%8A%E5%8D%B1%E5%AE%B3%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93" class="post-title-link" itemprop="url">xss注入点和注入语句及危害知识总结</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:30:29 / 修改时间：11:22:14" itemprop="dateCreated datePublished" datetime="2021-06-24T00:30:29+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E5%8F%8A%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">漏洞原理及基础知识</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="lt-1-gt-xss的概念"><a href="#lt-1-gt-xss的概念" class="headerlink" title="&lt;1&gt;xss的概念"></a>&lt;1&gt;xss的概念</h3><p>xss的英文名字是cross site scripting。俗称跨站脚本，是一种注入攻击，指攻击者在被攻击的网页上利用编写时的漏洞注入恶意脚本代码，受害者访问该页面时，恶意代码会在用户的浏览器上执行的攻击方</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/xss%E6%B3%A8%E5%85%A5%E7%82%B9%E5%92%8C%E6%B3%A8%E5%85%A5%E8%AF%AD%E5%8F%A5%E5%8F%8A%E5%8D%B1%E5%AE%B3%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3" class="post-title-link" itemprop="url">xss-labs前五关</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:29:41 / 修改时间：11:22:00" itemprop="dateCreated datePublished" datetime="2021-06-24T00:29:41+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="第一关"><a href="#第一关" class="headerlink" title="第一关"></a>第一关</h3><h5 id="lt-1-gt-解法"><a href="#lt-1-gt-解法" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><p>直接在url栏的name=后输入:</p>
-<blockquote>
-<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;（这是一段js代码）</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF" class="post-title-link" itemprop="url">xss-labs举例xss注入的方式及基本思路</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:28:47 / 修改时间：11:21:41" itemprop="dateCreated datePublished" datetime="2021-06-24T00:28:47+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="lt-1-gt-什么是xss"><a href="#lt-1-gt-什么是xss" class="headerlink" title="&lt;1&gt;什么是xss"></a>&lt;1&gt;什么是xss</h3><p>xss的英文名字是cross-site-script。俗称跨站脚本，是一种注入攻击，指攻击者在被攻击的网页上利用编</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:27:49 / 修改时间：11:21:29" itemprop="dateCreated datePublished" datetime="2021-06-24T00:27:49+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="提要"><a href="#提要" class="headerlink" title="提要"></a>提要</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC2%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC2%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第2部分解析及注入方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:26:54 / 修改时间：11:21:18" itemprop="dateCreated datePublished" datetime="2021-06-24T00:26:54+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="提前声明"><a href="#提前声明" class="headerlink" title="提前声明"></a>提前声明</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC2%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第1部分解析及注入方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:26:05 / 修改时间：11:21:06" itemprop="dateCreated datePublished" datetime="2021-06-24T00:26:05+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="提要"><a href="#提要" class="headerlink" title="提要"></a>提要</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86" class="post-title-link" itemprop="url">php伪协议及其它网络安全相关知识</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:25:24 / 修改时间：11:20:52" itemprop="dateCreated datePublished" datetime="2021-06-24T00:25:24+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E5%8F%8A%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">漏洞原理及基础知识</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="lt-1-gt-php伪协议"><a href="#lt-1-gt-php伪协议" class="headerlink" title="&lt;1&gt;php伪协议"></a>&lt;1&gt;php伪协议</h2><h3 id="1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解"><a href="#1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解" class="headerlink" title="1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解"></a>1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解</h3><ul>
-<li>ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。</li>
-<li>php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是否将URL作为文件处理，后者的意思是是否允许include/require打开URL作为文件处理。</li>
+<ul>
+<li><p>unicode（有utf-8,utf-16,utf-32三种情况，他们的区别时utf-8会将一个汉字随机转换成一、两、三、四个字节，而utf-16则会将一个汉字转换成两、四个字节，utf-32会将一个汉字转换为四个字节）<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_53061933/article/details/114594777?spm=1001.2014.3001.5501">了解更多unicode</a></p>
+</li>
+<li><p>URL的标准格式：<br>【protocol】：//【hostname】：【port】【path】?【query】#【fragment】</p>
+</li>
+<li><p>protocol是指网络传输协议(如：http、https、file等)。</p>
+<ul>
+<li>hostname是指存放资源的与域名、主机名或IP地址。</li>
+<li>port是指端口,有时用默认端口所以不显示。</li>
+<li>path是指一个主机上的一个目录或者文件地址，它决定了服务器如何处理这个请求。</li>
+<li>query从?到#之间是参数(也叫搜索部分)，参数之间用&amp;来间隔。</li>
+<li>fragment用于指定网络资源中的片段，搜索部分搜索出的信息多种多样，通过fragment可以明确指出哪些信息是我们需要 </li>
 </ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0" class="post-title-link" itemprop="url">harrynull.tech_cipher游记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:24:41 / 修改时间：11:20:30" itemprop="dateCreated datePublished" datetime="2021-06-24T00:24:41+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>(&gt;_&gt;)！编网站得人和我不是一个时代得人，很多题get不到那个点，我以后也想出个网站上来就让猜我叫啥</p>
-<h2 id="（1）有用网站分享"><a href="#（1）有用网站分享" class="headerlink" title="（1）有用网站分享"></a>（1）有用网站分享</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.uupoop.com/">在线ps</a></li>
-<li><a target="_blank" rel="noopener" href="http://gif.55.la/">在线gif制作</a></li>
-<li><a target="_blank" rel="noopener" href="https://tool.oschina.net/encrypt?type=3">在线base64转换</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cmd5.com/">在线md5解码</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/bianma/zhalanmima.php">栅栏密码在线解密、加密</a></li>
-<li><a target="_blank" rel="noopener" href="https://tool.oschina.net/hexconvert">在线进制转换</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.qtool.net/decode">在线jjencode和aaencode解码</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bejson.com/convert/ox2str">在线十六进制转字符串</a></li>
-<li><a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/3c1aad12cc7931b765ce1563.html">GMDSS码语查看</a></li>
+</li>
 </ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+<h2 id="lt-2-gt-查询ip"><a href="#lt-2-gt-查询ip" class="headerlink" title="&lt;2&gt;查询ip"></a>&lt;2&gt;查询ip</h2><p>获得域名之后应该是查ip，但是在此之前还有一步是查看HSTS列表上有没有要查询的域名，如果有的话就要在和这个域名对应的服务器进行联系时使用https协议（HSTS是IETE推荐的一种web协议）</p>
+<p>1.查IP会看本机上的host文件和本地DNS服务器上看看有没有域名相关的记录</p>
+<p>2.如果在查询根服务器之后依旧没有域名对应的ip那么将会传给下一级服务器直到查到为止。</p>
+<ul>
+<li>查询IP有两种方式，分别是递归查询和迭代查询，迭代查询就是这一级服务器没有IP地址的情况下，将下一级服务器的IP传给查询端由查询端访问下一级服务器的方式叫做迭代查询。递归查询是由这一级服务器直接访问下一级服务器下一级服务器同样如此，知道查到IP为止的查询方式，这种方式叫做递归查询。</li>
+</ul>
+<h2 id="lt-3-gt-与对应IP的终端进行联系"><a href="#lt-3-gt-与对应IP的终端进行联系" class="headerlink" title="&lt;3&gt;与对应IP的终端进行联系"></a>&lt;3&gt;与对应IP的终端进行联系</h2><p>tcp协议规定了客户端与服务器之间建立联系的方式</p>
+<h3 id="1-一般情况下与服务器进行连接"><a href="#1-一般情况下与服务器进行连接" class="headerlink" title="[1]一般情况下与服务器进行连接"></a>[1]一般情况下与服务器进行连接</h3><h4 id="1-按照TCP建立联系三次握手"><a href="#1-按照TCP建立联系三次握手" class="headerlink" title="1.按照TCP建立联系三次握手"></a>1.按照TCP建立联系三次握手</h4><p>一次：客户端向服务器发送SYN=1和Seq=x</p>
+<ul>
+<li>SYN=1的意思就是请求建立联系，而Seq=x意思是发送给服务器一个随机产生的序列号</li>
+</ul>
+<p>二次：服务器向客户端发送SYN=1,ACK=1,ACK number=x+1,Seq=y</p>
+<ul>
+<li>ACK是Acknownledge的缩写，ACK=1的意思是告诉终端数据以成功收到，ACK number=x+1就是为了验证数据已经成功接受</li>
+</ul>
+<p>三次：客户端向服务器发送SYN=0,ACK=1,ACK number=y+1，Seq=x+1</p>
+<h4 id="2-断开连接四次挥手"><a href="#2-断开连接四次挥手" class="headerlink" title="2.断开连接四次挥手"></a>2.断开连接四次挥手</h4><p>一次：客户端发给服务器FIN=1的TCP报文</p>
+<ul>
+<li>FIN=1意味着发送方字节流结束，fin为TCP报头的码位字段</li>
+</ul>
+<p>二次：服务器返回客户端一个ACK报文</p>
+<p>三次：服务器给给客户端发送一个FIN报文</p>
+<p>四次：客户端回复ACK报文</p>
+<h3 id="2-二般情况下与服务器进行明文通信商量之后加密联系"><a href="#2-二般情况下与服务器进行明文通信商量之后加密联系" class="headerlink" title="[2]二般情况下与服务器进行明文通信商量之后加密联系"></a>[2]二般情况下与服务器进行明文通信商量之后加密联系</h3><h4 id="1-SSL协议的构成"><a href="#1-SSL协议的构成" class="headerlink" title="1.SSL协议的构成"></a>1.SSL协议的构成</h4><p>SSL协议实际上分为两个部分，分别是<strong>SSL记录层协议</strong>和<strong>SSL握手协议</strong>，它用来记录上层协议的数据，再根据SSL握手协议发送，SSL记录层协议是基于TCP协议，而SSL握手协议是基于SSL记录层协议。</p>
+<h4 id="2-对记录层的介绍"><a href="#2-对记录层的介绍" class="headerlink" title="2.对记录层的介绍"></a>2.对记录层的介绍</h4><p>SSL记录层是架构在TCP协议上的，它分为记录头和记录数据。记录头有两种形式，分别是2字节和3字节两种类型，在2字节中包括的数据是mac(mac是由HASH根据密钥、实际数据等数据算出来的一个数值)、数据、记录头类型、数据长度。而3字节的数据则还要包括填充数据、填充数据长度（为了让数据块是一个整数，以便于数据加密）、Escape位，可知当记录头是3字节时次高位为1时表示所传输的数据是普通的数据，如果是0则表示所传输的数据是安全空白记录（被保留用于将来协议的扩展）。</p>
+<h4 id="3-SSL握手协议"><a href="#3-SSL握手协议" class="headerlink" title="3.SSL握手协议"></a>3.SSL握手协议</h4><ul>
+<li>第一步：客户端向服务端发送数据，数据包括一个叫clienthello.random随机数用于之后的密钥确定、自己支持的SSL/TLS协议版本（TLS是SSLv3上演变过来的）、以及之后要用的加密方式（一般是RAS加密）、如果有证书的话就会将客户算的CA证书返回给服务端，没有的话也要告诉服务端自己没有CA证书。等数据</li>
+<li>第二步：服务端接收到数据后，对客户端发送数据，数据内容包括自己的证书、一个叫serverhello.random的随机数、自己支持的SSL/TLS的版本、之后要用的加密方式。</li>
+<li>第三步：客户端接收到数据之后，算出来一个密钥，之后向服务端发送hellodown的数据表示客户端进入加密状态，并将数据加密。</li>
+<li>第四步：服务端接受到hellodown的数据之后向客户端发送finished数据<br>，后自己也进入加密状态。</li>
+</ul>
+<h4 id="4-对加密细节的简单讲解"><a href="#4-对加密细节的简单讲解" class="headerlink" title="4.对加密细节的简单讲解"></a>4.对加密细节的简单讲解</h4><ul>
+<li>密钥的确定<br>确定密钥要根据客户算和服务端传来的两个随机数，和客户端自己生成的随机数，之所以要用三个随机数，就是为了让这个加密数据的数无限接近真随机数。</li>
+<li>公钥加密密钥，密钥加密数据<br>RAS加密是非对称加密，用来加密数据的话，最后会使数据解析变慢，所以在实际使用过程中会将密钥用公钥根据RAS进行非对称加密，在将数据根据密钥进行对称加密，这就即使加密严格，又提高了解析的速度</li>
+</ul>
+<h2 id="lt-4-gt-传输在互联网上的数据"><a href="#lt-4-gt-传输在互联网上的数据" class="headerlink" title="&lt;4&gt;传输在互联网上的数据"></a>&lt;4&gt;传输在互联网上的数据</h2><p>这一部分自不必多说什么，网络的主要职能就是数据的交互，数据根据网卡由数据信息转换为光电信号，经过交换集线器（第二层交换机），路由器（第三层交换机），经过负载均衡器（4~7层交换机）最终到达你的电脑。</p>
+<h2 id="lt-5-gt-页面渲染"><a href="#lt-5-gt-页面渲染" class="headerlink" title="&lt;5&gt;页面渲染"></a>&lt;5&gt;页面渲染</h2><p>浏览器收到服务器返回的页面数据后，解析之后，开始对页面进行渲染。</p>
+
       
     </div>
 
@@ -1019,7 +399,7 @@
 
 
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>

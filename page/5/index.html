@@ -20,29 +20,25 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{&quot;hostname&quot;:&quot;froming.github.io&quot;,&quot;root&quot;:&quot;&#x2F;&quot;,&quot;images&quot;:&quot;&#x2F;images&quot;,&quot;scheme&quot;:&quot;Gemini&quot;,&quot;version&quot;:&quot;8.5.0&quot;,&quot;exturl&quot;:false,&quot;sidebar&quot;:{&quot;position&quot;:&quot;left&quot;,&quot;display&quot;:&quot;post&quot;,&quot;padding&quot;:18,&quot;offset&quot;:12},&quot;copycode&quot;:false,&quot;bookmark&quot;:{&quot;enable&quot;:false,&quot;color&quot;:&quot;#222&quot;,&quot;save&quot;:&quot;auto&quot;},&quot;fancybox&quot;:false,&quot;mediumzoom&quot;:false,&quot;lazyload&quot;:false,&quot;pangu&quot;:false,&quot;comments&quot;:{&quot;style&quot;:&quot;tabs&quot;,&quot;active&quot;:null,&quot;storage&quot;:true,&quot;lazyload&quot;:false,&quot;nav&quot;:null},&quot;motion&quot;:{&quot;enable&quot;:true,&quot;async&quot;:false,&quot;transition&quot;:{&quot;post_block&quot;:&quot;fadeIn&quot;,&quot;post_header&quot;:&quot;fadeInDown&quot;,&quot;post_body&quot;:&quot;fadeInDown&quot;,&quot;coll_header&quot;:&quot;fadeInLeft&quot;,&quot;sidebar&quot;:&quot;fadeInUp&quot;}},&quot;prism&quot;:false,&quot;i18n&quot;:{&quot;placeholder&quot;:&quot;搜索...&quot;,&quot;empty&quot;:&quot;没有找到任何搜索结果：${query}&quot;,&quot;hits_time&quot;:&quot;找到 ${hits} 个搜索结果（用时 ${time} 毫秒）&quot;,&quot;hits&quot;:&quot;找到 ${hits} 个搜索结果&quot;}}</script><script src="/js/config.js"></script>
-<meta name="description" content="&lt;1&gt;php伪协议1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解 ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。 php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是">
-<meta property="og:type" content="article">
-<meta property="og:title" content="php伪协议及其它网络安全相关知识">
-<meta property="og:url" content="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
+<meta name="description" content="网络安全websecurity">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A fifth century">
+<meta property="og:url" content="https://froming.github.io/page/5/index.html">
 <meta property="og:site_name" content="A fifth century">
-<meta property="og:description" content="&lt;1&gt;php伪协议1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解 ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。 php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是">
+<meta property="og:description" content="网络安全websecurity">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-06-23T16:25:24.000Z">
-<meta property="article:modified_time" content="2021-06-24T04:32:54.796Z">
 <meta property="article:author" content="Forming">
-<meta property="article:tag" content="php">
-<meta property="article:tag" content="MD5">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
+<link rel="canonical" href="https://froming.github.io/page/5/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:false,&quot;isPost&quot;:true,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:true,&quot;permalink&quot;:&quot;https:&#x2F;&#x2F;froming.github.io&#x2F;2021&#x2F;06&#x2F;24&#x2F;php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86&quot;,&quot;path&quot;:&quot;2021&#x2F;06&#x2F;24&#x2F;php伪协议及其它网络安全相关知识&quot;,&quot;title&quot;:&quot;php伪协议及其它网络安全相关知识&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:true,&quot;isPost&quot;:false,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:&quot;&quot;,&quot;permalink&quot;:&quot;&quot;,&quot;path&quot;:&quot;page&#x2F;5&#x2F;index.html&quot;,&quot;title&quot;:&quot;&quot;}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
-<title>php伪协议及其它网络安全相关知识 | A fifth century</title>
+<title>A fifth century</title>
   
 
 
@@ -106,7 +102,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -119,7 +115,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lt-1-gt-php%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.</span> <span class="nav-text">&lt;1&gt;php伪协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AF%B9%E6%9B%B4%E6%94%B9php-ini%E6%96%87%E4%BB%B6%E4%B8%AD%E2%80%98allow-url-fopen%E2%80%98%E5%92%8C%E2%80%99allow-url-include%E2%80%99%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">1.1.</span> <span class="nav-text">1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1%E5%AF%B9PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%90%8D%E5%AD%97%E7%94%B1%E6%9D%A5%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1对PHP伪协议名字由来的理解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-URL%E7%9A%84%E6%A0%87%E5%87%86%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">2.URL的标准格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AF%B9php-ini%E4%B8%AD%E7%9A%84%E9%83%A8%E5%88%86%E8%AF%AD%E5%8F%A5%E6%94%B9%E5%8F%98%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">1.3.</span> <span class="nav-text">3.对php.ini中的部分语句改变的必要性的理解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AF%B9php-input%E4%B8%BA%E8%BF%99%E7%A7%8D%E8%AF%AD%E6%B3%95%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">1.4.</span> <span class="nav-text">4.对php:&#x2F;&#x2F;input为这种语法的必要性的理解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-php-input"><span class="nav-number">1.5.</span> <span class="nav-text">5.php:&#x2F;&#x2F;input</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-base64"><span class="nav-number">1.6.</span> <span class="nav-text">6.base64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%85%B6%E5%AE%83php%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.7.</span> <span class="nav-text">7.其它php伪协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lt-2-gt-%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-number">2.</span> <span class="nav-text">&lt;2&gt;其它网络安全相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E5%BC%B1%E6%AF%94%E8%BE%83"><span class="nav-number">2.1.</span> <span class="nav-text">（1）弱比较</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AF%B9%E5%BC%BA%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%BC%B1%E7%B1%BB%E5%9E%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.对强类型与弱类型语言的理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%AF%B9%E2%80%9C%E4%B8%89%E7%AD%89%E5%8F%B7%E2%80%9D%E2%80%9C%E5%8F%8C%E7%AD%89%E5%8F%B7%E2%80%9D%E7%9A%84%E5%8C%BA%E5%88%AB%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.对“三等号”“双等号”的区别的理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%AF%94%E8%BE%83%E6%93%8D%E4%BD%9C"><span class="nav-number">2.1.3.</span> <span class="nav-text">3.比较操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%882%EF%BC%89md5"><span class="nav-number">2.2.</span> <span class="nav-text">（2）md5</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-md5%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">1.md5是什么</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%88%E7%AC%BC%E7%BB%9F%EF%BC%89"><span class="nav-number">2.2.0.2.</span> <span class="nav-text">2.实现的方法（笼统）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-0exxx%E6%81%92%E4%B8%BA%E9%9B%B6%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.3.</span> <span class="nav-text">(3)0exxx恒为零的原因</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -194,17 +189,16 @@
 </noscript>
 
 
-    <div class="main-inner post posts-expand">
+    <div class="main-inner index posts-expand">
 
-
-  
+    
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -217,9 +211,9 @@
       <meta itemprop="name" content="A fifth century">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          php伪协议及其它网络安全相关知识
-        </h1>
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86" class="post-title-link" itemprop="url">php伪协议及其它网络安全相关知识</a>
+        </h2>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -252,7 +246,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="lt-1-gt-php伪协议"><a href="#lt-1-gt-php伪协议" class="headerlink" title="&lt;1&gt;php伪协议"></a>&lt;1&gt;php伪协议</h2><h3 id="1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解"><a href="#1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解" class="headerlink" title="1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解"></a>1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解</h3><ul>
+          <h2 id="lt-1-gt-php伪协议"><a href="#lt-1-gt-php伪协议" class="headerlink" title="&lt;1&gt;php伪协议"></a>&lt;1&gt;php伪协议</h2><h3 id="1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解"><a href="#1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解" class="headerlink" title="1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解"></a>1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解</h3><ul>
 <li>ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。</li>
 <li>php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是否将URL作为文件处理，后者的意思是是否允许include/require打开URL作为文件处理。</li>
 </ul>
@@ -312,6 +306,7 @@
 <h5 id="2-实现的方法（笼统）"><a href="#2-实现的方法（笼统）" class="headerlink" title="2.实现的方法（笼统）"></a>2.实现的方法（笼统）</h5><p>一串数据占用的位数与512bit取余，如果余数不是448，则要补位（部位的方式为一位是1剩下的全补成零）。之后再将没有补位前的数据长度用64位表示。装入<em><strong>标准幻数</strong></em>。此时数据长度为（n+1）<em>512，之后将每一个512分为16个32子分位，进行</em><strong>四轮运算</strong>，最后得出一个128位的散列值。</p>
 <h3 id="3-0exxx恒为零的原因"><a href="#3-0exxx恒为零的原因" class="headerlink" title="(3)0exxx恒为零的原因"></a>(3)0exxx恒为零的原因</h3><p><em><strong>0exxx是指数表达形式，其中e前面是指数的实数位，而e后面是指数表达式的指数位，进行科学计数法转换以后，0无论乘多少次方都为零，所以0exxx的结果是0</strong></em></p>
 
+      
     </div>
 
     
@@ -319,25 +314,8 @@
     
 
     <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/php/" rel="tag"># php</a>
-              <a href="/tags/MD5/" rel="tag"># MD5</a>
-          </div>
-
-        
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0" rel="prev" title="harrynull.tech_cipher游记">
-                  <i class="fa fa-chevron-left"></i> harrynull.tech_cipher游记
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" rel="next" title="superforming的sql-labs大通关之第1部分解析及注入方法">
-                  superforming的sql-labs大通关之第1部分解析及注入方法 <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
+        <div class="post-eof"></div>
+      
     </footer>
   </article>
 </div>
@@ -345,7 +323,117 @@
 
 
 
+    
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Forming">
+      <meta itemprop="description" content="网络安全websecurity">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="A fifth century">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0" class="post-title-link" itemprop="url">harrynull.tech_cipher游记</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-24 00:24:41 / 修改时间：12:32:43" itemprop="dateCreated datePublished" datetime="2021-06-24T00:24:41+08:00">2021-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>(&gt;_&gt;)！编网站得人和我不是一个时代得人，很多题get不到那个点，我以后也想出个网站上来就让猜我叫啥</p>
+<h2 id="（1）有用网站分享"><a href="#（1）有用网站分享" class="headerlink" title="（1）有用网站分享"></a>（1）有用网站分享</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.uupoop.com/">在线ps</a></li>
+<li><a target="_blank" rel="noopener" href="http://gif.55.la/">在线gif制作</a></li>
+<li><a target="_blank" rel="noopener" href="https://tool.oschina.net/encrypt?type=3">在线base64转换</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cmd5.com/">在线md5解码</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/bianma/zhalanmima.php">栅栏密码在线解密、加密</a></li>
+<li><a target="_blank" rel="noopener" href="https://tool.oschina.net/hexconvert">在线进制转换</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.qtool.net/decode">在线jjencode和aaencode解码</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bejson.com/convert/ox2str">在线十六进制转字符串</a></li>
+<li><a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/3c1aad12cc7931b765ce1563.html">GMDSS码语查看</a></li>
+</ul>
+<h2 id="2-游览趣闻"><a href="#2-游览趣闻" class="headerlink" title="(2)游览趣闻"></a>(2)游览趣闻</h2><h3 id="1-第一关-第四关"><a href="#1-第一关-第四关" class="headerlink" title="1.第一关~第四关"></a>1.第一关~第四关</h3><p>过于easy，查看源码就能解决，不做记录</p>
+<h3 id="2-第五关"><a href="#2-第五关" class="headerlink" title="2.第五关"></a>2.第五关</h3><p>第五关开始玩了一个梗，在《银河系漫游指南》中有一句话“the answer to life the universe and everything”,是一个跨纬度种族发出的提问，最终被一个电脑解出来答案，答案就是42。</p>
+<h3 id="3-第六关"><a href="#3-第六关" class="headerlink" title="3.第六关"></a>3.第六关</h3><p>第六关的答案是一部老番的人物的名字，恰巧我没看过，这番太老了，不过“百度识图”就好了。</p>
+<h3 id="3-第七关"><a href="#3-第七关" class="headerlink" title="3.第七关"></a>3.第七关</h3><p>第七关是这个网站不当人的开始，第七关本身不难，但这是值得纪念的开始，这个网站从这个网页开始用到了ps。</p>
+<h3 id="4-第八关"><a href="#4-第八关" class="headerlink" title="4.第八关"></a>4.第八关</h3><p>第八关把文件用记事本打开，最后在末尾会找到下一关的名字</p>
+<h3 id="5-第十关"><a href="#5-第十关" class="headerlink" title="5.第十关"></a>5.第十关</h3><p>第十关，眼睛不好的同学可以手机录像之后下载一个“巧影”，上面可以自己卡帧</p>
+<h3 id="6-第十一关"><a href="#6-第十一关" class="headerlink" title="6.第十一关"></a>6.第十一关</h3><p>第十一关是有关md5的用上面我分享的网站解码就行</p>
+<h3 id="7-第十二关"><a href="#7-第十二关" class="headerlink" title="7.第十二关"></a>7.第十二关</h3><p>第十二关明显是经过编码的，和汉字有关的就是UTF-8之类的汉字编码方式</p>
+<h3 id="8-第十三关"><a href="#8-第十三关" class="headerlink" title="8.第十三关"></a>8.第十三关</h3><p>第十三关根据提示得到两张图片，做成gif之后就可以知道名字，不过最好还是不要用ps做因为要技术，上面分享的网站做因为方便。</p>
+<h3 id="9-第十四关"><a href="#9-第十四关" class="headerlink" title="9.第十四关"></a>9.第十四关</h3><p>第十四关的脑洞是我所不能及的，答案就是”ohm“,此时我才大一，而且是软件工程，还没开始学大物这电导率是我高中略有耳闻但是没有意识的物理量，真是不当人。</p>
+<h3 id="10-第十五关"><a href="#10-第十五关" class="headerlink" title="10.第十五关"></a>10.第十五关</h3><p>第十五关，要下载xv132的小程序，可以查看文件的二进制码，同时我们要知道每一种文件的源码都是要标注出文件是什么格式，仅仅靠文件名的后缀是不行的，翻看文件二进制码头我们可以发现他的码头是不对的，将格式改为gif的格式，同时将文件头数据块和文件结束数据块改对以后就可以将它用ps打开，可以看见有三个图层，第二个图层上是下一个网页的名字。还是老老实实用ps做好，我的亲身实践。</p>
+<h3 id="11-第十六关"><a href="#11-第十六关" class="headerlink" title="11.第十六关"></a>11.第十六关</h3><p>第十六关还是要用到ps，将两个图片调节混合模式为”差值“以后，向左移动上面的图层，之后就能得到答案。</p>
+<h3 id="12-第十七关和第十八关"><a href="#12-第十七关和第十八关" class="headerlink" title="12.第十七关和第十八关"></a>12.第十七关和第十八关</h3><p>第十七关和第十八关类似都是一个类型，通过二进制数据生成图像，最后根据图像得到下一个网页的名字。</p>
+<h3 id="13-第十九关"><a href="#13-第十九关" class="headerlink" title="13.第十九关"></a>13.第十九关</h3><p>   过</p>
+<h3 id="14-第二十关"><a href="#14-第二十关" class="headerlink" title="14.第二十关"></a>14.第二十关</h3><p>通过网页源码的‘input’标签和提示的信息可以发现，最后输入的数字应该是一个由十个字母组成的字符串，可以硬找，也可以编一个小程序。</p>
+<h3 id="15-第二十一关"><a href="#15-第二十一关" class="headerlink" title="15.第二十一关"></a>15.第二十一关</h3><p>用到了浏览器和服务器之间交流的知识，我在这一块的知识并不熟练，所以我感觉很有趣，直接在相应头或者请求头中找就可以找到。</p>
+<h3 id="16-第二十二，三关"><a href="#16-第二十二，三关" class="headerlink" title="16.第二十二，三关"></a>16.第二十二，三关</h3><p>过</p>
+<h3 id="17-第二十四关"><a href="#17-第二十四关" class="headerlink" title="17.第二十四关"></a>17.第二十四关</h3><p>是进制之间的转换，是十六进制转三十进制，多式几次找到正确选项之后就可以得到下一个网页。</p>
+<h3 id="18-第二十五关"><a href="#18-第二十五关" class="headerlink" title="18.第二十五关"></a>18.第二十五关</h3><p>将一串编码换成另一串编码，就像是jsfuck,这种编码的方式是只用六个符号编码出javascript脚本，它的原理是javascript的编码转换成二进制格式之后，和只用六种符号编码之后得到得二进制是一样的，所以得以实现。而这个提用到得编码方式是AAencode，直接用我分享的网站输入编码以后解码就好了。</p>
+<h3 id="19-第二十六关"><a href="#19-第二十六关" class="headerlink" title="19.第二十六关"></a>19.第二十六关</h3><p>用到得三重编码方式是base64编码，手机键盘编码（dial pad 是手机键盘得意思），和栅栏加密法</p>
+<h3 id="20-第二十七关"><a href="#20-第二十七关" class="headerlink" title="20.第二十七关"></a>20.第二十七关</h3><p>过</p>
+<h3 id="21-第二十八关"><a href="#21-第二十八关" class="headerlink" title="21.第二十八关"></a>21.第二十八关</h3><p>用到的是一个电影得梗《指挥官基恩》，用到‘银河标准字母表’。</p>
+<h3 id="22-第三十关"><a href="#22-第三十关" class="headerlink" title="22.第三十关"></a>22.第三十关</h3><p>这一关也很有趣，因为我知道了一个我以前不知道得编码方式——GMDSS编码，做这道题也简单，直接上上面找我分享的网站，就能通过比对找出答案</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 </div>
   </main>
