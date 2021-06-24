@@ -23,7 +23,7 @@
 <meta name="description" content="网络安全websecurity">
 <meta property="og:type" content="website">
 <meta property="og:title" content="A fifth century">
-<meta property="og:url" content="https://froming.github.io/page/2/index.html">
+<meta property="og:url" content="https://froming.github.io/page/9/index.html">
 <meta property="og:site_name" content="A fifth century">
 <meta property="og:description" content="网络安全websecurity">
 <meta property="og:locale" content="zh_CN">
@@ -31,11 +31,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://froming.github.io/page/2/">
+<link rel="canonical" href="https://froming.github.io/page/9/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:true,&quot;isPost&quot;:false,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:&quot;&quot;,&quot;permalink&quot;:&quot;&quot;,&quot;path&quot;:&quot;page&#x2F;2&#x2F;index.html&quot;,&quot;title&quot;:&quot;&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:true,&quot;isPost&quot;:false,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:&quot;&quot;,&quot;permalink&quot;:&quot;&quot;,&quot;path&quot;:&quot;page&#x2F;9&#x2F;index.html&quot;,&quot;title&quot;:&quot;&quot;}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
 <title>A fifth century</title>
@@ -199,7 +199,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/%E5%9F%BA%E4%BA%8EHTTPS%E5%8D%8F%E8%AE%AE%E8%AF%B7%E6%B1%82%E7%BD%91%E9%A1%B5%E7%9A%84%E8%BF%87%E7%A8%8B">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/%E5%9F%BA%E4%BA%8EHTTPS%E5%8D%8F%E8%AE%AE%E8%AF%B7%E6%B1%82%E7%BD%91%E9%A1%B5%E7%9A%84%E8%BF%87%E7%A8%8B" class="post-title-link" itemprop="url">基于HTTPS协议请求网页的过程</a>
+          <a href="/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86" class="post-title-link" itemprop="url">php伪协议及其它网络安全相关知识</a>
         </h2>
 
         <div class="post-meta-container">
@@ -224,7 +224,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:31:21 / 修改时间：12:34:29" itemprop="dateCreated datePublished" datetime="2021-06-24T00:31:21+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:25:24 / 修改时间：12:32:54" itemprop="dateCreated datePublished" datetime="2021-06-24T00:25:24+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -246,59 +246,65 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="lt-1-gt-从url栏将域名提取出来"><a href="#lt-1-gt-从url栏将域名提取出来" class="headerlink" title="&lt;1&gt;从url栏将域名提取出来"></a>&lt;1&gt;从url栏将域名提取出来</h2><p>在浏览器上的url栏输入url，如果有汉字，这时会将汉字用unicode转换成计算机可以识别的机器语言</p>
+          <h2 id="lt-1-gt-php伪协议"><a href="#lt-1-gt-php伪协议" class="headerlink" title="&lt;1&gt;php伪协议"></a>&lt;1&gt;php伪协议</h2><h3 id="1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解"><a href="#1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解" class="headerlink" title="1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解"></a>1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解</h3><ul>
+<li>ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。</li>
+<li>php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是否将URL作为文件处理，后者的意思是是否允许include/require打开URL作为文件处理。</li>
+</ul>
+<h4 id="1-1对PHP伪协议名字由来的理解"><a href="#1-1对PHP伪协议名字由来的理解" class="headerlink" title="1.1对PHP伪协议名字由来的理解"></a>1.1对PHP伪协议名字由来的理解</h4><p>php上的协议是一种自定协议不具有广泛性所以叫伪协议</p>
+<h3 id="2-URL的标准格式"><a href="#2-URL的标准格式" class="headerlink" title="2.URL的标准格式"></a>2.URL的标准格式</h3><ul>
+<li><p>URL的标准格式为protocol://hostname[:port]/path[?query#fragment]</p>
+<p>举例：”<a target="_blank" rel="noopener" href="http://www.baidu.com/movie/movieshow?id=234&amp;number=1314#name%E2%80%9C">http://www.baidu.com/movie/movieshow?id=234&amp;number=1314#name“</a></p>
 <ul>
-<li><p>unicode（有utf-8,utf-16,utf-32三种情况，他们的区别时utf-8会将一个汉字随机转换成一、两、三、四个字节，而utf-16则会将一个汉字转换成两、四个字节，utf-32会将一个汉字转换为四个字节）<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_53061933/article/details/114594777?spm=1001.2014.3001.5501">了解更多unicode</a></p>
-</li>
-<li><p>URL的标准格式：<br>【protocol】：//【hostname】：【port】【path】?【query】#【fragment】</p>
-</li>
-<li><p>protocol是指网络传输协议(如：http、https、file等)。</p>
-<ul>
+<li>protocol是指网络传输协议(如：http、https、file等)。</li>
 <li>hostname是指存放资源的与域名、主机名或IP地址。</li>
 <li>port是指端口,有时用默认端口所以不显示。</li>
 <li>path是指一个主机上的一个目录或者文件地址，它决定了服务器如何处理这个请求。</li>
 <li>query从?到#之间是参数(也叫搜索部分)，参数之间用&amp;来间隔。</li>
 <li>fragment用于指定网络资源中的片段，搜索部分搜索出的信息多种多样，通过fragment可以明确指出哪些信息是我们需要 </li>
 </ul>
+<h3 id="3-对php-ini中的部分语句改变的必要性的理解"><a href="#3-对php-ini中的部分语句改变的必要性的理解" class="headerlink" title="3.对php.ini中的部分语句改变的必要性的理解"></a>3.对php.ini中的部分语句改变的必要性的理解</h3></li>
+<li><p>php.ini的作用是是指导php解析器对php语句的处理方式</p>
+</li>
+<li><p>将’allow_url_fopen‘改为’allow_url_fopen=on‘;’allow_url_include’改为’allow_url-include=on‘让计算机可以将URL处理                     。</p>
+<h3 id="4-对php-input为这种语法的必要性的理解"><a href="#4-对php-input为这种语法的必要性的理解" class="headerlink" title="4.对php://input为这种语法的必要性的理解"></a>4.对php://input为这种语法的必要性的理解</h3><p>​               <em><strong>php内置遵循URL的风格的封装协议，只有这种格式计算机才能听懂，并执行命令</strong></em></p>
+<h3 id="5-php-input"><a href="#5-php-input" class="headerlink" title="5.php://input"></a>5.php://input</h3><p><em><strong>用于查看源码，同时是要查看未压缩文件的只读流（只读流是说只能进行读操作的数据）</strong></em></p>
+<p>条件：<em><strong>allow_url_fopen=off/on</strong></em> ;<em><strong>allow_url_include=on</strong></em></p>
+<p>1.可用于给某些变量赋值使用</p>
+<p>2.总的来说用于执行php代码</p>
+<p>3.在POST访问中访问POST的DATA 部分</p>
+<p>4.也可用于一句话木马的注入</p>
+<h3 id="6-base64"><a href="#6-base64" class="headerlink" title="6.base64"></a><em><strong>6.base64</strong></em></h3><p><em><strong>对base64与ASCII码转换的理解。</strong></em></p>
+<ul>
+<li>base64是用64个打印字符表示二进制数据。</li>
+<li>64个打印字符对应64个数字，所以只需6个bit就能表示任意一个打印字符，而一个byte的8个bit有两个就要一直表示0。</li>
+<li>三个传统字节可以用四个base64字符来表示。</li>
+<li>当只有一个传统字节时，用两个base64字符表示多余的bit用0来填补，同理三个也是一样的情况。</li>
+<li><em><strong><a href='http://blog.csdn.net/qq_37391017/article/details/84201021' target='_blank'>详细讲解</a></strong></em></li>
+</ul>
+<h3 id="7-其它php伪协议"><a href="#7-其它php伪协议" class="headerlink" title="7.其它php伪协议"></a>7.其它php伪协议</h3><p>1.php://filter</p>
+<ul>
+<li><p>条件：<em><strong>allow_url_fopen=off/on</strong></em>;<em><strong>allow_url_include=off/on</strong></em></p>
+</li>
+<li><p><em><strong>常用于读取php的源码</strong></em></p>
+</li>
+<li><p><em><strong>进行base64编码输出，不然会当作php代码执行</strong></em></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://127.0.0.1/">http://127.0.0.1/</a>&lt;文件路径&gt;?file=php://filter/read=&lt;读链的过滤器&gt;.base63-encode/resource=&lt;要过滤的数据流&gt;</p>
 </li>
 </ul>
-<h2 id="lt-2-gt-查询ip"><a href="#lt-2-gt-查询ip" class="headerlink" title="&lt;2&gt;查询ip"></a>&lt;2&gt;查询ip</h2><p>获得域名之后应该是查ip，但是在此之前还有一步是查看HSTS列表上有没有要查询的域名，如果有的话就要在和这个域名对应的服务器进行联系时使用https协议（HSTS是IETE推荐的一种web协议）</p>
-<p>1.查IP会看本机上的host文件和本地DNS服务器上看看有没有域名相关的记录</p>
-<p>2.如果在查询根服务器之后依旧没有域名对应的ip那么将会传给下一级服务器直到查到为止。</p>
-<ul>
-<li>查询IP有两种方式，分别是递归查询和迭代查询，迭代查询就是这一级服务器没有IP地址的情况下，将下一级服务器的IP传给查询端由查询端访问下一级服务器的方式叫做迭代查询。递归查询是由这一级服务器直接访问下一级服务器下一级服务器同样如此，知道查到IP为止的查询方式，这种方式叫做递归查询。</li>
+<p>2.另一些php://协议</p>
+<p>php://stdin、php://memory、php://temp等</p>
+<hr>
+<h2 id="lt-2-gt-其它网络安全相关知识"><a href="#lt-2-gt-其它网络安全相关知识" class="headerlink" title="&lt;2&gt;其它网络安全相关知识"></a>&lt;2&gt;其它网络安全相关知识</h2></li>
 </ul>
-<h2 id="lt-3-gt-与对应IP的终端进行联系"><a href="#lt-3-gt-与对应IP的终端进行联系" class="headerlink" title="&lt;3&gt;与对应IP的终端进行联系"></a>&lt;3&gt;与对应IP的终端进行联系</h2><p>tcp协议规定了客户端与服务器之间建立联系的方式</p>
-<h3 id="1-一般情况下与服务器进行连接"><a href="#1-一般情况下与服务器进行连接" class="headerlink" title="[1]一般情况下与服务器进行连接"></a>[1]一般情况下与服务器进行连接</h3><h4 id="1-按照TCP建立联系三次握手"><a href="#1-按照TCP建立联系三次握手" class="headerlink" title="1.按照TCP建立联系三次握手"></a>1.按照TCP建立联系三次握手</h4><p>一次：客户端向服务器发送SYN=1和Seq=x</p>
-<ul>
-<li>SYN=1的意思就是请求建立联系，而Seq=x意思是发送给服务器一个随机产生的序列号</li>
-</ul>
-<p>二次：服务器向客户端发送SYN=1,ACK=1,ACK number=x+1,Seq=y</p>
-<ul>
-<li>ACK是Acknownledge的缩写，ACK=1的意思是告诉终端数据以成功收到，ACK number=x+1就是为了验证数据已经成功接受</li>
-</ul>
-<p>三次：客户端向服务器发送SYN=0,ACK=1,ACK number=y+1，Seq=x+1</p>
-<h4 id="2-断开连接四次挥手"><a href="#2-断开连接四次挥手" class="headerlink" title="2.断开连接四次挥手"></a>2.断开连接四次挥手</h4><p>一次：客户端发给服务器FIN=1的TCP报文</p>
-<ul>
-<li>FIN=1意味着发送方字节流结束，fin为TCP报头的码位字段</li>
-</ul>
-<p>二次：服务器返回客户端一个ACK报文</p>
-<p>三次：服务器给给客户端发送一个FIN报文</p>
-<p>四次：客户端回复ACK报文</p>
-<h3 id="2-二般情况下与服务器进行明文通信商量之后加密联系"><a href="#2-二般情况下与服务器进行明文通信商量之后加密联系" class="headerlink" title="[2]二般情况下与服务器进行明文通信商量之后加密联系"></a>[2]二般情况下与服务器进行明文通信商量之后加密联系</h3><h4 id="1-SSL协议的构成"><a href="#1-SSL协议的构成" class="headerlink" title="1.SSL协议的构成"></a>1.SSL协议的构成</h4><p>SSL协议实际上分为两个部分，分别是<strong>SSL记录层协议</strong>和<strong>SSL握手协议</strong>，它用来记录上层协议的数据，再根据SSL握手协议发送，SSL记录层协议是基于TCP协议，而SSL握手协议是基于SSL记录层协议。</p>
-<h4 id="2-对记录层的介绍"><a href="#2-对记录层的介绍" class="headerlink" title="2.对记录层的介绍"></a>2.对记录层的介绍</h4><p>SSL记录层是架构在TCP协议上的，它分为记录头和记录数据。记录头有两种形式，分别是2字节和3字节两种类型，在2字节中包括的数据是mac(mac是由HASH根据密钥、实际数据等数据算出来的一个数值)、数据、记录头类型、数据长度。而3字节的数据则还要包括填充数据、填充数据长度（为了让数据块是一个整数，以便于数据加密）、Escape位，可知当记录头是3字节时次高位为1时表示所传输的数据是普通的数据，如果是0则表示所传输的数据是安全空白记录（被保留用于将来协议的扩展）。</p>
-<h4 id="3-SSL握手协议"><a href="#3-SSL握手协议" class="headerlink" title="3.SSL握手协议"></a>3.SSL握手协议</h4><ul>
-<li>第一步：客户端向服务端发送数据，数据包括一个叫clienthello.random随机数用于之后的密钥确定、自己支持的SSL/TLS协议版本（TLS是SSLv3上演变过来的）、以及之后要用的加密方式（一般是RAS加密）、如果有证书的话就会将客户算的CA证书返回给服务端，没有的话也要告诉服务端自己没有CA证书。等数据</li>
-<li>第二步：服务端接收到数据后，对客户端发送数据，数据内容包括自己的证书、一个叫serverhello.random的随机数、自己支持的SSL/TLS的版本、之后要用的加密方式。</li>
-<li>第三步：客户端接收到数据之后，算出来一个密钥，之后向服务端发送hellodown的数据表示客户端进入加密状态，并将数据加密。</li>
-<li>第四步：服务端接受到hellodown的数据之后向客户端发送finished数据<br>，后自己也进入加密状态。</li>
-</ul>
-<h4 id="4-对加密细节的简单讲解"><a href="#4-对加密细节的简单讲解" class="headerlink" title="4.对加密细节的简单讲解"></a>4.对加密细节的简单讲解</h4><ul>
-<li>密钥的确定<br>确定密钥要根据客户算和服务端传来的两个随机数，和客户端自己生成的随机数，之所以要用三个随机数，就是为了让这个加密数据的数无限接近真随机数。</li>
-<li>公钥加密密钥，密钥加密数据<br>RAS加密是非对称加密，用来加密数据的话，最后会使数据解析变慢，所以在实际使用过程中会将密钥用公钥根据RAS进行非对称加密，在将数据根据密钥进行对称加密，这就即使加密严格，又提高了解析的速度</li>
-</ul>
-<h2 id="lt-4-gt-传输在互联网上的数据"><a href="#lt-4-gt-传输在互联网上的数据" class="headerlink" title="&lt;4&gt;传输在互联网上的数据"></a>&lt;4&gt;传输在互联网上的数据</h2><p>这一部分自不必多说什么，网络的主要职能就是数据的交互，数据根据网卡由数据信息转换为光电信号，经过交换集线器（第二层交换机），路由器（第三层交换机），经过负载均衡器（4~7层交换机）最终到达你的电脑。</p>
-<h2 id="lt-5-gt-页面渲染"><a href="#lt-5-gt-页面渲染" class="headerlink" title="&lt;5&gt;页面渲染"></a>&lt;5&gt;页面渲染</h2><p>浏览器收到服务器返回的页面数据后，解析之后，开始对页面进行渲染。</p>
+<h3 id="（1）弱比较"><a href="#（1）弱比较" class="headerlink" title="（1）弱比较"></a>（1）弱比较</h3><h4 id="1-对强类型与弱类型语言的理解"><a href="#1-对强类型与弱类型语言的理解" class="headerlink" title="1.对强类型与弱类型语言的理解"></a>1.对强类型与弱类型语言的理解</h4><p>​    1.强类型语言是一种强制类型定义的语言，一旦某一个变量被定义类型，如果不经过强制转换，则它永远就是该数据类型了，强类型语言包括Java、.net 、Python、C++等语言。</p>
+<p>​    2.弱类型语言是一种弱类型定义的语言，某一个变量被定义类型，该变量可以根据环境变化自动进行转换，不需要经过显性强制转换。弱类型语言包括vb 、PHP、javascript等语言</p>
+<h4 id="2-对“三等号”“双等号”的区别的理解"><a href="#2-对“三等号”“双等号”的区别的理解" class="headerlink" title="2.对“三等号”“双等号”的区别的理解"></a>2.对“三等号”“双等号”的区别的理解</h4><p>1.===是恒等，两个数要类型相同且数值相同</p>
+<p>2.==是比较运算，不会检查两个数的类型</p>
+<h4 id="3-比较操作"><a href="#3-比较操作" class="headerlink" title="3.比较操作"></a>3.比较操作</h4><p><em><strong>数字和字符串比较，php会把字符串转换成数字再比较。php转换原则是：若字符串以数字开头，则取开头数字作为转换结果，若无则输出0</strong></em></p>
+<h3 id="（2）md5"><a href="#（2）md5" class="headerlink" title="（2）md5"></a>（2）md5</h3><h5 id="1-md5是什么"><a href="#1-md5是什么" class="headerlink" title="1.md5是什么"></a>1.md5是什么</h5><p>有人认为是一种加密的方式，因为md5将原文件改变。但是也有人不认为，因为md5加密出的文件无法复原。</p>
+<h5 id="2-实现的方法（笼统）"><a href="#2-实现的方法（笼统）" class="headerlink" title="2.实现的方法（笼统）"></a>2.实现的方法（笼统）</h5><p>一串数据占用的位数与512bit取余，如果余数不是448，则要补位（部位的方式为一位是1剩下的全补成零）。之后再将没有补位前的数据长度用64位表示。装入<em><strong>标准幻数</strong></em>。此时数据长度为（n+1）<em>512，之后将每一个512分为16个32子分位，进行</em><strong>四轮运算</strong>，最后得出一个128位的散列值。</p>
+<h3 id="3-0exxx恒为零的原因"><a href="#3-0exxx恒为零的原因" class="headerlink" title="(3)0exxx恒为零的原因"></a>(3)0exxx恒为零的原因</h3><p><em><strong>0exxx是指数表达形式，其中e前面是指数的实数位，而e后面是指数表达式的指数位，进行科学计数法转换以后，0无论乘多少次方都为零，所以0exxx的结果是0</strong></em></p>
 
       
     </div>
@@ -318,7 +324,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>

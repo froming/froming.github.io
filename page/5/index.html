@@ -199,7 +199,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/php%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%8F%8A%E5%85%B6%E5%AE%83%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86" class="post-title-link" itemprop="url">php伪协议及其它网络安全相关知识</a>
+          <a href="/2021/06/24/xss-labs%E4%B8%BE%E4%BE%8Bxss%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF" class="post-title-link" itemprop="url">xss-labs举例xss注入的方式及基本思路</a>
         </h2>
 
         <div class="post-meta-container">
@@ -224,139 +224,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:25:24 / 修改时间：12:32:54" itemprop="dateCreated datePublished" datetime="2021-06-24T00:25:24+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E5%8F%8A%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">漏洞原理及基础知识</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="lt-1-gt-php伪协议"><a href="#lt-1-gt-php伪协议" class="headerlink" title="&lt;1&gt;php伪协议"></a>&lt;1&gt;php伪协议</h2><h3 id="1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解"><a href="#1-对更改php-ini文件中‘allow-url-fopen‘和’allow-url-include’的理解" class="headerlink" title="1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解"></a>1.对更改php.ini文件中‘allow_url_fopen‘和’allow_url_include’的理解</h3><ul>
-<li>ini是(initial’初始化‘)的缩写，ini文件用来对操作系统或特定程序初始化或进行参数设置，也就是说php.ini是PHP的一个配置文件。</li>
-<li>php.ini中有’allow_url_fopen‘和’allow_url_include’。前者的意思是说是否将URL作为文件处理，后者的意思是是否允许include/require打开URL作为文件处理。</li>
-</ul>
-<h4 id="1-1对PHP伪协议名字由来的理解"><a href="#1-1对PHP伪协议名字由来的理解" class="headerlink" title="1.1对PHP伪协议名字由来的理解"></a>1.1对PHP伪协议名字由来的理解</h4><p>php上的协议是一种自定协议不具有广泛性所以叫伪协议</p>
-<h3 id="2-URL的标准格式"><a href="#2-URL的标准格式" class="headerlink" title="2.URL的标准格式"></a>2.URL的标准格式</h3><ul>
-<li><p>URL的标准格式为protocol://hostname[:port]/path[?query#fragment]</p>
-<p>举例：”<a target="_blank" rel="noopener" href="http://www.baidu.com/movie/movieshow?id=234&amp;number=1314#name%E2%80%9C">http://www.baidu.com/movie/movieshow?id=234&amp;number=1314#name“</a></p>
-<ul>
-<li>protocol是指网络传输协议(如：http、https、file等)。</li>
-<li>hostname是指存放资源的与域名、主机名或IP地址。</li>
-<li>port是指端口,有时用默认端口所以不显示。</li>
-<li>path是指一个主机上的一个目录或者文件地址，它决定了服务器如何处理这个请求。</li>
-<li>query从?到#之间是参数(也叫搜索部分)，参数之间用&amp;来间隔。</li>
-<li>fragment用于指定网络资源中的片段，搜索部分搜索出的信息多种多样，通过fragment可以明确指出哪些信息是我们需要 </li>
-</ul>
-<h3 id="3-对php-ini中的部分语句改变的必要性的理解"><a href="#3-对php-ini中的部分语句改变的必要性的理解" class="headerlink" title="3.对php.ini中的部分语句改变的必要性的理解"></a>3.对php.ini中的部分语句改变的必要性的理解</h3></li>
-<li><p>php.ini的作用是是指导php解析器对php语句的处理方式</p>
-</li>
-<li><p>将’allow_url_fopen‘改为’allow_url_fopen=on‘;’allow_url_include’改为’allow_url-include=on‘让计算机可以将URL处理                     。</p>
-<h3 id="4-对php-input为这种语法的必要性的理解"><a href="#4-对php-input为这种语法的必要性的理解" class="headerlink" title="4.对php://input为这种语法的必要性的理解"></a>4.对php://input为这种语法的必要性的理解</h3><p>​               <em><strong>php内置遵循URL的风格的封装协议，只有这种格式计算机才能听懂，并执行命令</strong></em></p>
-<h3 id="5-php-input"><a href="#5-php-input" class="headerlink" title="5.php://input"></a>5.php://input</h3><p><em><strong>用于查看源码，同时是要查看未压缩文件的只读流（只读流是说只能进行读操作的数据）</strong></em></p>
-<p>条件：<em><strong>allow_url_fopen=off/on</strong></em> ;<em><strong>allow_url_include=on</strong></em></p>
-<p>1.可用于给某些变量赋值使用</p>
-<p>2.总的来说用于执行php代码</p>
-<p>3.在POST访问中访问POST的DATA 部分</p>
-<p>4.也可用于一句话木马的注入</p>
-<h3 id="6-base64"><a href="#6-base64" class="headerlink" title="6.base64"></a><em><strong>6.base64</strong></em></h3><p><em><strong>对base64与ASCII码转换的理解。</strong></em></p>
-<ul>
-<li>base64是用64个打印字符表示二进制数据。</li>
-<li>64个打印字符对应64个数字，所以只需6个bit就能表示任意一个打印字符，而一个byte的8个bit有两个就要一直表示0。</li>
-<li>三个传统字节可以用四个base64字符来表示。</li>
-<li>当只有一个传统字节时，用两个base64字符表示多余的bit用0来填补，同理三个也是一样的情况。</li>
-<li><em><strong><a href='http://blog.csdn.net/qq_37391017/article/details/84201021' target='_blank'>详细讲解</a></strong></em></li>
-</ul>
-<h3 id="7-其它php伪协议"><a href="#7-其它php伪协议" class="headerlink" title="7.其它php伪协议"></a>7.其它php伪协议</h3><p>1.php://filter</p>
-<ul>
-<li><p>条件：<em><strong>allow_url_fopen=off/on</strong></em>;<em><strong>allow_url_include=off/on</strong></em></p>
-</li>
-<li><p><em><strong>常用于读取php的源码</strong></em></p>
-</li>
-<li><p><em><strong>进行base64编码输出，不然会当作php代码执行</strong></em></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="http://127.0.0.1/">http://127.0.0.1/</a>&lt;文件路径&gt;?file=php://filter/read=&lt;读链的过滤器&gt;.base63-encode/resource=&lt;要过滤的数据流&gt;</p>
-</li>
-</ul>
-<p>2.另一些php://协议</p>
-<p>php://stdin、php://memory、php://temp等</p>
-<hr>
-<h2 id="lt-2-gt-其它网络安全相关知识"><a href="#lt-2-gt-其它网络安全相关知识" class="headerlink" title="&lt;2&gt;其它网络安全相关知识"></a>&lt;2&gt;其它网络安全相关知识</h2></li>
-</ul>
-<h3 id="（1）弱比较"><a href="#（1）弱比较" class="headerlink" title="（1）弱比较"></a>（1）弱比较</h3><h4 id="1-对强类型与弱类型语言的理解"><a href="#1-对强类型与弱类型语言的理解" class="headerlink" title="1.对强类型与弱类型语言的理解"></a>1.对强类型与弱类型语言的理解</h4><p>​    1.强类型语言是一种强制类型定义的语言，一旦某一个变量被定义类型，如果不经过强制转换，则它永远就是该数据类型了，强类型语言包括Java、.net 、Python、C++等语言。</p>
-<p>​    2.弱类型语言是一种弱类型定义的语言，某一个变量被定义类型，该变量可以根据环境变化自动进行转换，不需要经过显性强制转换。弱类型语言包括vb 、PHP、javascript等语言</p>
-<h4 id="2-对“三等号”“双等号”的区别的理解"><a href="#2-对“三等号”“双等号”的区别的理解" class="headerlink" title="2.对“三等号”“双等号”的区别的理解"></a>2.对“三等号”“双等号”的区别的理解</h4><p>1.===是恒等，两个数要类型相同且数值相同</p>
-<p>2.==是比较运算，不会检查两个数的类型</p>
-<h4 id="3-比较操作"><a href="#3-比较操作" class="headerlink" title="3.比较操作"></a>3.比较操作</h4><p><em><strong>数字和字符串比较，php会把字符串转换成数字再比较。php转换原则是：若字符串以数字开头，则取开头数字作为转换结果，若无则输出0</strong></em></p>
-<h3 id="（2）md5"><a href="#（2）md5" class="headerlink" title="（2）md5"></a>（2）md5</h3><h5 id="1-md5是什么"><a href="#1-md5是什么" class="headerlink" title="1.md5是什么"></a>1.md5是什么</h5><p>有人认为是一种加密的方式，因为md5将原文件改变。但是也有人不认为，因为md5加密出的文件无法复原。</p>
-<h5 id="2-实现的方法（笼统）"><a href="#2-实现的方法（笼统）" class="headerlink" title="2.实现的方法（笼统）"></a>2.实现的方法（笼统）</h5><p>一串数据占用的位数与512bit取余，如果余数不是448，则要补位（部位的方式为一位是1剩下的全补成零）。之后再将没有补位前的数据长度用64位表示。装入<em><strong>标准幻数</strong></em>。此时数据长度为（n+1）<em>512，之后将每一个512分为16个32子分位，进行</em><strong>四轮运算</strong>，最后得出一个128位的散列值。</p>
-<h3 id="3-0exxx恒为零的原因"><a href="#3-0exxx恒为零的原因" class="headerlink" title="(3)0exxx恒为零的原因"></a>(3)0exxx恒为零的原因</h3><p><em><strong>0exxx是指数表达形式，其中e前面是指数的实数位，而e后面是指数表达式的指数位，进行科学计数法转换以后，0无论乘多少次方都为零，所以0exxx的结果是0</strong></em></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/harrynull-tech-cipher%E6%B8%B8%E8%AE%B0" class="post-title-link" itemprop="url">harrynull.tech_cipher游记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:24:41 / 修改时间：12:32:43" itemprop="dateCreated datePublished" datetime="2021-06-24T00:24:41+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:28:47 / 修改时间：12:33:45" itemprop="dateCreated datePublished" datetime="2021-06-24T00:28:47+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -378,41 +246,63 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>(&gt;_&gt;)！编网站得人和我不是一个时代得人，很多题get不到那个点，我以后也想出个网站上来就让猜我叫啥</p>
-<h2 id="（1）有用网站分享"><a href="#（1）有用网站分享" class="headerlink" title="（1）有用网站分享"></a>（1）有用网站分享</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.uupoop.com/">在线ps</a></li>
-<li><a target="_blank" rel="noopener" href="http://gif.55.la/">在线gif制作</a></li>
-<li><a target="_blank" rel="noopener" href="https://tool.oschina.net/encrypt?type=3">在线base64转换</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cmd5.com/">在线md5解码</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/bianma/zhalanmima.php">栅栏密码在线解密、加密</a></li>
-<li><a target="_blank" rel="noopener" href="https://tool.oschina.net/hexconvert">在线进制转换</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.qtool.net/decode">在线jjencode和aaencode解码</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bejson.com/convert/ox2str">在线十六进制转字符串</a></li>
-<li><a target="_blank" rel="noopener" href="https://wenku.baidu.com/view/3c1aad12cc7931b765ce1563.html">GMDSS码语查看</a></li>
+          <h3 id="lt-1-gt-什么是xss"><a href="#lt-1-gt-什么是xss" class="headerlink" title="&lt;1&gt;什么是xss"></a>&lt;1&gt;什么是xss</h3><p>xss的英文名字是cross-site-script。俗称跨站脚本，是一种注入攻击，指攻击者在被攻击的网页上利用编写时的漏洞注入恶意脚本代码，受害者访问该页面时，恶意代码会在用户的浏览器上执行。</p>
+<h3 id="lt-2-gt-XSS的分类"><a href="#lt-2-gt-XSS的分类" class="headerlink" title="&lt;2&gt;XSS的分类"></a>&lt;2&gt;XSS的分类</h3><ul>
+<li><p>1.反射型</p>
+</li>
+<li><p>2.dom型</p>
+</li>
+<li><p>3.存储型</p>
+</li>
+<li><p>&lt;1&gt;<strong>反射型解析</strong>：反射型的数据走向是 <strong>客户端-&gt;服务器-&gt;客户端</strong>，XSS-LABS中全是这种类型的，或者也可以说是dom型的，客户端根据html网页源码，判断注入漏洞，不调用html中的js代码是反射型，而dom型则是直接调用网页源码中的js代码。</p>
+</li>
+<li><p>&lt;2&gt;<strong>dom型解析</strong>：dom型的数据走向是 <strong>URL-&gt;浏览器</strong>。</p>
+</li>
+<li><p>&lt;3&gt;<strong>存储型解析</strong>：存储型的数据走向是 <strong>客户端-&gt;服务器-&gt;数据库-&gt;服务器-&gt;客户端</strong>，比如有些网站有评论功能，当你评论时，服务器会把你的评论保存再数据库中，如果这时候注入恶意的js代码，那么只要一有人请求这个网页，那么就会请求到有恶意代码的网页。</p>
+</li>
 </ul>
-<h2 id="2-游览趣闻"><a href="#2-游览趣闻" class="headerlink" title="(2)游览趣闻"></a>(2)游览趣闻</h2><h3 id="1-第一关-第四关"><a href="#1-第一关-第四关" class="headerlink" title="1.第一关~第四关"></a>1.第一关~第四关</h3><p>过于easy，查看源码就能解决，不做记录</p>
-<h3 id="2-第五关"><a href="#2-第五关" class="headerlink" title="2.第五关"></a>2.第五关</h3><p>第五关开始玩了一个梗，在《银河系漫游指南》中有一句话“the answer to life the universe and everything”,是一个跨纬度种族发出的提问，最终被一个电脑解出来答案，答案就是42。</p>
-<h3 id="3-第六关"><a href="#3-第六关" class="headerlink" title="3.第六关"></a>3.第六关</h3><p>第六关的答案是一部老番的人物的名字，恰巧我没看过，这番太老了，不过“百度识图”就好了。</p>
-<h3 id="3-第七关"><a href="#3-第七关" class="headerlink" title="3.第七关"></a>3.第七关</h3><p>第七关是这个网站不当人的开始，第七关本身不难，但这是值得纪念的开始，这个网站从这个网页开始用到了ps。</p>
-<h3 id="4-第八关"><a href="#4-第八关" class="headerlink" title="4.第八关"></a>4.第八关</h3><p>第八关把文件用记事本打开，最后在末尾会找到下一关的名字</p>
-<h3 id="5-第十关"><a href="#5-第十关" class="headerlink" title="5.第十关"></a>5.第十关</h3><p>第十关，眼睛不好的同学可以手机录像之后下载一个“巧影”，上面可以自己卡帧</p>
-<h3 id="6-第十一关"><a href="#6-第十一关" class="headerlink" title="6.第十一关"></a>6.第十一关</h3><p>第十一关是有关md5的用上面我分享的网站解码就行</p>
-<h3 id="7-第十二关"><a href="#7-第十二关" class="headerlink" title="7.第十二关"></a>7.第十二关</h3><p>第十二关明显是经过编码的，和汉字有关的就是UTF-8之类的汉字编码方式</p>
-<h3 id="8-第十三关"><a href="#8-第十三关" class="headerlink" title="8.第十三关"></a>8.第十三关</h3><p>第十三关根据提示得到两张图片，做成gif之后就可以知道名字，不过最好还是不要用ps做因为要技术，上面分享的网站做因为方便。</p>
-<h3 id="9-第十四关"><a href="#9-第十四关" class="headerlink" title="9.第十四关"></a>9.第十四关</h3><p>第十四关的脑洞是我所不能及的，答案就是”ohm“,此时我才大一，而且是软件工程，还没开始学大物这电导率是我高中略有耳闻但是没有意识的物理量，真是不当人。</p>
-<h3 id="10-第十五关"><a href="#10-第十五关" class="headerlink" title="10.第十五关"></a>10.第十五关</h3><p>第十五关，要下载xv132的小程序，可以查看文件的二进制码，同时我们要知道每一种文件的源码都是要标注出文件是什么格式，仅仅靠文件名的后缀是不行的，翻看文件二进制码头我们可以发现他的码头是不对的，将格式改为gif的格式，同时将文件头数据块和文件结束数据块改对以后就可以将它用ps打开，可以看见有三个图层，第二个图层上是下一个网页的名字。还是老老实实用ps做好，我的亲身实践。</p>
-<h3 id="11-第十六关"><a href="#11-第十六关" class="headerlink" title="11.第十六关"></a>11.第十六关</h3><p>第十六关还是要用到ps，将两个图片调节混合模式为”差值“以后，向左移动上面的图层，之后就能得到答案。</p>
-<h3 id="12-第十七关和第十八关"><a href="#12-第十七关和第十八关" class="headerlink" title="12.第十七关和第十八关"></a>12.第十七关和第十八关</h3><p>第十七关和第十八关类似都是一个类型，通过二进制数据生成图像，最后根据图像得到下一个网页的名字。</p>
-<h3 id="13-第十九关"><a href="#13-第十九关" class="headerlink" title="13.第十九关"></a>13.第十九关</h3><p>   过</p>
-<h3 id="14-第二十关"><a href="#14-第二十关" class="headerlink" title="14.第二十关"></a>14.第二十关</h3><p>通过网页源码的‘input’标签和提示的信息可以发现，最后输入的数字应该是一个由十个字母组成的字符串，可以硬找，也可以编一个小程序。</p>
-<h3 id="15-第二十一关"><a href="#15-第二十一关" class="headerlink" title="15.第二十一关"></a>15.第二十一关</h3><p>用到了浏览器和服务器之间交流的知识，我在这一块的知识并不熟练，所以我感觉很有趣，直接在相应头或者请求头中找就可以找到。</p>
-<h3 id="16-第二十二，三关"><a href="#16-第二十二，三关" class="headerlink" title="16.第二十二，三关"></a>16.第二十二，三关</h3><p>过</p>
-<h3 id="17-第二十四关"><a href="#17-第二十四关" class="headerlink" title="17.第二十四关"></a>17.第二十四关</h3><p>是进制之间的转换，是十六进制转三十进制，多式几次找到正确选项之后就可以得到下一个网页。</p>
-<h3 id="18-第二十五关"><a href="#18-第二十五关" class="headerlink" title="18.第二十五关"></a>18.第二十五关</h3><p>将一串编码换成另一串编码，就像是jsfuck,这种编码的方式是只用六个符号编码出javascript脚本，它的原理是javascript的编码转换成二进制格式之后，和只用六种符号编码之后得到得二进制是一样的，所以得以实现。而这个提用到得编码方式是AAencode，直接用我分享的网站输入编码以后解码就好了。</p>
-<h3 id="19-第二十六关"><a href="#19-第二十六关" class="headerlink" title="19.第二十六关"></a>19.第二十六关</h3><p>用到得三重编码方式是base64编码，手机键盘编码（dial pad 是手机键盘得意思），和栅栏加密法</p>
-<h3 id="20-第二十七关"><a href="#20-第二十七关" class="headerlink" title="20.第二十七关"></a>20.第二十七关</h3><p>过</p>
-<h3 id="21-第二十八关"><a href="#21-第二十八关" class="headerlink" title="21.第二十八关"></a>21.第二十八关</h3><p>用到的是一个电影得梗《指挥官基恩》，用到‘银河标准字母表’。</p>
-<h3 id="22-第三十关"><a href="#22-第三十关" class="headerlink" title="22.第三十关"></a>22.第三十关</h3><p>这一关也很有趣，因为我知道了一个我以前不知道得编码方式——GMDSS编码，做这道题也简单，直接上上面找我分享的网站，就能通过比对找出答案</p>
+<h3 id="lt-3-gt-XSS的危害"><a href="#lt-3-gt-XSS的危害" class="headerlink" title="&lt;3&gt;XSS的危害"></a>&lt;3&gt;XSS的危害</h3><p>XSS-LABS中的漏洞没办法让人直观的感受到XSS的危害，所以我在这里举个例子让大家感受一下，如果一个人发现了一个网站过滤不严的地方，然后用a标签写了一个连接，中间加入了js代码，骗你进这个网址点一点就能免费领电饭煲，当你点进去以后发现其实指向了自己经常登录的一个网站，后来也不在意以为是恶作剧，可能这时候你已经被拿走了你在这个网站的cookie，那么注入者拿着你的cookie登录网站，用你的大会员看视频，损害你的利益。</p>
+<h3 id="lt-4-gt-基本过关原理"><a href="#lt-4-gt-基本过关原理" class="headerlink" title="&lt;4&gt;基本过关原理"></a>&lt;4&gt;基本过关原理</h3><p>通过探索发现漏洞，并根据漏洞注入js代码，成功调取head标签中内嵌的js函数——alert，进入下一关。</p>
+<h3 id="lt-5-gt-传递参数方式"><a href="#lt-5-gt-传递参数方式" class="headerlink" title="&lt;5&gt;传递参数方式"></a>&lt;5&gt;传递参数方式</h3><p>像SQL-LABS一样，XSS靶场也包括有不同的传递注入语句的方式，不过和SQL-LABS不同的是，XSS-LABS没有SQL-LABS那么多的传递方式，它有以下两种：</p>
+<ul>
+<li>1.get传参</li>
+<li>2.HTTP消息头传参<br>在哪注入归根结底就是看网站源码调取哪里的参数，调取的参数加了怎样的过滤。</li>
+</ul>
+<h3 id="lt-6-gt-常见存在注入的语句"><a href="#lt-6-gt-常见存在注入的语句" class="headerlink" title="&lt;6&gt;常见存在注入的语句"></a>&lt;6&gt;常见存在注入的语句</h3><ul>
+<li>1.a标签中的href</li>
+<li>2.embed标签传参处</li>
+<li>3.input标签</li>
+<li>4.embed也可以作为其它标签的参数,比如span</li>
+</ul>
+<h3 id="lt-7-gt-绕过的方法"><a href="#lt-7-gt-绕过的方法" class="headerlink" title="&lt;7&gt;绕过的方法"></a>&lt;7&gt;绕过的方法</h3><ul>
+<li>1.img标签src出错时用onerror注入</li>
+<li>2.将a标签闭合,用script标签进行注入</li>
+<li>3.根据href属性的值可以是一个js代码</li>
+<li>4.如果是input标签,可以将value属性闭合之后用onmoseover等触发事件</li>
+<li>5.可以尝试将代码进行unicode编码等浏览器可以解析的编码方式进行注入</li>
+<li>6.多个参数之间可能组合,对于这种情况要具体分析</li>
+</ul>
+<p>总之就是一句话<strong>只要你套路够骚,就没有绕不过去的waf</strong></p>
+<h3 id="lt-8-gt-xss注入的基本思路"><a href="#lt-8-gt-xss注入的基本思路" class="headerlink" title="&lt;8&gt;xss注入的基本思路"></a>&lt;8&gt;xss注入的基本思路</h3><h4 id="第一步-初步信息收集"><a href="#第一步-初步信息收集" class="headerlink" title="第一步:初步信息收集"></a>第一步:初步信息收集</h4><p>判断一个网站是否存在xss注入,首先要有信息去分析,所以第一步进行信息收集</p>
+<h5 id="收集信息的方法"><a href="#收集信息的方法" class="headerlink" title="收集信息的方法"></a>收集信息的方法</h5><ul>
+<li>&lt;1&gt;查看网页源码,留意源码中<strong>常见存在注入的语句</strong>,并留意可以向服务器传递的<strong>参数</strong></li>
+<li>&lt;2&gt;向服务器传递参数,并判断,哪些参数被用到了网页上,并且初步记录</li>
+<li>&lt;3&gt;将用了传递参数的语句总结出来之后,将<strong>常见存在注入的语句</strong>挑出,并且对它们的闭合方式进行记录</li>
+<li>&lt;4&gt;对初步记录进行分析,并总结结论,结论的标准是</li>
+<li><strong>我要在哪些语句上用哪些xss绕过方法进行注入</strong></li>
+</ul>
+<h4 id="第二步-尝试注入并记录结果"><a href="#第二步-尝试注入并记录结果" class="headerlink" title="第二步:尝试注入并记录结果"></a>第二步:尝试注入并记录结果</h4><p>根据第一步的初步信息记录结果,进行注入,但是一般网站都会进行waf防护,所以注入不成功很正常,所以要记录不成功的案例分析</p>
+<h4 id="第三步-分析不成功的结果"><a href="#第三步-分析不成功的结果" class="headerlink" title="第三步:分析不成功的结果"></a>第三步:分析不成功的结果</h4><p>根据绕过方法,将第二步的信息分析,发现可能的方法,进行尝试,之后一直第二步第三步进行循环直到成功</p>
+<h3 id="lt-9-gt-总结发现"><a href="#lt-9-gt-总结发现" class="headerlink" title="&lt;9&gt;总结发现"></a>&lt;9&gt;总结发现</h3><h4 id="1-关于双写注入的发现"><a href="#1-关于双写注入的发现" class="headerlink" title="1.关于双写注入的发现"></a>1.关于双写注入的发现</h4><p>双写注入一般出现在删除字符的情况下,调用<strong>str_replace函数</strong>,将传递过来中的参数中的指定字符串被替换成””,如下图:</p>
+<p><img src="https://img-blog.csdnimg.cn/20210316191726821.png" alt="在这里插入图片描述"><br>根据原理，这一关有多种双写方式，比如在语句中用javassccript和javascrscriptipt的效果一样，原理是把中间的script删除之后，两边的字符又组成了新的’<strong>script</strong>‘,但是计算机不会再检查一遍字符串,从而实现注入。</p>
+<h4 id="2-关于为什么input标签不闭合也可以的解释"><a href="#2-关于为什么input标签不闭合也可以的解释" class="headerlink" title="2.关于为什么input标签不闭合也可以的解释"></a>2.关于为什么input标签不闭合也可以的解释</h4><p>我做题得时候一直苦恼一件事就是为什么input没有闭合也能被正确解析，原因在于在html中input是可以不闭合的，但是在xhtml中必须闭合</p>
+<h4 id="3-unicode编码后成功注入的原理"><a href="#3-unicode编码后成功注入的原理" class="headerlink" title="3.unicode编码后成功注入的原理"></a>3.unicode编码后成功注入的原理</h4><p>这一关要用到unicode编码编码字符串，这样在服务端可以解析代码，但是在服务器端并没有检测出来拦截的字符串，使注入可以成功。过程如下：<br><strong>输入URL–&gt;unicode编码–&gt;服务端–&gt;没有解析unicode–&gt;服务端没有过滤成功–&gt;客户端–&gt;unicode解码</strong>。</p>
+<h4 id="4-第十四关做不了的原因："><a href="#4-第十四关做不了的原因：" class="headerlink" title="4.第十四关做不了的原因："></a>4.第十四关做不了的原因：</h4><p>这一关如果不想看的话直接跳过就好，可能使网站用不了了,使这一关不能做，但是这里我讲一下exif，exif(exchangeable image file format)可交换文件格式，是一种用来记录数码照片属性，数据的文件格式，在php中有一个函数叫exif_read_data用来读取这种格式的文件，我们就可以将js代码编辑到这种格式的文件中以此实现注入。</p>
+<h4 id="5-第十七、十八、十九、二十关："><a href="#5-第十七、十八、十九、二十关：" class="headerlink" title="5.第十七、十八、十九、二十关："></a>5.第十七、十八、十九、二十关：</h4><p>这四关要调用swf格式的文件，flash可以解析的文件格式就是swf文件格式，由此可以看出xss-labd是多老了，编写者一定想不到2021年flash已经在除IE之外的浏览器上除名了。这四关都要用到embed，这个的作用是嵌入一个swf文件格式的文件，同时还有可以向文件中传递参数。</p>
+<ul>
+<li>1.第十七、十八关:<br>这两关只是图片不一样其它完全相同，所以可以用相同的方法注入js脚本，查看服务器上的源码可以发现，arg01和arg02共同为swf文件传递参数，所以我们要根据这一特性和span标签中可以插入焦事件的特性嵌入js代码，所以我们可以在arg01出输入%0a这是一个十六进制编码，意思是换行，这么做就使我们可以顺利的调取alert函数，那么arg02就可以输入onmouseover=javascript:alert(form)此时就实现了调取alert()函数。其实还有很多方法，比如先是在arg01处输入a再在srg02处输入b onmouseover=javascript:alert(form)。但是其实都是万变不离其宗的东西。</li>
+<li>2.第十九、二十关:<br>最后两关观察服务器网页源码源码，发现在src参数处做了引号的包裹，同时用来htmlspecialchar函数将单引号、双引号、大于号、小于号、和号进行了实体字符的转换，理论上来讲已经可以说是毫无破绽了，因为没有闭合的办法。但其实是有的，这里就要引入一个序列化的概念，数据在网络上以<strong>流</strong>（有顺序，有头有尾，在两台主机间传递的数据叫做流）的形式传递，那么一个程序要是想要在其它的主机上也能运行，就需要将自身的属性进行记录，比如版本什么的，这就叫序列化。那么我们可以用反序列化的软件，将一个软件进行反序列化，就可以知道它缺少了什么，又根据swf的特性（可以传递参数的特性） 加入其中缺少的参数，但是将js脚本注入到就要传进去的地方，比如在第十九关的arg01处输入序列化是缺少的version参数，但是arg02参数处输入js脚本比如输入&lt;a href=”javascript:alet(1)”&gt;forming_is _handsome&lt;/a&gt;</li>
+</ul>
 
       
     </div>
@@ -432,7 +322,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>

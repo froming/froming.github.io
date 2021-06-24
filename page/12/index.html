@@ -23,7 +23,7 @@
 <meta name="description" content="网络安全websecurity">
 <meta property="og:type" content="website">
 <meta property="og:title" content="A fifth century">
-<meta property="og:url" content="https://froming.github.io/page/2/index.html">
+<meta property="og:url" content="https://froming.github.io/page/12/index.html">
 <meta property="og:site_name" content="A fifth century">
 <meta property="og:description" content="网络安全websecurity">
 <meta property="og:locale" content="zh_CN">
@@ -31,11 +31,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://froming.github.io/page/2/">
+<link rel="canonical" href="https://froming.github.io/page/12/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:true,&quot;isPost&quot;:false,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:&quot;&quot;,&quot;permalink&quot;:&quot;&quot;,&quot;path&quot;:&quot;page&#x2F;2&#x2F;index.html&quot;,&quot;title&quot;:&quot;&quot;}</script>
+<script class="next-config" data-name="page" type="application/json">{&quot;sidebar&quot;:&quot;&quot;,&quot;isHome&quot;:true,&quot;isPost&quot;:false,&quot;lang&quot;:&quot;zh-CN&quot;,&quot;comments&quot;:&quot;&quot;,&quot;permalink&quot;:&quot;&quot;,&quot;path&quot;:&quot;page&#x2F;12&#x2F;index.html&quot;,&quot;title&quot;:&quot;&quot;}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">&quot;&quot;</script>
 <title>A fifth century</title>
@@ -199,7 +199,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/%E5%9F%BA%E4%BA%8EHTTPS%E5%8D%8F%E8%AE%AE%E8%AF%B7%E6%B1%82%E7%BD%91%E9%A1%B5%E7%9A%84%E8%BF%87%E7%A8%8B">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/docker%E6%84%8F%E4%B9%89%E4%B8%8E%E7%BB%84%E6%88%90%E5%8F%8A%E5%8E%9F%E7%90%86%E8%BF%98%E6%9C%89%E5%92%8C%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF%E7%9A%84%E5%AF%B9%E6%AF%94">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/%E5%9F%BA%E4%BA%8EHTTPS%E5%8D%8F%E8%AE%AE%E8%AF%B7%E6%B1%82%E7%BD%91%E9%A1%B5%E7%9A%84%E8%BF%87%E7%A8%8B" class="post-title-link" itemprop="url">基于HTTPS协议请求网页的过程</a>
+          <a href="/2021/06/24/docker%E6%84%8F%E4%B9%89%E4%B8%8E%E7%BB%84%E6%88%90%E5%8F%8A%E5%8E%9F%E7%90%86%E8%BF%98%E6%9C%89%E5%92%8C%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF%E7%9A%84%E5%AF%B9%E6%AF%94" class="post-title-link" itemprop="url">docker意义与组成及原理还有和虚拟化技术的对比</a>
         </h2>
 
         <div class="post-meta-container">
@@ -224,7 +224,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:31:21 / 修改时间：12:34:29" itemprop="dateCreated datePublished" datetime="2021-06-24T00:31:21+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:22:59 / 修改时间：12:32:20" itemprop="dateCreated datePublished" datetime="2021-06-24T00:22:59+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -232,7 +232,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E5%8F%8A%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">漏洞原理及基础知识</span></a>
+          <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
         </span>
     </span>
 
@@ -246,59 +246,18 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="lt-1-gt-从url栏将域名提取出来"><a href="#lt-1-gt-从url栏将域名提取出来" class="headerlink" title="&lt;1&gt;从url栏将域名提取出来"></a>&lt;1&gt;从url栏将域名提取出来</h2><p>在浏览器上的url栏输入url，如果有汉字，这时会将汉字用unicode转换成计算机可以识别的机器语言</p>
+          <h2 id="docker的意义"><a href="#docker的意义" class="headerlink" title="docker的意义"></a>docker的意义</h2><ul>
+<li>&lt;1&gt;简说<br><strong>总的来说docker让数据传输更容易，同时让程序的运行不是很依赖环境，从而达到节约计算机资源的目的。</strong></li>
+<li>&lt;2&gt;细说<br>当你看到这些优点时，可能理解了docker存在的意义，但是又引出了新问题——怎么理解这些优点，或者说这些优点的具体体现是什么？让我们以一个程序开发者的身份看这些问题。如果你是一个软件的开发者，开发出了一款软件以后需要考虑什么？要考虑软件在不同系统上的适配问题。就像Java环境分linux版、mac版和windows版一样，不同环境软件不一样。这导致软件开发过程中，开发人员不止要考虑程序本身，还要考虑运行问题。这会增加开发人员的工作量，同时在人文上使“运维”和“开发”掰扯不清楚，导致“开发没问题，运行有问题”，让责任不明确。而docker的发明使开发者的工作量更小，同时解决了责任不明的问题。</li>
+</ul>
+<h2 id="docker的组成"><a href="#docker的组成" class="headerlink" title="docker的组成"></a>docker的组成</h2><p>docker可以理解为一个程序</p>
 <ul>
-<li><p>unicode（有utf-8,utf-16,utf-32三种情况，他们的区别时utf-8会将一个汉字随机转换成一、两、三、四个字节，而utf-16则会将一个汉字转换成两、四个字节，utf-32会将一个汉字转换为四个字节）<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_53061933/article/details/114594777?spm=1001.2014.3001.5501">了解更多unicode</a></p>
-</li>
-<li><p>URL的标准格式：<br>【protocol】：//【hostname】：【port】【path】?【query】#【fragment】</p>
-</li>
-<li><p>protocol是指网络传输协议(如：http、https、file等)。</p>
-<ul>
-<li>hostname是指存放资源的与域名、主机名或IP地址。</li>
-<li>port是指端口,有时用默认端口所以不显示。</li>
-<li>path是指一个主机上的一个目录或者文件地址，它决定了服务器如何处理这个请求。</li>
-<li>query从?到#之间是参数(也叫搜索部分)，参数之间用&amp;来间隔。</li>
-<li>fragment用于指定网络资源中的片段，搜索部分搜索出的信息多种多样，通过fragment可以明确指出哪些信息是我们需要 </li>
+<li>&lt;1&gt;组成一：镜像<br>既然docker是一个程序，那必然有存储的地方，在理解docker镜像时可以把镜像理解为磁盘文件，值得一提的是镜像本身有自己的分层结构。<a target="_blank" rel="noopener" href="https://blog.csdn.net/kevin_tech/article/details/104453918/?ops_request_misc=&request_id=&biz_id=102&utm_term=docker%25E7%259A%2584%25E9%2595%259C%25E5%2583%258F%25E5%258E%259F%25E7%2590%2586&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-5-104453918.pc_search_result_no_baidu_js">了解更多镜像知识</a></li>
+<li>&lt;2&gt;组成二：容器<br>有文件就要有在内存上运行的地方，容器就可以理解为一个或多个在内存上的进程。</li>
+<li>&lt;3&gt;组成三：仓库<br>所谓仓库就是储存镜像的地方，最大的公共镜像仓库就是Docker hub</li>
 </ul>
-</li>
-</ul>
-<h2 id="lt-2-gt-查询ip"><a href="#lt-2-gt-查询ip" class="headerlink" title="&lt;2&gt;查询ip"></a>&lt;2&gt;查询ip</h2><p>获得域名之后应该是查ip，但是在此之前还有一步是查看HSTS列表上有没有要查询的域名，如果有的话就要在和这个域名对应的服务器进行联系时使用https协议（HSTS是IETE推荐的一种web协议）</p>
-<p>1.查IP会看本机上的host文件和本地DNS服务器上看看有没有域名相关的记录</p>
-<p>2.如果在查询根服务器之后依旧没有域名对应的ip那么将会传给下一级服务器直到查到为止。</p>
-<ul>
-<li>查询IP有两种方式，分别是递归查询和迭代查询，迭代查询就是这一级服务器没有IP地址的情况下，将下一级服务器的IP传给查询端由查询端访问下一级服务器的方式叫做迭代查询。递归查询是由这一级服务器直接访问下一级服务器下一级服务器同样如此，知道查到IP为止的查询方式，这种方式叫做递归查询。</li>
-</ul>
-<h2 id="lt-3-gt-与对应IP的终端进行联系"><a href="#lt-3-gt-与对应IP的终端进行联系" class="headerlink" title="&lt;3&gt;与对应IP的终端进行联系"></a>&lt;3&gt;与对应IP的终端进行联系</h2><p>tcp协议规定了客户端与服务器之间建立联系的方式</p>
-<h3 id="1-一般情况下与服务器进行连接"><a href="#1-一般情况下与服务器进行连接" class="headerlink" title="[1]一般情况下与服务器进行连接"></a>[1]一般情况下与服务器进行连接</h3><h4 id="1-按照TCP建立联系三次握手"><a href="#1-按照TCP建立联系三次握手" class="headerlink" title="1.按照TCP建立联系三次握手"></a>1.按照TCP建立联系三次握手</h4><p>一次：客户端向服务器发送SYN=1和Seq=x</p>
-<ul>
-<li>SYN=1的意思就是请求建立联系，而Seq=x意思是发送给服务器一个随机产生的序列号</li>
-</ul>
-<p>二次：服务器向客户端发送SYN=1,ACK=1,ACK number=x+1,Seq=y</p>
-<ul>
-<li>ACK是Acknownledge的缩写，ACK=1的意思是告诉终端数据以成功收到，ACK number=x+1就是为了验证数据已经成功接受</li>
-</ul>
-<p>三次：客户端向服务器发送SYN=0,ACK=1,ACK number=y+1，Seq=x+1</p>
-<h4 id="2-断开连接四次挥手"><a href="#2-断开连接四次挥手" class="headerlink" title="2.断开连接四次挥手"></a>2.断开连接四次挥手</h4><p>一次：客户端发给服务器FIN=1的TCP报文</p>
-<ul>
-<li>FIN=1意味着发送方字节流结束，fin为TCP报头的码位字段</li>
-</ul>
-<p>二次：服务器返回客户端一个ACK报文</p>
-<p>三次：服务器给给客户端发送一个FIN报文</p>
-<p>四次：客户端回复ACK报文</p>
-<h3 id="2-二般情况下与服务器进行明文通信商量之后加密联系"><a href="#2-二般情况下与服务器进行明文通信商量之后加密联系" class="headerlink" title="[2]二般情况下与服务器进行明文通信商量之后加密联系"></a>[2]二般情况下与服务器进行明文通信商量之后加密联系</h3><h4 id="1-SSL协议的构成"><a href="#1-SSL协议的构成" class="headerlink" title="1.SSL协议的构成"></a>1.SSL协议的构成</h4><p>SSL协议实际上分为两个部分，分别是<strong>SSL记录层协议</strong>和<strong>SSL握手协议</strong>，它用来记录上层协议的数据，再根据SSL握手协议发送，SSL记录层协议是基于TCP协议，而SSL握手协议是基于SSL记录层协议。</p>
-<h4 id="2-对记录层的介绍"><a href="#2-对记录层的介绍" class="headerlink" title="2.对记录层的介绍"></a>2.对记录层的介绍</h4><p>SSL记录层是架构在TCP协议上的，它分为记录头和记录数据。记录头有两种形式，分别是2字节和3字节两种类型，在2字节中包括的数据是mac(mac是由HASH根据密钥、实际数据等数据算出来的一个数值)、数据、记录头类型、数据长度。而3字节的数据则还要包括填充数据、填充数据长度（为了让数据块是一个整数，以便于数据加密）、Escape位，可知当记录头是3字节时次高位为1时表示所传输的数据是普通的数据，如果是0则表示所传输的数据是安全空白记录（被保留用于将来协议的扩展）。</p>
-<h4 id="3-SSL握手协议"><a href="#3-SSL握手协议" class="headerlink" title="3.SSL握手协议"></a>3.SSL握手协议</h4><ul>
-<li>第一步：客户端向服务端发送数据，数据包括一个叫clienthello.random随机数用于之后的密钥确定、自己支持的SSL/TLS协议版本（TLS是SSLv3上演变过来的）、以及之后要用的加密方式（一般是RAS加密）、如果有证书的话就会将客户算的CA证书返回给服务端，没有的话也要告诉服务端自己没有CA证书。等数据</li>
-<li>第二步：服务端接收到数据后，对客户端发送数据，数据内容包括自己的证书、一个叫serverhello.random的随机数、自己支持的SSL/TLS的版本、之后要用的加密方式。</li>
-<li>第三步：客户端接收到数据之后，算出来一个密钥，之后向服务端发送hellodown的数据表示客户端进入加密状态，并将数据加密。</li>
-<li>第四步：服务端接受到hellodown的数据之后向客户端发送finished数据<br>，后自己也进入加密状态。</li>
-</ul>
-<h4 id="4-对加密细节的简单讲解"><a href="#4-对加密细节的简单讲解" class="headerlink" title="4.对加密细节的简单讲解"></a>4.对加密细节的简单讲解</h4><ul>
-<li>密钥的确定<br>确定密钥要根据客户算和服务端传来的两个随机数，和客户端自己生成的随机数，之所以要用三个随机数，就是为了让这个加密数据的数无限接近真随机数。</li>
-<li>公钥加密密钥，密钥加密数据<br>RAS加密是非对称加密，用来加密数据的话，最后会使数据解析变慢，所以在实际使用过程中会将密钥用公钥根据RAS进行非对称加密，在将数据根据密钥进行对称加密，这就即使加密严格，又提高了解析的速度</li>
-</ul>
-<h2 id="lt-4-gt-传输在互联网上的数据"><a href="#lt-4-gt-传输在互联网上的数据" class="headerlink" title="&lt;4&gt;传输在互联网上的数据"></a>&lt;4&gt;传输在互联网上的数据</h2><p>这一部分自不必多说什么，网络的主要职能就是数据的交互，数据根据网卡由数据信息转换为光电信号，经过交换集线器（第二层交换机），路由器（第三层交换机），经过负载均衡器（4~7层交换机）最终到达你的电脑。</p>
-<h2 id="lt-5-gt-页面渲染"><a href="#lt-5-gt-页面渲染" class="headerlink" title="&lt;5&gt;页面渲染"></a>&lt;5&gt;页面渲染</h2><p>浏览器收到服务器返回的页面数据后，解析之后，开始对页面进行渲染。</p>
+<h2 id="docker的原理"><a href="#docker的原理" class="headerlink" title="docker的原理"></a>docker的原理</h2><p>docker要实现的话要依赖，linux namespace、linux cgroup等，他们分别实现镜像和容器的隔离，和计算机资源的合理运用。这里只做浅谈，想要了解的朋友请自行搜索。</p>
+<h2 id="docker与虚拟机的对比"><a href="#docker与虚拟机的对比" class="headerlink" title="docker与虚拟机的对比"></a>docker与虚拟机的对比</h2><p>拿虚拟机来说，要实现虚拟机要在硬件层(hardsware layer)之上要通过虚拟化软件(hypervisor)形成虚拟层(vitualization)并分化出不同区域，搭建出不同的系统(host os)，同时在虚拟层之上还有管理不同区域的工具——那VMware来说就是VMware workstation。docker则不必这么麻烦，因为他和实体计算机公用一套内核，所以占用资源较少。由此也可以发现，docker相比于虚拟机它与操作系统的联系更紧密。</p>
 
       
     </div>
@@ -318,7 +277,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>

@@ -199,7 +199,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%9A%84%E6%80%BB%E7%BB%93">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC2%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%9A%84%E6%80%BB%E7%BB%93" class="post-title-link" itemprop="url">docker常用命令的总结</a>
+          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC2%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第2部分解析及注入方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -224,7 +224,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:21:14 / 修改时间：12:32:01" itemprop="dateCreated datePublished" datetime="2021-06-24T00:21:14+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:26:54 / 修改时间：12:33:20" itemprop="dateCreated datePublished" datetime="2021-06-24T00:26:54+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -232,7 +232,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
+          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
         </span>
     </span>
 
@@ -246,291 +246,45 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="！！提醒！！"><a href="#！！提醒！！" class="headerlink" title="！！提醒！！"></a>！！提醒！！</h3><p>&lt;1&gt;docker用的是unix socket而不是TCP,这会导致当前用户权限不够所以直接输入命令，会回显下面一段话“Got permission denied while…”,解决这一问题可以在命令前加入sudo。<br>&lt;2&gt;有时会有不能成功拉取的镜像的情况这可能是因为没有镜像加速器的原因导致的。解决这一问题可以通过以下几步<br>1.在阿里云上注册一个账号<br>2.点开右上角的“控制台”<br>3.点击“弹性计算”中的”容器镜像服务“<br>4.点击之后在左边可以找到“镜像中心”其中就有“镜像加速器”<br>5.在其中可以发现属于自己的”加速器地址“<br>6.在kali Linux中输入</p>
-<blockquote>
-<p>cd /etc/docker</p>
-</blockquote>
-<p>7.切换到对应目录下之后输入</p>
-<blockquote>
-<p>sudo vim ./deamon.json</p>
-</blockquote>
-<p>8.进入vim模式之后就可以编辑其中内容，要把刚刚的加速器地址以这种形式输入进去<br>{“registry-mirrors”:[“加速器地址”]}</p>
-<p>9.最后可以按照程序员管理拉取一个hello world镜像尝试一下</p>
-<blockquote>
-<p>sudo docker pull hello-world</p>
-</blockquote>
-<p>成功以后是这样子<br><img src="https://img-blog.csdnimg.cn/20210131151132530.png" alt="在这里插入图片描述"></p>
-<h3 id="lt-1-gt-docker中的management-command和command"><a href="#lt-1-gt-docker中的management-command和command" class="headerlink" title="&lt;1&gt;docker中的management command和command"></a>&lt;1&gt;docker中的management command和command</h3><p>Managementcommand和Command在 1.13 版本之前，docker 并没有 Mangement command。在 Docker 1.12 CLI 中大约有很多顶级命令，这些命令没有经过任何组织，十分混乱，对于新手来说，学习它们并不容易。比如对于容器的创建，在以前没有management command时，语句是“docker create”，而有了management command时语句就变为了“docker container create”。</p>
-<h3 id="lt-2-gt-拉取镜像的操作"><a href="#lt-2-gt-拉取镜像的操作" class="headerlink" title="&lt;2&gt;拉取镜像的操作"></a>&lt;2&gt;拉取镜像的操作</h3><blockquote>
-<p>sudo docker pull 【image】</p>
-</blockquote>
-<p>根据程序员传统以拉取hello-world为例，其结果如下，若结果不是如此，请看上文提醒的第二部分<br><img src="https://img-blog.csdnimg.cn/20210131151350407.png" alt="在这里插入图片描述"></p>
-<h3 id="lt-3-gt-查看系统相关信息的语句："><a href="#lt-3-gt-查看系统相关信息的语句：" class="headerlink" title="&lt;3&gt;查看系统相关信息的语句："></a>&lt;3&gt;查看系统相关信息的语句：</h3><blockquote>
-<p>docker version</p>
-</blockquote>
-<p>运行如下<br><img src="https://img-blog.csdnimg.cn/20210131040427176.png" alt="在这里插入图片描述">还可以输入</p>
-<blockquote>
-<p>sudo docker info<br><img src="https://img-blog.csdnimg.cn/20210131123259219.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-</blockquote>
-<p>又或是</p>
-<blockquote>
-<p>sudo docker system info<br><img src="https://img-blog.csdnimg.cn/20210131123304204.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-</blockquote>
-<h3 id="lt-4-gt-创建一个新的容器"><a href="#lt-4-gt-创建一个新的容器" class="headerlink" title="&lt;4&gt;创建一个新的容器"></a>&lt;4&gt;创建一个新的容器</h3><p> (1)使用 Commands</p>
-<blockquote>
-<p>sudo docker create 【option】【image】</p>
-</blockquote>
-<p>(2)使用 Management Commands</p>
-<blockquote>
-<p>sudo docker container create 【option】【image】</p>
-</blockquote>
-<p>它们作用相同，和之后要学的run类似，都是根据镜像创建一个容器、，但是create的特点是创建但是不运行，而run则会运行。<br>其中option是参数的意思，参数有：</p>
+          <h2 id="提前声明"><a href="#提前声明" class="headerlink" title="提前声明"></a>提前声明</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。</p>
+<h2 id="（1）第11-17关有别与前十关的地方"><a href="#（1）第11-17关有别与前十关的地方" class="headerlink" title="（1）第11~17关有别与前十关的地方"></a>（1）第11~17关有别与前十关的地方</h2><h3 id="lt-1-gt-理论上的不同"><a href="#lt-1-gt-理论上的不同" class="headerlink" title="&lt;1&gt;理论上的不同"></a>&lt;1&gt;理论上的不同</h3><p>客户端向服务端传送数据的方式有两种（get方式和post方式），前十关是以get方式请求网页并实现注入，而这一部分是以post方式。</p>
 <ul>
-<li>–name 指定一个容器名称，未指定时，会随机产生一个名字     </li>
-<li>–hostname 设置容器的主机名</li>
-<li>–mac-address 设置 MAC 地址</li>
-<li>–ulimit 设置 Ulimit 选项<br><strong>说明</strong>：ulimit 是一种 Linux 系统的内建功能，一些简单的描述，可以参考 通过 ulimit 改善系统性能 </li>
+<li>get与post方式基础不同在于在http请求报文中的位置不同，直接在url中的是get方式，这种方式不安全，同时因为服务器资源问题一般不超2k（理论上在http中没有规定必须小于2k）。</li>
 </ul>
-<h3 id="lt-5-gt-根据一个镜像创建新的容器并运行"><a href="#lt-5-gt-根据一个镜像创建新的容器并运行" class="headerlink" title="&lt;5&gt;根据一个镜像创建新的容器并运行"></a>&lt;5&gt;根据一个镜像创建新的容器并运行</h3><p>(1)command命令</p>
-<blockquote>
-<p>sudo docker run 【option】【image】</p>
-</blockquote>
-<p>(2)management command命令</p>
-<blockquote>
-<p>sudo docker container run 【option】【image】</p>
-</blockquote>
-<p>其中option就是run的参数，如下</p>
+<h3 id="lt-2-gt-实操中的不同"><a href="#lt-2-gt-实操中的不同" class="headerlink" title="&lt;2&gt;实操中的不同"></a>&lt;2&gt;实操中的不同</h3><p>实际操作时，主要的不同方式在于<br>【1】若之前使用的是hacjbar则需要辅助工具进行注入（因为hackbar不会自动导入http请求数据），比如burpsuite(可以在上面抓包改post数据再发送数据)、HTTP header live(火狐小插件，用于获取http请求报文)、hackbar(以post方式发送http请求报文的)<br>【2】注释符不同，在前十关中注释方式是–+，而这一部分是#。这是因为不同的请求方式编码不同，导致注释方法不同。</p>
+<h2 id="（2）post方式的联合查询（第11、12关）"><a href="#（2）post方式的联合查询（第11、12关）" class="headerlink" title="（2）post方式的联合查询（第11、12关）"></a>（2）post方式的联合查询（第11、12关）</h2><ul>
+<li>和之前说过的一样，这里只说明这一种方法，更多sql注入的方式，由<strong>聪明的你</strong>自己发现。</li>
+</ul>
+<h3 id="lt-1-gt-观察源码推敲思路"><a href="#lt-1-gt-观察源码推敲思路" class="headerlink" title="&lt;1&gt;观察源码推敲思路"></a>&lt;1&gt;观察源码推敲思路</h3><p>附图为证<br>第11关<br><img src="https://img-blog.csdnimg.cn/202101242124055.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>第12关<br><img src="https://img-blog.csdnimg.cn/20210124212456389.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">观察源码会发现，以post方式传进去的参数的值赋值给了uname、passwd,最终整合成了一个sql语句，根据这个语句我们可以发现，既可以在uname处注入也可以在passwd处注入。同时注意11关与12关的差别<br>是对值的包裹方式不同。<br>第11关的包裹方式：’uname’、’passwd’<br>第12关的包裹方式：(uname)、(passwd)</p>
+<h3 id="lt-2-gt-以第十一关为例（第十二关类似第十一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"><a href="#lt-2-gt-以第十一关为例（第十二关类似第十一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）" class="headerlink" title="&lt;2&gt;以第十一关为例（第十二关类似第十一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"></a>&lt;2&gt;以第十一关为例（第十二关类似第十一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）</h3><p>我会讲不用hackbar怎么用，中间穿插上要是使用hackbar的方法</p>
 <ul>
-<li>-i 或 –interactive， 交互模式。</li>
-<li>-t 或 –tty， 分配一个 pseudo-TTY，即伪终端。</li>
-<li>–rm 在容器退出后自动移除。</li>
-<li>-p 将容器的端口映射到主机。</li>
-<li>-v 或 –volume， 指定数据卷。</li>
+<li>1.第一步：尝试登陆以发现注入类型及取得post部分（<strong>如果不用hackbar这一步就可以跳过一半了，只需要判断注入类型</strong>）<br>可以通过burpsuit抓包，或者firefox浏览器的插件实现（HTTP header live）得到请求数据，这里简单说一下HTTP header live的使用方法。<br> 【1】(为hackbar准备，获取poat)首先打开插件，下载好插件以后就可以在左上角处找到，如下图红方框标记处<br><img src="https://img-blog.csdnimg.cn/20210124221635684.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>因为事先不可能看到源码，所以不知道在脚本中的标识符是怎么样的，也就需要在网页上的username和password处分别输入’Dumb‘’Dumb’，这一步的作用是向服务器发送http请求，从而截取到以post发送的数据。http请求是由请求行，请求头部，请求数据组成，请求头部中的host里面有请求服务器的ip，因为服务器就是本地计算机所以直接在插件中找到ip是127.0.0.1的http请求，最后在请求数据中就可以找到以post发送的数据，如下图<br><img src="https://img-blog.csdnimg.cn/20210124222734590.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><strong>uname=Dumb&amp;passwd=Dumb&amp;submit=Submit</strong>就是我们要的请求数据<br>【2】同时发现数据直接回显到了网页上，所以只需像第一部分第一类型那样，利用联合查询，既可以调取数据。</li>
+<li>2.第二步（查看是否存在注入）<br>【1】用hackbar的话,导入url，点开post data,如下图<br><img src="https://img-blog.csdnimg.cn/20210124223610158.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">如果不用hackbar直接就可以在password或者username任意一处输入下文的内容即可。用hackbar的情况也是在post处的uname或者passwd任意两处输入下文内容即可。<br><strong>下面将不再分开讲解，本文将以不用hackbar的方式说明</strong><br>【2】如下图输入<br><img src="https://img-blog.csdnimg.cn/2021012423502793.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>没有报错证明存在注入</li>
+<li>3.第三步（判断查询语句查询结果的列数）<br>在username处输入admin，在password中输入admin’ order by 数字 #（数字要从1开始逐个尝试，直到报错。最后则说明表里面有报错的数前一个的数的列数）<br>由下面两副图你会发现查询语句的回复中中一共有2列<br><img src="https://img-blog.csdnimg.cn/20210125001204293.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><img src="https://img-blog.csdnimg.cn/20210125001213233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">+ 4.第四步（查库名）<br>在username处输入：admin，在password处输入:-admin’ union select 1,databse() #或者输入-admin’ union select 1,schema_name from information_schema.schemata limit 1,1#(同时需要注意admin前面的-是不可少的主要作用是使第一句的查询结果不要显示)<br><img src="https://img-blog.csdnimg.cn/20210125005933734.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
 </ul>
-<p>这里就以打开刚刚拉取的hello-world演示一下用法<br>在kali linux命令行中输入</p>
-<blockquote>
-<p>sudon docker run  hello-world</p>
-</blockquote>
-<p>最后如下图<br><img src="https://img-blog.csdnimg.cn/20210131154000990.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>以后台模式创建并运行一个容器</p>
-<blockquote>
-<p>docker container run \ -i -t -d \  ubuntu /bin/bash</p>
-</blockquote>
-<p>使用 docker container ls -a 命令查看容器的状态，可以看到这个容器已经在后台运行。参数-i-t的作用是创建一个伪终端，同时在run语句中【image】后面是可以跟语句的，如上面这一段话的意思就是说基于ubuntu创建一个容器，并在容器中打开bash。<br>打开之后我们从这一模式出去有两种办法分别是<br>1.在命令行输入exit<br>2.先按ctrl+p再按ctrl+q<br>这两种方式都会让程序进入后台运行。</p>
-<h3 id="lt-6-gt-查看容器列表"><a href="#lt-6-gt-查看容器列表" class="headerlink" title="&lt;6&gt;查看容器列表"></a>&lt;6&gt;查看容器列表</h3><p>(1)command命令</p>
-<blockquote>
-<p>sudo docker ps</p>
-</blockquote>
-<p>(2)manage command命令</p>
-<blockquote>
-<p>sudo docker container ls</p>
-</blockquote>
-<p>这个命令也是有参数的</p>
 <ul>
-<li>-a 显示所有的容器。</li>
-<li>-q 仅显示 ID。</li>
-<li>-s 显示总的文件大小。</li>
-<li>–all显示所有容器<br>-a和–all作用是差不多的<br>没有参数的运行结果如下：<br><img src="https://img-blog.csdnimg.cn/20210131125531962.png" alt="在这里插入图片描述">有参数（-a和–all）结果如下<br><img src="https://img-blog.csdnimg.cn/20210131162655275.png" alt="在这里插入图片描述"></li>
+<li><p>5.第五步（查表名）<br>在username处输入admin，在password处输入的是-admin’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=’security’#<br><img src="https://img-blog.csdnimg.cn/20210125010002800.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+</li>
+<li><p>6.第六步(查列名)<br>输入：-admin’ union select 1,group_concat(column_name) from information_schema.columns where table_name=‘users’#</p>
+</li>
 </ul>
-<h3 id="lt-7-gt-容器的启动"><a href="#lt-7-gt-容器的启动" class="headerlink" title="&lt;7&gt;容器的启动"></a>&lt;7&gt;容器的启动</h3><p>（1）Management Command</p>
-<blockquote>
-<p>sudo docker container start 【option】 containername</p>
-</blockquote>
-<p>（2）旧的命令格式如下：</p>
-<blockquote>
-<p>docker start 【option】 containername</p>
-</blockquote>
-<h4 id="不得不提的组合技（创建-启动）"><a href="#不得不提的组合技（创建-启动）" class="headerlink" title="不得不提的组合技（创建+启动）"></a>不得不提的组合技（创建+启动）</h4><p>(1)创建</p>
-<blockquote>
-<p>sudo docker container create -it 【containername】 【command】</p>
-</blockquote>
-<p>(2)启动</p>
-<blockquote>
-<p>sudo docker container start 【containername】</p>
-</blockquote>
-<h3 id="lt-8-gt-容器中进程的停止"><a href="#lt-8-gt-容器中进程的停止" class="headerlink" title="&lt;8&gt;容器中进程的停止"></a>&lt;8&gt;容器中进程的停止</h3><p>(1)Management Command</p>
-<blockquote>
-<p>sudo docker container stop  【containername】</p>
-</blockquote>
-<p>(2)command</p>
-<blockquote>
-<p>sudo docker stop 【containername】</p>
-</blockquote>
-<h3 id="lt-9-gt-重启容器"><a href="#lt-9-gt-重启容器" class="headerlink" title="&lt;9&gt;重启容器"></a>&lt;9&gt;重启容器</h3><p>（1）Management Command</p>
-<blockquote>
-<p>sudo docker container restart 【containername】</p>
-</blockquote>
-<p>（2）command</p>
-<blockquote>
-<p>sudo docker restart 【containername】</p>
-</blockquote>
-<h3 id="lt-10-gt-容器中进程的暂停"><a href="#lt-10-gt-容器中进程的暂停" class="headerlink" title="&lt;10&gt;容器中进程的暂停"></a>&lt;10&gt;容器中进程的暂停</h3><p>(1)Management Command</p>
-<blockquote>
-<p>sudo docker container pause 【containername】<br>(2)command<br>sudo docker pause 【containername】</p>
-</blockquote>
-<h3 id="lt-11-gt-容器中进程接触暂停"><a href="#lt-11-gt-容器中进程接触暂停" class="headerlink" title="&lt;11&gt;容器中进程接触暂停"></a>&lt;11&gt;容器中进程接触暂停</h3><p>(1)Management Commands</p>
-<blockquote>
-<p>sudo docker container unpause 【containername】</p>
-</blockquote>
-<p>(2)command</p>
-<blockquote>
-<p>sudo docker unpause 【containername】</p>
-</blockquote>
-<h3 id="lt-12-gt-连接容器"><a href="#lt-12-gt-连接容器" class="headerlink" title="&lt;12&gt;连接容器"></a>&lt;12&gt;连接容器</h3><p>使用 attach 操作将本地标准输入输出流连接到一个运行中的容器，命令格式为：<br>(1)Management Commands</p>
-<blockquote>
-<p>sudo docker container attach 【containername】</p>
-</blockquote>
-<p>(2)command</p>
-<blockquote>
-<p>sudo docker attach 【containername】</p>
-</blockquote>
-<p>可以通过查看相应的主机名和 Mac 地址以判断我们是否连接到了容器。</p>
-<h3 id="lt-13-gt-查看容器详细信息"><a href="#lt-13-gt-查看容器详细信息" class="headerlink" title="&lt;13&gt;查看容器详细信息"></a>&lt;13&gt;查看容器详细信息</h3><p>（1）Management Commands</p>
-<blockquote>
-<p>sudo docker container inspect 【containername】</p>
-</blockquote>
-<p>（2）command</p>
-<blockquote>
-<p>sudo docker inspect 【containername】</p>
-</blockquote>
-<h3 id="lt-14-gt-真——重启容器"><a href="#lt-14-gt-真——重启容器" class="headerlink" title="&lt;14&gt;真——重启容器"></a>&lt;14&gt;真——重启容器</h3><p>docker container restart 【containername】</p>
-<h3 id="lt-15-gt-在容器中执行命令"><a href="#lt-15-gt-在容器中执行命令" class="headerlink" title="&lt;15&gt;在容器中执行命令"></a>&lt;15&gt;在容器中执行命令</h3><p>我们还可以在一个运行中的容器中执行命令</p>
-<blockquote>
-<p>sudo docker container exec  【containername】【command】</p>
-</blockquote>
-<h3 id="lt-16-gt-删除容器"><a href="#lt-16-gt-删除容器" class="headerlink" title="&lt;16&gt;删除容器"></a>&lt;16&gt;删除容器</h3><p>(1)Management Commands</p>
-<blockquote>
-<p>sudo docker container rm 【containername】</p>
-</blockquote>
-<p>(2)command</p>
-<blockquote>
-<p>sudo docker rm 【containername】</p>
-</blockquote>
-<p>或者输入</p>
-<blockquote>
-<p>sudo docker container rm -f $(docker container ls -aq)</p>
-</blockquote>
-<p>根据前面的学习可以发现这句话的意思是先执行括号中的语句，括号中的语句的意思是列出全部的容器，其中的参数的意思是【-a是显示全部容器】【-q是只显示名字】。最终这句话的结果放到了整句话中执行，【-f的作用是强制删除】</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/csrf%E4%BB%8E%E5%B0%8F%E7%99%BD%E5%88%B0%E5%85%A5%E9%97%A8">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/csrf%E4%BB%8E%E5%B0%8F%E7%99%BD%E5%88%B0%E5%85%A5%E9%97%A8" class="post-title-link" itemprop="url">csrf从小白到入门</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:20:24 / 修改时间：12:31:50" itemprop="dateCreated datePublished" datetime="2021-06-24T00:20:24+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E5%8F%8A%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">漏洞原理及基础知识</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="lt-1-gt-简介"><a href="#lt-1-gt-简介" class="headerlink" title="&lt;1&gt;简介"></a>&lt;1&gt;简介</h1><p>csrf（cross-site-request-forgery）俗称跨站请求伪造，这种漏洞是服务端对用户审核不严格导致的。简单来说就是伪造一个用户的身份做一些违法乱纪的事情。举例说明，假如有一个人叫A，A打开了一个网站，这个网站在A打开并且登录之后返回了一个cookie，如果我这时发了一个钓鱼邮件给A，邮件中有我提前写好的html文件，A打开邮件附录的<br>html文件之后会直接访问他刚刚打开的网站，这时计算机会直接将刚刚的cookie发给服务器，这样就实现了冒用他的身份。有的人可能会问，这样做了之后有什么危害？有危害是肯定的，要是我冒用A的身份打开的是一个银行的网页，且这个网页有转账的功能我要是直接用脚本完成转账的动作，那么这就算是完成了一次攻击，且对A也好还是银行也好都是不好的，足以看出csrf的危害。</p>
-<h1 id="lt-2-gt-csrf分类及实例"><a href="#lt-2-gt-csrf分类及实例" class="headerlink" title="&lt;2&gt;csrf分类及实例"></a>&lt;2&gt;csrf分类及实例</h1><p>众所周知，在HTTP协议中规定了8种传递数据的方式，所以理论上csrf应该有八种类型，不过对于现实来说服务器上的网站一般用post和get两种方式来传递参数，所以我接下来将要用pikachu上面的几种方法来举例csrf和csrf的防御方法还有csrf跨域请求的方法。</p>
-<h2 id="（1）get传参的csrf"><a href="#（1）get传参的csrf" class="headerlink" title="（1）get传参的csrf"></a>（1）get传参的csrf</h2><p>所谓get传参的csrf就是服务器接收数据是用get的方式，打开pikachu，登录一个用户的账号，比如用用户名为vince密码是123456的账户<br><img src="https://img-blog.csdnimg.cn/20210414151517953.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><img src="https://img-blog.csdnimg.cn/20210414151559900.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>登录上去之后理论上前端就已经收到了后端传过来的cookie那么我们只差伪造一个url就能开始骗用户点击之后修改他的信息了<br><em><strong>打开开发者工具查看网络种的记录可以发现传来了cookie</strong></em><br><img src="https://img-blog.csdnimg.cn/20210414152043250.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>我们伪造一个“诱人”的url骗他们点击之后就可以实现发送cookie冒用身份了。首先我们要确定<strong>修改用户页面传</strong>的get参数。<br><em>转到用户修改数据页面之后就可以根据源码看get传的参数了</em><br><img src="https://img-blog.csdnimg.cn/2021041415292246.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">如上图我们可以发现传的参数是如上几个，我们构造一下url，把vince用户的个人信息改成好玩的参数<br>原本从<strong>修改页面传回的url如下</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1/pikachu/vul/csrf/csrfget/csrf_get_edit.php?sex=lal&amp;phonenum=123456&amp;add=lilian&amp;email=dumb&amp;submit=submit</span><br></pre></td></tr></table></figure>
-
-<p>经过修改成了这样子</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;lt;a href=&quot;http://127.0.0.1/pikachu/vul/csrf/csrfget/csrf_get_edit.php?sex=你必狂吃不胖&amp;phonenum=你必越长越好看&amp;add=你必天天捡钱&amp;email=你必好运连连&amp;submit=submit&quot;&amp;lt;美女荷官，在线发牌，百万影片你想要的这里都有&lt;/a&amp;gt;</span><br></pre></td></tr></table></figure>
-
-<p>那么在一个能解析html标签的环境下你就会发现它变成了如下的标签<br><img src="https://img-blog.csdnimg.cn/2021041415383373.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">要是被你骗的人真的点击之后会是这样子</p>
-<p><img src="https://img-blog.csdnimg.cn/2021041415413542.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">现在你成果完成了一次csrf</p>
-<h2 id="（2）post传参的csrf"><a href="#（2）post传参的csrf" class="headerlink" title="（2）post传参的csrf"></a>（2）post传参的csrf</h2><p>有些网站并不是get传参而是post传参那么此时我们怎么实现csrf呢？我会用钓鱼邮件中附加一个html的方式，有可能也会用恶意服务器的方式，也可以用xss+csrf组合拳的方式传递参数。我在这里就介绍一下伪恶意服务器的方法。之所以说他是伪恶意服务器是因为我不可能真的做一个服务器，我是将sql-labs的靶场源文件改了改成了一个在集成环境中的伪恶意网站。基于上文的原理，我们可以想到csrf的基本套路，但是我们也发现刚刚的传参方式在post类型中并不适用所以我们要用以上三种方法用post方式传递数据。<br>首先要写一个搭建在集成环境上的网站，我就直接用了sql-labs靶场第十一关，原本第十一关的代码如下</p>
-<p><img src="https://img-blog.csdnimg.cn/20210415100837907.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>更改之后第十一关的代码改成了如下样子<br><img src="https://img-blog.csdnimg.cn/20210415092714773.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">此时在一个新的窗口中访问sql-labs靶场第十一关，会是如下</p>
-<p><img src="https://img-blog.csdnimg.cn/20210415101022372.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>原本vince的信息是如下图</p>
-<p><img src="https://img-blog.csdnimg.cn/20210415101211224.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>再点击sql-labs的submit按钮之后就能实现csrf，实现之后vince信息被改成了如下样子</p>
-<p><img src="https://img-blog.csdnimg.cn/20210415101348948.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h2 id="（3）加入token的csrf"><a href="#（3）加入token的csrf" class="headerlink" title="（3）加入token的csrf"></a>（3）加入token的csrf</h2><p>在服务器传回的数据中加入名为token的变量，那么就能有效防范csrf。但是可以肯定的是世上没有绝对的东西，token虽然能有效防御csrf，但是做不到完全。csrf的重点是冒用正常用户的身份，用他的身份做一些事情。用之前讲的老套路套路加入token的csrf明显是行不通的，因为你自己写的网页也好、url也好是不能用javascript等语言写的脚本调取另一个窗口的数据的。他们循序了同源策略。下面首先介绍一下同源策略之后再说绕过实例。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210125010017209.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <ul>
-<li>token简单来说就是服务器随机生成的一个字符串，在一个请求到达服务器的时候，服务器会首先查看请求中是否有合法的token，有的话才会正常处理。</li>
+<li>7.第七步提取数据）<br>输入：-admin’ union select 1,group_concat(username) from users#和-admin’ union select 1,group_concat(password) from users（‘concat_ws’函数在post方式中不能用，这牵扯到另一种注入方式报错注入）<br>【1】usernametu图<br><img src="https://img-blog.csdnimg.cn/20210125010048613.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">【2】password图<br><img src="https://img-blog.csdnimg.cn/202101250101129.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
 </ul>
-<h1 id="lt-3-gt-同源策略"><a href="#lt-3-gt-同源策略" class="headerlink" title="&lt;3&gt;同源策略"></a>&lt;3&gt;同源策略</h1><p>同源策略是指同源的脚本才能互相调用dom树、cookie、token的情况。下面是判断两个脚本同源的条件。</p>
-<p>   1.协议：比如用http协议的网站文件不能调用用https协议的网站文件。<br>    2.域名：比如一个域名是forming.com那么与handsome.com就不遵守同源协议。值得一提的是一级域名与二级域名之间也是不遵守同源策略的，比如forming.com和handsome.forming.com之间也不遵守同源策略。<br>    3.端口：就是字面意思的端口也没有什么好解释的。</p>
-<p>同源策略是一种安全策略，为的就是保护用户的隐私，但是本着“既然存在就一定有漏洞”的原则，同源策略也是有办法绕过的。</p>
-<h1 id="lt-4-gt-加入token后实现csrf"><a href="#lt-4-gt-加入token后实现csrf" class="headerlink" title="&lt;4&gt;加入token后实现csrf"></a>&lt;4&gt;加入token后实现csrf</h1><p>直接用之前提的两种方法因为同源策略的原因是不行的。基于此一般要用xss+csrf组合拳的方式再结合上<strong>跨域的方法</strong>将数据传递出去实现绕过，首先需要本页面具有xss漏洞（<strong>对xss了解不多的童鞋可以看看这篇文章</strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_53061933/article/details/115082067?spm=1001.2014.3001.5501">xss(cross site script)注入点、注入语句及危害知识总结</a>)实现javascript脚本的注入，之后调取必要信息和token实现csrf。</p>
+<h2 id="2-post方式的布尔盲注（第13-16关）"><a href="#2-post方式的布尔盲注（第13-16关）" class="headerlink" title="(2)post方式的布尔盲注（第13~16关）"></a>(2)post方式的布尔盲注（第13~16关）</h2><h3 id="lt-1-gt-集成环境中的源码分析"><a href="#lt-1-gt-集成环境中的源码分析" class="headerlink" title="&lt;1&gt;集成环境中的源码分析"></a>&lt;1&gt;集成环境中的源码分析</h3><p>废话不多说，上图</p>
 <ul>
-<li>举例：假如<a target="_blank" rel="noopener" href="http://www.first.com的a.html存在xss漏洞,注入一个iframe框架,框架的网页指向是之前的恶意网站www.second.com的b.html,其中iframe的src属性中要包含hash记录(就是/#%E5%90%8E%E9%9D%A2%E8%A6%81%E6%9C%89%E4%B8%9C%E8%A5%BF%EF%BC%89%EF%BC%8C%E5%85%B6%E4%B8%AD%E7%9A%84hash%E5%80%BC%E6%98%AFa.html%E7%9A%84cookie%E5%92%8Ctoken%EF%BC%8C%E8%BF%99%E6%A0%B7%E5%AE%9E%E7%8E%B0%E4%BA%86%E6%95%B0%E6%8D%AE%E7%9A%84%E8%B7%A8%E5%9F%9F%E4%BC%A0%E9%80%92%E3%80%82%E7%84%B6%E5%90%8Eb.html%E4%B8%AD%E6%9C%89%E6%A0%B9%E6%8D%AEhash%E8%AE%B0%E5%BD%95%E6%8E%A5%E5%8F%97cookie%E5%92%8Ctoken%E5%AE%9E%E7%8E%B0csrf%E3%80%82%E8%BF%99%E7%A7%8D%E6%96%B9%E6%B3%95%E6%A0%B9%E6%8D%AE%E4%B8%8B%E6%96%87%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84location.hash%E7%9A%84%E8%B7%A8%E5%9F%9F%E6%80%9D%E8%B7%AF%EF%BC%8C%E4%B8%8D%E8%BF%87%E4%B8%8D%E5%AE%8C%E5%85%A8%E7%9B%B8%E5%90%8C%E3%80%82">www.first.com的a.html存在xss漏洞，注入一个iframe框架，框架的网页指向是之前的恶意网站www.second.com的b.html，其中iframe的src属性中要包含hash记录（就是#后面要有东西），其中的hash值是a.html的cookie和token，这样实现了数据的跨域传递。然后b.html中有根据hash记录接受cookie和token实现csrf。这种方法根据下文跨域方法中的location.hash的跨域思路，不过不完全相同。</a></li>
+<li>第13关<br><img src="https://img-blog.csdnimg.cn/20210125011128593.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+<li>第14关<br><img src="https://img-blog.csdnimg.cn/20210125011158173.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+<li>第15关<br><img src="https://img-blog.csdnimg.cn/20210125011221212.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+<li>第16关<br><img src="https://img-blog.csdnimg.cn/20210125011246863.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>看源码可以分析出，网页不再返回结果而是显示输入正确与否，所以要用<strong>布尔盲注</strong>。注入的地方可以是uname处也可以是passwd处包裹方式为：<br>第13关的包裹方式：(‘passwd’)、(‘uname’)<br>第14关的包裹方式：”passwd”、”uname”<br>第15关的包裹方式：’passwd’、’uname’<br>第16关的包裹方式：(“passwd”)、(“uname”)</li>
 </ul>
-<h1 id="lt-5-gt-跨域的方法（克服同源策略的方法）"><a href="#lt-5-gt-跨域的方法（克服同源策略的方法）" class="headerlink" title="&lt;5&gt;跨域的方法（克服同源策略的方法）"></a>&lt;5&gt;跨域的方法（克服同源策略的方法）</h1><h2 id="（1）可以跨域的HTML标签"><a href="#（1）可以跨域的HTML标签" class="headerlink" title="（1）可以跨域的HTML标签"></a>（1）可以跨域的HTML标签</h2><p>1.&lt;img&gt;标签<br>通过src属性</p>
-<p>2.&lt;audio&gt;标签<br>通过src属性</p>
-<p>3.&lt;video&gt;标签<br>通过src属性</p>
-<p>4.&lt;embed&gt;标签<br>通过src属性</p>
-<p>5.&lt;script&gt;标签<br>通过src属性</p>
-<p>6.&lt;applet&gt;标签<br>通过code属性</p>
-<p>7.&lt;object&gt;标签<br>通过data属性</p>
-<p>8.&lt;link&gt;标签<br>通过src属性</p>
-<p>9.&lt;iframe&gt;标签<br>通过src属性</p>
-<p>还有其它很多类似的标签，它们都有类似的属性，src属性code属性等访问属性中url的功能更多的标签就不再这里一 一列举。但是值得注意的是，用src属性实现的跨域是没办法用javascript实现读、写的，这是因为内在配置的问题。</p>
-<h2 id="（2）jsonp跨域"><a href="#（2）jsonp跨域" class="headerlink" title="（2）jsonp跨域"></a>（2）jsonp跨域</h2><p>jsonp的全程是json with padding，其实就是通过刚刚的一些可以跨域的标签将数据以json的方式将数据在不同域之间传输，还可以将js脚本放到此域下文件然后通过跨域标签引入到这个html文件中。</p>
-<h2 id="（3）window-name"><a href="#（3）window-name" class="headerlink" title="（3）window.name"></a>（3）window.name</h2><p>这里要先引入一个”window对象”的概念，所谓window对象就是在浏览器上打开的窗口，又或者是在iframe标签中嵌套的框架打开的网页。而每一个window对象都有一个window.name的属性，这个属性有一个特性是当上一个窗口定义了该属性之后，即使跳转也不会刷新这个属性，同时每一个网页都对它有读写的权力。</p>
-<h2 id="（4）CORS（跨域资源共享）"><a href="#（4）CORS（跨域资源共享）" class="headerlink" title="（4）CORS（跨域资源共享）"></a>（4）CORS（跨域资源共享）</h2><p>简单理解来说这就是一种规则，可以让浏览器向服务器发出xmlhttprequst请求，这其实就是在http消息头中加入一些参数，让双方通过参数来认识彼此之后，以此来跨域进行数据交互。CORS请求有两种类型</p>
-<ul>
-<li>1.简单请求<br>【1】简单请求要同时满足两大条件：<br>  &lt;1&gt;请求方式：1.HEAD 2.GET 3.POST<br>  &lt;2&gt;消息头中有只有这几个参数：<br>  1.Accept(告诉服务端自己接受什么介质类型)<br>  2.Accept-Language(浏览器申明自己接收的语言)<br>  3.Content-Language(服务端表明自己响应对象的语言)<br>  4.Content-Type(服务端告诉浏览器响应对象的类型)<br> 【2】浏览器<br>  客户端会在跨域的请求中加入一些参数，比如origin参数来说明这个请求的发起源，服务端就可以由此判断接下来的反应。<br> 【3】服务端<br>  服务端有三个参数access-control-allow-credentials、access-control-allow-origin、access-control-expose-header可以被用于http消息头。以”allow-credentials”结尾的参数的值有且仅有一个就是”true”，这个参数的作用是要不要客户端发送cookie。以“allow-origin”结尾的参数的值就是发送这个消息头的服务器的url，这个参数的作用是说明这个请求来自哪个源（有协议、域名、端口）让服务端据此作出回应。“expose-header”结尾的参数是明确标注出要客户端在消息头中添加的数据。</li>
-<li>2.非简单请求<br>只要不是简单请求的都是非简单请求，它们的不同之处在于，非简单请求在简单请求的基础上加了一个预检请求，这个请求要在刚刚描述的请求之前<br>  （1）预检请求<br>  【1】浏览器<br>  本质上就是在发出真正的请求之前，先在http消息头中加一些参数和服务端通信，加入的参数有origin、access-control-allow-methods、access-control-allow-header这三个参数的值和之前的类似就不再赘述，这些参数在传给服务端之后，服务端会核对这些参数，并做出如下应答。<br>  【2】服务端<br>  服务端会在应答消息头中放的参数有access-control-allow-origin、access-control-allow-methods、access-control-allow-header参数值和之前说的一样，就不在赘述。还有一个参数是access-control-max-age，这个参数是规定这个预检请求在多长时间内有效，意思就是浏览器在规定时间内不用再发送预检请求。这个参数的值是以毫秒为单位的值，比如值为300000意思就是50分钟内要是再和服务端建立联系的话都不用发送预检请求。<br>  （2）正常请求<br>  正常请求就和简单请求的参数一样了。</li>
+<h3 id="lt-2-gt-以第十三关为例（第十四、十五、十六关类似第十三关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"><a href="#lt-2-gt-以第十三关为例（第十四、十五、十六关类似第十三关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）" class="headerlink" title="&lt;2&gt;以第十三关为例（第十四、十五、十六关类似第十三关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"></a>&lt;2&gt;以第十三关为例（第十四、十五、十六关类似第十三关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）</h3><ul>
+<li>1.第一步(判断注入方式及准备活动，若不用hackbar则不需准备活动）<br>【1】判断注入方式<br>输入‘admin’‘admin’，以及‘admin’‘ad’,会得到如下图的图片<br>输入‘admin’‘admin’时得到：<br><img src="https://img-blog.csdnimg.cn/20210125115028969.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">输入‘admin’’ad’时得到：<br><img src="https://img-blog.csdnimg.cn/20210125115130793.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">从页面的回显可以发现，查询结果不会回显到网页上，但是回显sql语句正确与否和输入正确与否。<br>【2】准备活动和前面讲的一样，找到http请求中的请求数据，因为和查找方法相同，所以不再赘述。</li>
+<li>2.第二步（判断是否存在注入）<br>和之前一样选择在password处注入，读者可以尝试在另一处注入。在username处输入：admin。在passwd处输入admin’)#得到<br><img src="https://img-blog.csdnimg.cn/20210125124319549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">没有报错证明存在注入。</li>
+<li>3.第三步（基于and的布尔盲注，兑现第一部分的承诺）<br>在username处输入：admin，在password处输入：admin’) and left((select database()),1)=’s’#会得到肯定的回答<br><img src="https://img-blog.csdnimg.cn/20210125125435260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
+<li>4.根据惯例，我说到这一步，屏幕前的你一定已经会了，毕竟这么聪明。</li>
 </ul>
-<h2 id="（5）location-hash"><a href="#（5）location-hash" class="headerlink" title="（5）location.hash"></a>（5）location.hash</h2><p>【1】首先要知道什么是hash，所谓hash就是url中最后#后面的参数<br>【2】浏览器请求的时候这个跨域的方法其实就是应用iframe标签，将forming.com下的first.html中的内联框架指向handsome.com下的second.html，然后将传进来的hash值进行编辑之后传递给一个与first.html同源的网页thirth.html，通过first.html和thirth.html同源实现脚本的调用。这就实现了“私货”的夹带。</p>
-<h2 id="（6）window-postmessage"><a href="#（6）window-postmessage" class="headerlink" title="（6）window.postmessage"></a>（6）window.postmessage</h2><p>可以通过这个js脚本语言将不同源的网页间的脚本调用。</p>
-<h2 id="（7）document-domain"><a href="#（7）document-domain" class="headerlink" title="（7）document.domain"></a>（7）document.domain</h2><p>这个函数的先决条件是，在主域名同源的子域名间设置参数实现不同源的脚本的调用。</p>
-<h1 id="lt-6-gt-其它防护方法的介绍"><a href="#lt-6-gt-其它防护方法的介绍" class="headerlink" title="&lt;6&gt;其它防护方法的介绍"></a>&lt;6&gt;其它防护方法的介绍</h1><p>浏览器之外对于服务器的安全策略，CSP（content security policy）内容安全策略，你可以把它理解为服务器的”配置器“，服务器支不支持哪些标签都可以由它来定义，想要绕过它就是多尝试，毕竟它把什么东西都禁用了，网站也不能正常运行了，比如<iframe>标签用不了就去用<form>标签，只要思路骚就没有绕不过去的东西。</p>
 
       
     </div>
@@ -550,7 +304,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>

@@ -199,7 +199,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC2%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
+    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC2%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第2部分解析及注入方法</a>
+          <a href="/2021/06/24/xss-labs%E5%89%8D%E4%BA%94%E5%85%B3" class="post-title-link" itemprop="url">xss-labs前五关</a>
         </h2>
 
         <div class="post-meta-container">
@@ -224,7 +224,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-24 00:26:54 / 修改时间：12:33:20" itemprop="dateCreated datePublished" datetime="2021-06-24T00:26:54+08:00">2021-06-24</time>
+      <time title="创建时间：2021-06-24 00:29:41 / 修改时间：12:34:05" itemprop="dateCreated datePublished" datetime="2021-06-24T00:29:41+08:00">2021-06-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -246,225 +246,72 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="提前声明"><a href="#提前声明" class="headerlink" title="提前声明"></a>提前声明</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。</p>
-<h2 id="（1）第11-17关有别与前十关的地方"><a href="#（1）第11-17关有别与前十关的地方" class="headerlink" title="（1）第11~17关有别与前十关的地方"></a>（1）第11~17关有别与前十关的地方</h2><h3 id="lt-1-gt-理论上的不同"><a href="#lt-1-gt-理论上的不同" class="headerlink" title="&lt;1&gt;理论上的不同"></a>&lt;1&gt;理论上的不同</h3><p>客户端向服务端传送数据的方式有两种（get方式和post方式），前十关是以get方式请求网页并实现注入，而这一部分是以post方式。</p>
-<ul>
-<li>get与post方式基础不同在于在http请求报文中的位置不同，直接在url中的是get方式，这种方式不安全，同时因为服务器资源问题一般不超2k（理论上在http中没有规定必须小于2k）。</li>
-</ul>
-<h3 id="lt-2-gt-实操中的不同"><a href="#lt-2-gt-实操中的不同" class="headerlink" title="&lt;2&gt;实操中的不同"></a>&lt;2&gt;实操中的不同</h3><p>实际操作时，主要的不同方式在于<br>【1】若之前使用的是hacjbar则需要辅助工具进行注入（因为hackbar不会自动导入http请求数据），比如burpsuite(可以在上面抓包改post数据再发送数据)、HTTP header live(火狐小插件，用于获取http请求报文)、hackbar(以post方式发送http请求报文的)<br>【2】注释符不同，在前十关中注释方式是–+，而这一部分是#。这是因为不同的请求方式编码不同，导致注释方法不同。</p>
-<h2 id="（2）post方式的联合查询（第11、12关）"><a href="#（2）post方式的联合查询（第11、12关）" class="headerlink" title="（2）post方式的联合查询（第11、12关）"></a>（2）post方式的联合查询（第11、12关）</h2><ul>
-<li>和之前说过的一样，这里只说明这一种方法，更多sql注入的方式，由<strong>聪明的你</strong>自己发现。</li>
-</ul>
-<h3 id="lt-1-gt-观察源码推敲思路"><a href="#lt-1-gt-观察源码推敲思路" class="headerlink" title="&lt;1&gt;观察源码推敲思路"></a>&lt;1&gt;观察源码推敲思路</h3><p>附图为证<br>第11关<br><img src="https://img-blog.csdnimg.cn/202101242124055.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>第12关<br><img src="https://img-blog.csdnimg.cn/20210124212456389.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">观察源码会发现，以post方式传进去的参数的值赋值给了uname、passwd,最终整合成了一个sql语句，根据这个语句我们可以发现，既可以在uname处注入也可以在passwd处注入。同时注意11关与12关的差别<br>是对值的包裹方式不同。<br>第11关的包裹方式：’uname’、’passwd’<br>第12关的包裹方式：(uname)、(passwd)</p>
-<h3 id="lt-2-gt-以第十一关为例（第十二关类似第十一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"><a href="#lt-2-gt-以第十一关为例（第十二关类似第十一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）" class="headerlink" title="&lt;2&gt;以第十一关为例（第十二关类似第十一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"></a>&lt;2&gt;以第十一关为例（第十二关类似第十一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）</h3><p>我会讲不用hackbar怎么用，中间穿插上要是使用hackbar的方法</p>
-<ul>
-<li>1.第一步：尝试登陆以发现注入类型及取得post部分（<strong>如果不用hackbar这一步就可以跳过一半了，只需要判断注入类型</strong>）<br>可以通过burpsuit抓包，或者firefox浏览器的插件实现（HTTP header live）得到请求数据，这里简单说一下HTTP header live的使用方法。<br> 【1】(为hackbar准备，获取poat)首先打开插件，下载好插件以后就可以在左上角处找到，如下图红方框标记处<br><img src="https://img-blog.csdnimg.cn/20210124221635684.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>因为事先不可能看到源码，所以不知道在脚本中的标识符是怎么样的，也就需要在网页上的username和password处分别输入’Dumb‘’Dumb’，这一步的作用是向服务器发送http请求，从而截取到以post发送的数据。http请求是由请求行，请求头部，请求数据组成，请求头部中的host里面有请求服务器的ip，因为服务器就是本地计算机所以直接在插件中找到ip是127.0.0.1的http请求，最后在请求数据中就可以找到以post发送的数据，如下图<br><img src="https://img-blog.csdnimg.cn/20210124222734590.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><strong>uname=Dumb&amp;passwd=Dumb&amp;submit=Submit</strong>就是我们要的请求数据<br>【2】同时发现数据直接回显到了网页上，所以只需像第一部分第一类型那样，利用联合查询，既可以调取数据。</li>
-<li>2.第二步（查看是否存在注入）<br>【1】用hackbar的话,导入url，点开post data,如下图<br><img src="https://img-blog.csdnimg.cn/20210124223610158.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">如果不用hackbar直接就可以在password或者username任意一处输入下文的内容即可。用hackbar的情况也是在post处的uname或者passwd任意两处输入下文内容即可。<br><strong>下面将不再分开讲解，本文将以不用hackbar的方式说明</strong><br>【2】如下图输入<br><img src="https://img-blog.csdnimg.cn/2021012423502793.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>没有报错证明存在注入</li>
-<li>3.第三步（判断查询语句查询结果的列数）<br>在username处输入admin，在password中输入admin’ order by 数字 #（数字要从1开始逐个尝试，直到报错。最后则说明表里面有报错的数前一个的数的列数）<br>由下面两副图你会发现查询语句的回复中中一共有2列<br><img src="https://img-blog.csdnimg.cn/20210125001204293.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><img src="https://img-blog.csdnimg.cn/20210125001213233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">+ 4.第四步（查库名）<br>在username处输入：admin，在password处输入:-admin’ union select 1,databse() #或者输入-admin’ union select 1,schema_name from information_schema.schemata limit 1,1#(同时需要注意admin前面的-是不可少的主要作用是使第一句的查询结果不要显示)<br><img src="https://img-blog.csdnimg.cn/20210125005933734.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
-</ul>
-<ul>
-<li><p>5.第五步（查表名）<br>在username处输入admin，在password处输入的是-admin’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=’security’#<br><img src="https://img-blog.csdnimg.cn/20210125010002800.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-</li>
-<li><p>6.第六步(查列名)<br>输入：-admin’ union select 1,group_concat(column_name) from information_schema.columns where table_name=‘users’#</p>
-</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20210125010017209.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ul>
-<li>7.第七步提取数据）<br>输入：-admin’ union select 1,group_concat(username) from users#和-admin’ union select 1,group_concat(password) from users（‘concat_ws’函数在post方式中不能用，这牵扯到另一种注入方式报错注入）<br>【1】usernametu图<br><img src="https://img-blog.csdnimg.cn/20210125010048613.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">【2】password图<br><img src="https://img-blog.csdnimg.cn/202101250101129.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
-</ul>
-<h2 id="2-post方式的布尔盲注（第13-16关）"><a href="#2-post方式的布尔盲注（第13-16关）" class="headerlink" title="(2)post方式的布尔盲注（第13~16关）"></a>(2)post方式的布尔盲注（第13~16关）</h2><h3 id="lt-1-gt-集成环境中的源码分析"><a href="#lt-1-gt-集成环境中的源码分析" class="headerlink" title="&lt;1&gt;集成环境中的源码分析"></a>&lt;1&gt;集成环境中的源码分析</h3><p>废话不多说，上图</p>
-<ul>
-<li>第13关<br><img src="https://img-blog.csdnimg.cn/20210125011128593.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
-<li>第14关<br><img src="https://img-blog.csdnimg.cn/20210125011158173.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
-<li>第15关<br><img src="https://img-blog.csdnimg.cn/20210125011221212.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
-<li>第16关<br><img src="https://img-blog.csdnimg.cn/20210125011246863.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>看源码可以分析出，网页不再返回结果而是显示输入正确与否，所以要用<strong>布尔盲注</strong>。注入的地方可以是uname处也可以是passwd处包裹方式为：<br>第13关的包裹方式：(‘passwd’)、(‘uname’)<br>第14关的包裹方式：”passwd”、”uname”<br>第15关的包裹方式：’passwd’、’uname’<br>第16关的包裹方式：(“passwd”)、(“uname”)</li>
-</ul>
-<h3 id="lt-2-gt-以第十三关为例（第十四、十五、十六关类似第十三关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"><a href="#lt-2-gt-以第十三关为例（第十四、十五、十六关类似第十三关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）" class="headerlink" title="&lt;2&gt;以第十三关为例（第十四、十五、十六关类似第十三关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"></a>&lt;2&gt;以第十三关为例（第十四、十五、十六关类似第十三关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）</h3><ul>
-<li>1.第一步(判断注入方式及准备活动，若不用hackbar则不需准备活动）<br>【1】判断注入方式<br>输入‘admin’‘admin’，以及‘admin’‘ad’,会得到如下图的图片<br>输入‘admin’‘admin’时得到：<br><img src="https://img-blog.csdnimg.cn/20210125115028969.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">输入‘admin’’ad’时得到：<br><img src="https://img-blog.csdnimg.cn/20210125115130793.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">从页面的回显可以发现，查询结果不会回显到网页上，但是回显sql语句正确与否和输入正确与否。<br>【2】准备活动和前面讲的一样，找到http请求中的请求数据，因为和查找方法相同，所以不再赘述。</li>
-<li>2.第二步（判断是否存在注入）<br>和之前一样选择在password处注入，读者可以尝试在另一处注入。在username处输入：admin。在passwd处输入admin’)#得到<br><img src="https://img-blog.csdnimg.cn/20210125124319549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">没有报错证明存在注入。</li>
-<li>3.第三步（基于and的布尔盲注，兑现第一部分的承诺）<br>在username处输入：admin，在password处输入：admin’) and left((select database()),1)=’s’#会得到肯定的回答<br><img src="https://img-blog.csdnimg.cn/20210125125435260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></li>
-<li>4.根据惯例，我说到这一步，屏幕前的你一定已经会了，毕竟这么聪明。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://froming.github.io/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Forming">
-      <meta itemprop="description" content="网络安全websecurity">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A fifth century">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/24/superforming%E7%9A%84sql-labs%E5%A4%A7%E9%80%9A%E5%85%B3%E4%B9%8B%E7%AC%AC1%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90%E5%8F%8A%E6%B3%A8%E5%85%A5%E6%96%B9%E6%B3%95" class="post-title-link" itemprop="url">superforming的sql-labs大通关之第1部分解析及注入方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-06-24 00:26:05 / 修改时间：12:33:09" itemprop="dateCreated datePublished" datetime="2021-06-24T00:26:05+08:00">2021-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9D%B6%E5%9C%BA%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">靶场笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="提要"><a href="#提要" class="headerlink" title="提要"></a>提要</h2><p>本文中的sql语句不可以直接复制到靶场中注入，因为编辑的时候不一定是用英语符号，直接复制可能不会注入成功。我写这一系列的博客，主要是记录的自己的学习心路，以及给后来者一些引导，所以这一系列是教程系得博客。这也让我不会在前面的关卡说太多注入的东西，毕竟学东西讲究一个循序渐进，所以前面几关注入的更多方法留待聪明的你自己发现。</p>
-<h2 id="sql注入的基本概念"><a href="#sql注入的基本概念" class="headerlink" title="sql注入的基本概念"></a>sql注入的基本概念</h2><p>在开始闯关之前不妨先对sql注入有一个基本的概念，所谓sql注入，实际上就是通过<strong>漏洞</strong>将sql命令插入表单或输入域名或页面请求的查询字符串，把sql语句注入到后台数据库，从而把网站数据库中的信息提取出来。</p>
-<h2 id="（1）sql-labs第一、二、三、四关（联合查询）"><a href="#（1）sql-labs第一、二、三、四关（联合查询）" class="headerlink" title="（1）sql-labs第一、二、三、四关（联合查询）"></a>（1）sql-labs第一、二、三、四关（联合查询）</h2><ul>
-<li>还可以布尔盲注，时间盲注和报错注入</li>
-</ul>
-<h3 id="lt-1-gt-前四关的区别"><a href="#lt-1-gt-前四关的区别" class="headerlink" title="&lt;1&gt;前四关的区别"></a>&lt;1&gt;前四关的区别</h3><p>进行sql注入有不同的方法，前四关都是一种类型，它们的不同之处在与包裹数据的方式不同（<strong>看图观察‘$id’变量的包裹方式</strong>）。之所以说它们是有别于之后几关的sql注入，是因为它们会直接把id对应的‘username’和’password’回显到网页中(<strong>观察if语句中的内容</strong>)。下面附图说明不同。</p>
-<ul>
-<li>第一关集成环境中的部分源码<br><img src="https://img-blog.csdnimg.cn/20210123124317740.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
-<li>第二关集成环境中的部分源码<br><img src="https://img-blog.csdnimg.cn/20210123124504873.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
-<li>第三关集成环境中的部分源码<br><img src="https://img-blog.csdnimg.cn/20210123124535735.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
-<li>第四关集成环境中的部分源码<br><img src="https://img-blog.csdnimg.cn/20210123124602252.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
-</ul>
-<p>通过观察可以发现每一关的包裹数据的方式都不相同</p>
-<p>第一关：通过’$id’的方式包裹</p>
-<p>第二关：通过$id的方式包裹</p>
-<p>第三关：通过(‘$id’)的方式包裹</p>
-<p>第四关：通过($id)的方式包裹</p>
-<p>根据包裹方式的不同，注入时也是略有不同。<br>一般包裹方式就是七中分别是：id、’id’、(‘id’)、((‘id’))、”id”、(“id”)、((“id”))。确定类型以后可以使用手工测试的方式进行确定。</p>
-<h3 id="lt-2-gt-联合查询可以用到的sql语句及函数"><a href="#lt-2-gt-联合查询可以用到的sql语句及函数" class="headerlink" title="&lt;2&gt;联合查询可以用到的sql语句及函数"></a>&lt;2&gt;联合查询可以用到的sql语句及函数</h3><p>（1）推断有多少列的方法：</p>
-<p>order by  [参数] （可以判断有多少列，它的作用是将回显信息排列，’参数’的作用是指明按哪一对应的列排序）</p>
-<p>（2）联合查询：</p>
-<p>union的使用 （使用时需要注意，union明确要求前后语句回显的列要相同）</p>
-<p>（3）查库：</p>
-<p>select schema_name from information_schema.schemta;</p>
-<p>（4）查表：</p>
-<p>select table_name from information_schema.tables where table_schema=’库名’；</p>
-<p>（5）查列：</p>
-<p>select column_name from information_schema.columns where table_name=’表名’；</p>
-<p>（6）其它</p>
-<p>?id=-1’ union select 1,2,group_concat(sechma_name) from information_schema.schemata–+;<br><strong>其中group_concat的作用是使同一个分组中的值连接起来，返回一个字符串结果。</strong></p>
-<h3 id="lt-3-gt-以第一关为例（第二，三，四关类似第一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"><a href="#lt-3-gt-以第一关为例（第二，三，四关类似第一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）" class="headerlink" title="&lt;3&gt;以第一关为例（第二，三，四关类似第一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"></a>&lt;3&gt;以第一关为例（第二，三，四关类似第一关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）</h3><ul>
-<li><p>1.第一步（判断是否存在注入）<br>先在url栏里面输入?id=1’，如果报错则说明，存在注入。<br><img src="https://img-blog.csdnimg.cn/2021012315172969.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>2.第二步（判断查询语句查询结果的列数）<br>在url栏中输入?id=1’ order by 数字–+（<strong>‘–+’在sql中是注释符，这样让之后的语句不能执行，只能执行我们注入的语句。数字要从1开始逐个尝试，直到报错。最后则说明表里面有报错的数前一个的数的列数</strong>）<br>由下面两副图你会发现查询语句最后的回显中一共有三列<br><img src="https://img-blog.csdnimg.cn/20210123133259926.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><img src="https://img-blog.csdnimg.cn/202101231333080.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>3.第三步（判断表中哪几列的信息会回显）<br>在url栏的域名后输入?id=-1’ union select 1,2,3–+<br>因为前四关会有回显，所以看回显出的是哪几个数字就能判断出哪几列会回显到网页上，由下图可知是第2、3列会回显的网页中<br><img src="https://img-blog.csdnimg.cn/20210123132910354.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>4.第四步（查库名）<br>在url栏里面输入:?id=-1’ union select 1,2,group_concat(schema_name) from information_schema.schemata –+或者输入?id=-1’ union select 1,2,schema_name from information_schema.schemata limit 1,1–+(<em><strong>limit的作用是限制回显的库名是第几个</strong></em>)这里主要是说明一下limit的用法，因为下面几关会用到,到时候不做说明。(<em><strong>同时需要注意1前面的-是不可少的主要作用是使第一句的查询结果不要显示</strong></em>)<br><img src="https://img-blog.csdnimg.cn/20210123134300489.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>5.第五步（查表名）<br>要输入的是:?id=-1’ union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=’security’–+<br><img src="https://img-blog.csdnimg.cn/20210123134645148.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>6.第六步(查列名)<br>在url栏输入：?id=-1’ union select 1,2,group_concat(column_name) from information_schema.columns where table_name=’users’–+<br><img src="https://img-blog.csdnimg.cn/20210123134825265.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>7.第七步（提取数据）<br>输入：?id=-1’ union select 1,2,group_concat(concat_ws(‘<del>‘,username,password)) from users–+（‘concat_ws’的作用是将‘username’和’password’合并回显，同时在它们中间插入‘</del>’）<br><img src="https://img-blog.csdnimg.cn/20210123140534263.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-</ul>
-<h2 id="（2）sql第五关到第八关（布尔盲注）"><a href="#（2）sql第五关到第八关（布尔盲注）" class="headerlink" title="（2）sql第五关到第八关（布尔盲注）"></a>（2）sql第五关到第八关（布尔盲注）</h2><ul>
-<li>还可以时间盲注，报错注入</li>
-</ul>
-<h3 id="lt-1-gt-第五、六、七、八关的不同"><a href="#lt-1-gt-第五、六、七、八关的不同" class="headerlink" title="&lt;1&gt;第五、六、七、八关的不同"></a>&lt;1&gt;第五、六、七、八关的不同</h3><p>和前四关不同的是第五关到第八关没有将搜索到的信息回显到网页上（注意观察if语句中的内容），但是和前四关相同的是它们之间的不同也是包裹‘id’变量的方式不同（注意观察’id’变量）**(值得说明的是第五关和第八关的包裹方式相同，但是它们还有一个区别是当输入错误的语句时，第五关会返回错误的提示而第八关则不会，读者可以留意下图中第五关和第八关的源码)**</p>
-<ul>
-<li><p>第五关<br><img src="https://img-blog.csdnimg.cn/20210123141337597.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>第六关<br><img src="https://img-blog.csdnimg.cn/2021012314134874.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>第七关<br><img src="https://img-blog.csdnimg.cn/20210123141355384.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>第八关<br><img src="https://img-blog.csdnimg.cn/20210123141406703.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">第五关的包裹方式：’id’</p>
-</li>
-</ul>
-<p>第六关的包裹方式：id</p>
-<p>第七关的包裹方式：((‘id’))</p>
-<p>第八关的包裹方式：’id’</p>
-<h3 id="lt-2-gt-布尔盲注可以用到的sql语句及函数"><a href="#lt-2-gt-布尔盲注可以用到的sql语句及函数" class="headerlink" title="&lt;2&gt;布尔盲注可以用到的sql语句及函数"></a>&lt;2&gt;布尔盲注可以用到的sql语句及函数</h3><p>较前四关而言第五关到第八关不同之处在于没有回显，我们不能直观的看见信息，所以我们需要一种新的方式进行sql注入——布尔型注入</p>
-<p>1.substr()函数：格式是substr(a,b,c)意思是将a字符串从b位置截取c长度</p>
-<p>举例： select substr((select schema_name from information_schema.schemata limit 0,1),1,1)=’i’;</p>
-<p>2.ascii()函数：将括号中的字符转换为acsii码，再在最后进行值大小的判断，正确返回1，错误返回0</p>
-<p>举例： select ascii(substr((select schema_name from information_schema.schemata limit 0,1),1,1))&gt;1;</p>
-<p>3.模糊查询：要用到like函数</p>
-<p>举例： &lt;1&gt;在mysql navicat中查字段会出现的情况有</p>
-<p>​                   (1)select database() like ‘%s%’;表示库名中是否有一个带有s</p>
-<p>​                   (2) select database() like ‘s%’;表示库名中是否有一个开头字符为s</p>
-<p>​            &lt;2&gt;在电脑自带的命令行中进入mqsql则情况完全不同如果用 select database() like ‘字符’;它没有在mqsql navicat中那么多的情况，只有一种就是’字符%‘，这种情况的原因是我们已经锁定了一个数据库导致的。</p>
-<p>4.regexp函数，regexp为匹配security正则表达式</p>
-<p>举例： select database() regexp ‘s’;</p>
-<p> 5.left函数，从字符串开头截取括号中的数字个长度的字符</p>
-<p>举例：select left((select schema_name from information_schema.schemata limit 0,1),1)=’i’;</p>
-<h3 id="lt-3-gt-以第五关为例（第六，七，八关类似第五关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"><a href="#lt-3-gt-以第五关为例（第六，七，八关类似第五关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）" class="headerlink" title="&lt;3&gt;以第五关为例（第六，七，八关类似第五关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）"></a>&lt;3&gt;以第五关为例（第六，七，八关类似第五关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方式）</h3><p>本文的做题方法选用的是基于联合查询的布尔盲注，在下一部分会讲不基于布尔查询的盲注。</p>
-<ul>
-<li><p>1.第一步：（判断是否存在注入）<br>输入?id=1’判断是否有sql注入,通过下图判断出，存在sql注入。<br><img src="https://img-blog.csdnimg.cn/20210123151837705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-</li>
-<li><p>2.第二部（判断查询语句查询结果的列数）<br>输入：?id=1’ order by 3–+得到<br> <img src="https://img-blog.csdnimg.cn/20210125123601592.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">再输入：?id=1’ order by 4–+得到<br><img src="https://img-blog.csdnimg.cn/20210125123650710.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">最后可以发现，查询语句查询结果有三列</p>
-</li>
-<li><p>3.第三步（和前四关不同的是这里没有回显，所以就不需要通过联合查询判断哪几列会回显到网页上，直接判断数据库名）<br>输入：<br>?id=1’ union select 1,2,substr((select schema_name from information_schema.schemata limit 4,1),1,1)=’s’–+<br>或者<br>?id=1’ union select 1,2,select left((select schema_name from information_schema.schemata limit 4,1),1)=’s’–+<br>又或<br>?id=1’ union select 1,2,ascii(substr((select schema_name from information_schema.schemata limit 4,1),1,1))&gt;0–+<strong>通过二分法和ascii函数联合的方式进行判断</strong></p>
-</li>
-</ul>
-<p>还有很多盲注的方式这里不再一一介绍，通过多种函数的联合的方法可以有许多不同的方法，留待读者自己去发现。总体思路就是输入一段语句，让服务器判断正误，通过网页回显进行猜测。一般盲注都会通过burpsuite等软件进行操作，具体的使用方法请读者自行寻找对应文章。</p>
-<ul>
-<li>4.第四、五、六步基本上与第三步的思路相同，只是其中的一些关键字不再相同，读者结合前四关的基础和这一部分所讲的盲注方式，一定可以轻易的理解，并使用，所以第四、五、六步不再赘述。</li>
-</ul>
-<h2 id="（3）第九关与第十关（时间盲注）"><a href="#（3）第九关与第十关（时间盲注）" class="headerlink" title="（3）第九关与第十关（时间盲注）"></a>（3）第九关与第十关（时间盲注）</h2><ul>
-<li>还可以报错注入</li>
-</ul>
-<p>与第五关到第八关不同第九关到第十关只能用时间盲注，原因是无论输入的语句正确与否都会得到相同的回显‘you are in………..’,所以为了判断输入语句正确与否</p>
-<h3 id="lt-1-gt-只能用时间盲注的原因"><a href="#lt-1-gt-只能用时间盲注的原因" class="headerlink" title="&lt;1&gt;只能用时间盲注的原因"></a>&lt;1&gt;只能用时间盲注的原因</h3><p>与第五关到第八关不同第九关到第十关只能用时间盲注，原因是无论输入的语句正确与否都会得到相同的回显‘you are in………..’,所以为了判断输入语句正确与否,要用到一个新的函数if()和sleep(),这样通过相应客户端的时间就知道输入语句是否正确，得到的结果是否正确。</p>
-<h3 id="lt-2-gt-第九关、第十关的不同"><a href="#lt-2-gt-第九关、第十关的不同" class="headerlink" title="&lt;2&gt;第九关、第十关的不同"></a>&lt;2&gt;第九关、第十关的不同</h3><p>老规矩贴图为例，和之前提过的观察点相同。<br>1.第九关集成环境中的源码<br><img src="https://img-blog.csdnimg.cn/20210123150555152.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">2.第十关集成环境中的源码<br><img src="https://img-blog.csdnimg.cn/20210123150705532.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">第九关包裹方式：’id’<br>第十关包裹方式：id</p>
-<h3 id="lt-3-gt-学习时间盲注补充的sql语句及函数"><a href="#lt-3-gt-学习时间盲注补充的sql语句及函数" class="headerlink" title="&lt;3&gt;学习时间盲注补充的sql语句及函数"></a>&lt;3&gt;学习时间盲注补充的sql语句及函数</h3><p>1.格式：sleep(n)<br>这个函数的意思是让程序晚n秒执行。<br>2.格式：if(A,B,C)<br>意思是若A为真，则执行B,若A为假，则执行C。</p>
-<h3 id="lt-4-gt-以第九关为例（第十关类似第九关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方试）"><a href="#lt-4-gt-以第九关为例（第十关类似第九关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方试）" class="headerlink" title="&lt;4&gt;以第九关为例（第十关类似第九关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方试）"></a>&lt;4&gt;以第九关为例（第十关类似第九关，只需要将以下所讲的每一条语句中的包裹方式换成上面所推测出的各关的包裹方试）</h3><ul>
-<li><p>1.第一步（判断是否存在注入）<br>输入?id=1’ and sleep (5)–+判断是否有sql注入,如果没有立即相应客户端，则说明存在漏洞。</p>
-</li>
-<li><p>2.第二步（因为没有回显，所以直接进行判断库的操作）</p>
-</li>
-<li><p>输入?id=1‘ and if((substr((select schema_name from information_schema.schemata limit 4,1),1,1)=’s’),1,sleep(3))–+通过给的句子进行不断猜解，就可以查到库名。</p>
-</li>
-<li><p>3.用近似的语句可以查表名、列名及表中信息，通过前面的练习，相信读者已经对sql注入有了了解，重复的部分不再赘述。</p>
-</li>
-</ul>
+          <h3 id="第一关"><a href="#第一关" class="headerlink" title="第一关"></a>第一关</h3><h5 id="lt-1-gt-解法"><a href="#lt-1-gt-解法" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><p>直接在url栏的name=后输入:</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;（这是一段js代码）</p>
+</blockquote>
+<h5 id="lt-2-gt-解析："><a href="#lt-2-gt-解析：" class="headerlink" title="&lt;2&gt;解析："></a>&lt;2&gt;解析：</h5><p><img src="https://img-blog.csdnimg.cn/20210120202910649.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">那么如果我们注入的是一段能在客户端运行的程序的话，就是能达到恶意注入的目的，查看源码，发现没有做任何防御，我们试着注入在h2处注入的脚本。</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/20210120203404108.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="第二关"><a href="#第二关" class="headerlink" title="第二关"></a>第二关</h3><h5 id="lt-1-gt-解法-1"><a href="#lt-1-gt-解法-1" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><p>与第一关不同的是输入的地方不同，如果和第一关在相同位置上注入就会少返回一个“确定”值，所以要在网页中的输入栏输入</p>
+<blockquote>
+<p>forming is handsome” onfocus=javascript:alert(‘xss’)&gt;//</p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>forming is handsome”&gt; &lt;script&gt;alert(‘forming is hand’)&lt;/script&gt;//</p>
+</blockquote>
+<h5 id="lt-2-gt-解析"><a href="#lt-2-gt-解析" class="headerlink" title="&lt;2&gt;解析:"></a>&lt;2&gt;解析:</h5><p>首先注入&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;,然后查看网页源码<br><img src="https://img-blog.csdnimg.cn/20210120223235142.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>可以发现在h2标签处的‘&gt;’和‘&lt;’被替换成了实体字符，用到的是htmlspecialchars()函数(想知道更多请自行搜索)。所以在此处是实现不了脚本注入的，但是看第一个input元素处‘&lt;’和‘&gt;’并没有被替换，所以在这里根据onfocus事件，可以实现脚本注入。输入</p>
+<blockquote>
+<p>forming is handsome” onfocus=javascript:alert(‘xss’)&gt;//</p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>forming is handsome”&gt; &lt;script&gt;alert(‘forming is hand’)&lt;/script&gt;//</p>
+</blockquote>
+<p>当输入前者进去以后点击页面上的确定，待刷新以后点击一下输入框给onfocus事件一个焦点，网站就会自动通向下一关。若是后者则会自动弹出选框。<br>下图是前者的源码图。<br><img src="https://img-blog.csdnimg.cn/20210120225508104.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="前者的源码图"></p>
+<h3 id="第三关"><a href="#第三关" class="headerlink" title="第三关"></a>第三关</h3><h5 id="lt-1-gt-解法-2"><a href="#lt-1-gt-解法-2" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><p>在与第二关相同的位置输入</p>
+<blockquote>
+<p>forming’ onfocus=javascript:alert(‘handsome’) //</p>
+</blockquote>
+<p><strong>这里讲一个我发现的东西</strong>，那就是输入的字符串不能太长，不然无法注入成功。<br><strong>毕竟</strong>我也想在每一个能输入forming is handsome的地方都输入，但是这个地方可能是开辟的空间太小这么长的字符串不能被存储，所以只能这么短。</p>
+<h5 id="lt-2-gt-解析-1"><a href="#lt-2-gt-解析-1" class="headerlink" title="&lt;2&gt;解析:"></a>&lt;2&gt;解析:</h5><p>和之前一样都是进行尝试，输入:</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;</p>
+</blockquote>
+<p>再查看网页源码：<br><img src="https://img-blog.csdnimg.cn/20210120233111544.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>发现和第二关的不同之处在于在input处也转换了”&gt;”,”&lt;”,那么可以换一种onfocus事件的书写格式达到注入的目的，输入：</p>
+<blockquote>
+<p>forming’ onfocus=javascript:alert(‘handsome’) //</p>
+</blockquote>
+<p>最后再与第二关一样触发onfocus事件，就可以过关。<em><strong>但最后有我一个小问题，我自己给了个解释，如果看到这里的各位有’地道的‘‘正确的’理解，欢迎指正。</strong></em><br><img src="https://img-blog.csdnimg.cn/2021012023392024.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">图片中的input元素处的语句并没有闭合为什么不影响脚本注入？我的解释是，因为input标签是一种无内容标签，所以可以不接/，从而告诉浏览器末尾位置，而浏览器可以自动解析但是不影响，应该是应浏览器而变。</p>
+<h3 id="第四关"><a href="#第四关" class="headerlink" title="第四关"></a>第四关</h3><h5 id="lt-1-gt-解法-3"><a href="#lt-1-gt-解法-3" class="headerlink" title="&lt;1&gt;解法:"></a>&lt;1&gt;解法:</h5><blockquote>
+<p>forming” onfocus=javascript:alert(‘handsome’) //</p>
+</blockquote>
+<h5 id="lt-2-gt-解析：-1"><a href="#lt-2-gt-解析：-1" class="headerlink" title="&lt;2&gt;解析："></a>&lt;2&gt;解析：</h5><p>输入：</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;</p>
+</blockquote>
+<p>以此判断一下情况<br><img src="https://img-blog.csdnimg.cn/20210121010748109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>判断出来和第三关情况大致相同，只是在input处从原来由字符变成实体换成删去’&gt;‘和’&lt;’，但是我们输入的字符串中没有’&gt;‘或’&lt;’,所以我们输入和第三关一样的答案尝试，发现还是不可以。我查看网页源码以后发现，是包裹name的值的符号由单引号变成了双引号，所以<strong>理论上</strong>只需要在第三关的基础上把包裹name值得’改为”，但是需要注意的是（在第三关提醒过）可能是网站源文件中给这一空所留的空间太小导致，输入太长，是不能注入成功的。<br><img src="https://img-blog.csdnimg.cn/20210121011058549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="第五关"><a href="#第五关" class="headerlink" title="第五关"></a>第五关</h3><h5 id="lt-1-gt-解法："><a href="#lt-1-gt-解法：" class="headerlink" title="&lt;1&gt;解法："></a>&lt;1&gt;解法：</h5><p>输入：</p>
+<blockquote>
+<p>forming” &gt;&lt;a href=javascript:alert(‘’is)&gt;handsome&lt;/a&gt;</p>
+</blockquote>
+<h5 id="lt-2-gt-解析：-2"><a href="#lt-2-gt-解析：-2" class="headerlink" title="&lt;2&gt;解析："></a>&lt;2&gt;解析：</h5><p>首先还是输入：</p>
+<blockquote>
+<p>&lt;script&gt;alert(‘forming is handsome’)&lt;/script&gt;</p>
+</blockquote>
+<p>再查看源码<br><img src="https://img-blog.csdnimg.cn/20210121013404863.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">发现h2处的‘&gt;’和’&lt;’被替换成了实体字符，而input处的‘&lt;’和‘&gt;’则没有被替换，同时‘script’被加上了’_’，证明script已经被屏蔽。与前几种情况都不完全相同，所以再输入：</p>
+<blockquote>
+<p>forming” onfocus=javascript:alert(‘handsome’) //</p>
+</blockquote>
+<p>判断一下<br><img src="https://img-blog.csdnimg.cn/20210121013814748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">和刚刚情况一样，证明‘script’和’onfocus’都被屏蔽了。那么是时候请出另一种注入方式了，输入：</p>
+<blockquote>
+<p>forming” &gt;&lt;a href=javascript:alert(‘is’)&gt;handsome&lt;/a&gt;</p>
+</blockquote>
+<p>查看源码：<br><img src="https://img-blog.csdnimg.cn/20210121014338711.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzUzMDYxOTMz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述">发现href没有被屏蔽，所以本质上是把有alert函数的文件以超链接的方式与网页连接，最终通过访问超链接的方式执行js脚本。</p>
 
       
     </div>
@@ -484,7 +331,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>
